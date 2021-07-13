@@ -14,7 +14,6 @@ import VerifiedEmail from './Component/Auth/VerifiedEmail';
 import OMRoute from './helper/OMRoute';
 import ApprovedUser from './Component/ApprovedUser/ApprovedUser';
 
-
 function App() {
   const dispatch = useDispatch();
 

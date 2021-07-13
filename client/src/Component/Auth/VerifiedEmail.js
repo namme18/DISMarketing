@@ -9,27 +9,6 @@ import { useParams } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { emailVerified } from '../../redux/reducers/authActions/emailVerified';
-import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
-
-const Alert = props => {
-    return <MuiAlert elevation={6} variant='filled' {...props} />
-}
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2)
-        }
-    },
-
-    snackbar: {
-        '& .MuiAlert-filledWarning': {
-        backgroundColor: 'rgba(255,152,0, 0.8)'
-        }
-    }
-}));
 
 const VerifiedEmail = () => {
     const verifyToken = useParams().verifyToken;

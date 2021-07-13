@@ -5,6 +5,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useDispatch } from 'react-redux';
 import { processApprovedUser } from '../../redux/reducers/authActions/processApprovedUser';
+import { getErrors } from '../../redux/reducers/errorReducer';
 
 const Row = ({user, allUsers}) => {
 
@@ -14,7 +15,7 @@ const Row = ({user, allUsers}) => {
     const [data, setData] = useState({
         edit: false,
         teamleader: null,
-        restrictionlevel: user.restrictionlevel,
+        restrictionlevel: null,
         isApproved: false,
     });
 
@@ -37,6 +38,24 @@ const Row = ({user, allUsers}) => {
 
     const handleSave = (id, e) => {
         const { teamleader, restrictionlevel, isApproved } = data;
+        if(!id || !isApproved || !restrictionlevel){
+            const errData={
+                msg:'Please complete required field!',
+                status: 404,
+                id:'CANT_APPROVED'
+            }
+            return dispatch(getErrors(errData))
+        }
+
+        if(restrictionlevel === 'agent' && !teamleader){
+            const errData={
+                msg:'Please asign a team leader',
+                status: 404,
+                id:'CANT_APPROVED'
+            }
+            return dispatch(getErrors(errData))
+        }
+
         const newData = {
             id,
             teamleader,
@@ -84,21 +103,18 @@ const Row = ({user, allUsers}) => {
             </TableCell>
             <TableCell>
                 {data.restrictionlevel === 'agent' ? (
-                    user.teamleader ? (
-                        user.teamleader
-                    ) : (
                     <TextField id='select' name='teamleader' label='Team Leader' select fullWidth onChange={onChange}>
                         {teamleaders.length === 0 ? (
                                 <MenuItem value={null}>Asign first a Team Leader</MenuItem>
                             ) : (
-
-                                teamleaders?.map(leader => (
-                                    <MenuItem value={leader.username}>{leader.username}</MenuItem>
+                                teamleaders?.filter(tl => tl._id != user._id).map(leader => (
+                                    <MenuItem value={leader._id}>{leader.username}</MenuItem>
                                 ))
                             )}
                     </TextField>
-                    )
-                ): 'NONE'}
+                ): (
+                    user.teamleader ? allUsers?.filter(tl => tl._id === user.teamleader)[0]?.username : 'NONE'
+                )}
             </TableCell>
             <TableCell>
                 {data.edit ? (

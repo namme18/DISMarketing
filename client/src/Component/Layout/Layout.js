@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
     CssBaseline,
     Grid,
+    Backdrop,
+    CircularProgress
 } from '@material-ui/core';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +13,7 @@ import useStyles from './style';
 import ResponsiveNav from './ResponsiveNav';
 import Appbar from './Appbar';
 import ErrorSnackbar from '../../helper/ErrorSnackbar';
-
+import SuccessSnackbar from '../../helper/SuccessSnackbar';
 
 const Layout = ({children}) => {
     const classes = useStyles();
@@ -19,7 +21,7 @@ const Layout = ({children}) => {
     const location = useLocation();
     const dispatch = useDispatch();
 
-    const { user } = useSelector(state => state.authReducer);
+    const { user, isLoading } = useSelector(state => state.authReducer);
 
     useEffect(() => {
         if(!JSON.parse(localStorage.getItem('token'))){
@@ -28,10 +30,18 @@ const Layout = ({children}) => {
     }, [user]);
 
     useEffect(() => {
+        if(isLoading) {
+            return setOpen(true);
+        }
+        setOpen(false);
+    },[isLoading]);
+
+    useEffect(() => {
         dispatch(validateUser());
     },[location]);
 
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const onClickDislogo = () => {
         history.push('/home');
@@ -46,14 +56,18 @@ const Layout = ({children}) => {
         <div className={classes.root}>
             <CssBaseline />
             <ErrorSnackbar />
+            <SuccessSnackbar />
             <Appbar handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} user={user}  />
             <ResponsiveNav handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
 
             <Grid className={classes.page}>
                 <Grid item>
-                <VerifyEmail />
-                <Grid className={classes.toolbar} />
-                {children}
+                    <Backdrop open={open} className={classes.backdrop}>
+                        <CircularProgress color='inherit' />
+                    </Backdrop>
+                    <VerifyEmail />
+                    <Grid className={classes.toolbar} />
+                    {children}
                 </Grid>
             </Grid>
         </div>

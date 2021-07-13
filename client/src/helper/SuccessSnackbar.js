@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearErrors } from '../redux/reducers/errorReducer';
 import { makeStyles } from '@material-ui/core/styles';
+import { clearSuccess } from '../redux/reducers/successReducer';
 
 const Alert = props => {
     return <MuiAlert variant='filled' elevation={6} {...props} />
@@ -18,33 +18,33 @@ const useStyles = makeStyles(theme => ({
     },
 
     snackbar: {
-        '& .MuiAlert-filledError': {
-        backgroundColor: 'rgba(244,67,54, 0.8)'
+        '& .MuiAlert-filledSuccess': {
+        backgroundColor: 'rgba(76,175,80, 0.8)'
         }
     }
 }));
 
-const ErrorSnackbar = () => {
+const SuccessSnackbar = () => {
 
-    const error = useSelector(state => state.errorReducer);
+    const success = useSelector(state => state.successReducer);
     const classes = useStyles();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(true);
 
     const onClose = () => {
         setOpen(false)
-        dispatch(clearErrors());
+        dispatch(clearSuccess());
     }
 
     useEffect(() => {
-        if(error.id){
+        if(success.id){
             setOpen(true);
         }
-    },[error.id]);
+    },[success.id]);
     
     return(
         <>
-        {error.id !== null ? (
+        {success.id !== null ? (
             <Snackbar
                 className={classes.snackbar}
                 open={open}
@@ -57,9 +57,9 @@ const ErrorSnackbar = () => {
             >
                 <Alert
                     onClose={onClose}
-                    severity='error'
+                    severity='success'
                 >
-                    {`${error.id}: ${error.msg}`}
+                    {`${success.id}: ${success.msg}`}
                 </Alert>
             </Snackbar>
         ) : null
@@ -68,4 +68,4 @@ const ErrorSnackbar = () => {
     )
 }
 
-export default ErrorSnackbar;
+export default SuccessSnackbar;

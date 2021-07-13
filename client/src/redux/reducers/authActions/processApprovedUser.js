@@ -3,6 +3,7 @@ import axios from "axios";
 import { tokenConfig } from "../../../helper/tokenConfig";
 import { userLoading, approvedUser, userLoaded } from "../authReducer";
 import { clearErrors, getErrors } from "../errorReducer";
+import { clearSuccess, getSuccess } from '../successReducer';
 
 export const processApprovedUser = createAsyncThunk('approvedUser', async({id, isApproved, teamleader, restrictionlevel}, {dispatch, getState, rejectWithValue}) => {
     dispatch(userLoading());
@@ -13,6 +14,7 @@ export const processApprovedUser = createAsyncThunk('approvedUser', async({id, i
         .then(res => {
             dispatch(approvedUser(res.data));
             dispatch(clearErrors());
+            dispatch(getSuccess({msg: 'User approved Done!', status: 200, id: 'Success'}))
             return dispatch(userLoaded());
         })
         .catch(err => {
@@ -22,6 +24,7 @@ export const processApprovedUser = createAsyncThunk('approvedUser', async({id, i
                 id:'CANT_APPROVED'
             }
             dispatch(getErrors(errData));
+            dispatch(clearSuccess());
             dispatch(userLoaded());
             return rejectWithValue(err);
         })

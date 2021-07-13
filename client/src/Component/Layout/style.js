@@ -50,5 +50,9 @@ export default makeStyles((theme) => ({
         '& .MuiAlert-filledWarning': {
         backgroundColor: 'rgba(255,152,0, 0.8)'
         }
-    }
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+      },
 }));
