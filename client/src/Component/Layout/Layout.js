@@ -14,6 +14,7 @@ import ResponsiveNav from './ResponsiveNav';
 import Appbar from './Appbar';
 import ErrorSnackbar from '../../helper/ErrorSnackbar';
 import SuccessSnackbar from '../../helper/SuccessSnackbar';
+import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 
 const Layout = ({children}) => {
     const classes = useStyles();
@@ -39,6 +40,10 @@ const Layout = ({children}) => {
     useEffect(() => {
         dispatch(validateUser());
     },[location]);
+
+    useEffect(() => {
+        dispatch(getAllUsers());
+    },[dispatch]);
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [open, setOpen] = useState(false);

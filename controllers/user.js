@@ -273,6 +273,7 @@ exports.approvedUser = (req, res) => {
 
 exports.getAllUser = (req, res) => {
     User.find()
+        .sort({registerDate: -1})
         .then(allUser => {
             return res.status(200).json(allUser);
         })

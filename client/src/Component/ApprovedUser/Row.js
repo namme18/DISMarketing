@@ -63,7 +63,7 @@ const Row = ({user, allUsers}) => {
             isApproved
         }
         dispatch(processApprovedUser(newData));
-        setData({edit: false});
+        setData({edit: false, isApproved: true});
     }
 
     const handleCancel = () => {
@@ -128,19 +128,19 @@ const Row = ({user, allUsers}) => {
             <TableCell>
                 {data.edit ? (
                 <>
-                <IconButton aria-label='edit' onClick={() => handleSave(user._id)}>
+                <IconButton aria-label='edit' onClick={() => handleSave(user._id)} size='small'>
                     <Tooltip title='save'>
                         <SaveIcon color='primary' />
                      </Tooltip>
                  </IconButton>
-                 <IconButton aria-label='cancel' onClick={handleCancel}>
+                 <IconButton aria-label='cancel' onClick={handleCancel} size='small'>
                  <Tooltip title='Cancel'>
                      <CancelIcon color='error' />
                   </Tooltip>
                  </IconButton>
                 </>
                 ): (
-                <IconButton aria-label='edit' onClick={() => handleEdit(user._id)}>
+                <IconButton aria-label='edit' onClick={() => handleEdit(user._id)} size='small'>
                     <Tooltip title='Edit'>
                     <EditIcon color='secondary' />
                     </Tooltip>

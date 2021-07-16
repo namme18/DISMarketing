@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const config = require('config');
+const errorHandler = require('./middleware/Error/errorHandler');
 
 
 
@@ -22,6 +23,10 @@ mongoose
     .catch(err => console.log(err));
 
 app.use('/auth', require('./routes/user'));
+app.use('/subs', require('./routes/subs'));
+
+//error handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

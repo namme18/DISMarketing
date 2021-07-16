@@ -1,8 +1,7 @@
-import { Route, Redirect, useHistory } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const OMRoute = ({component: Component, ...rest}) => {
-    const history = useHistory();
     const { restrictionlevel } = useSelector(state => state.authReducer.user);
     return(
         <Route 

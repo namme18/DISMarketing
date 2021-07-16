@@ -14,10 +14,10 @@ import {
   Divider
 } from '@material-ui/core';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
-import CreateData from './CreateData';
 import Row from './Row';
 import { format } from 'date-fns';
 import TodayIcon from '@material-ui/icons/Today';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -41,14 +41,7 @@ const useStyles = makeStyles(theme => ({
 const Home = () => {
   
     const classes = useStyles();
-
-  const rows = [
-    CreateData('team1', 159, 6.0),
-    CreateData('team2', 237, 9.0),
-    CreateData('team3', 262, 16.0),
-    CreateData('team4', 305, 3.7),
-    CreateData('team5', 356, 16.1),
-  ];
+    const { allUsers } = useSelector(state => state.authReducer);
 
   return (
     <Grow in>
@@ -84,8 +77,10 @@ const Home = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
-              <Row key={row.name} row={row} />
+            {allUsers
+            ?.filter(user => user.restrictionlevel === 'teamleader')
+            .map(tl => (
+              <Row key={tl._id} tl={tl} />
             ))}
           </TableBody>
         </Table>

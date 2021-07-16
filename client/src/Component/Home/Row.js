@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core';
 import {
     Typography,
     Box,
@@ -8,15 +7,13 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TableRow,
-    Paper
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowDown';
 
-const Row = ({row}) =>{
+const Row = ({tl}) =>{
     const [open, setOpen] = useState(false);
 
     return(
@@ -28,10 +25,10 @@ const Row = ({row}) =>{
                 </IconButton>
             </TableCell>
             <TableCell align='center' component='th' scope='row'>
-                {row.team}
+                {tl.username}
             </TableCell>
-            <TableCell align='center'>{row.installed}</TableCell>
-            <TableCell align='center'>{row.appsgen}</TableCell>
+            <TableCell align='center'>{tl.registerDate}</TableCell>
+            <TableCell align='center'>{tl.email}</TableCell>
         </TableRow>
 
         <TableRow>
@@ -49,13 +46,13 @@ const Row = ({row}) =>{
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {row.agentsPerformance.map(agent => (
+                                {/* {row.agentsPerformance.map(agent => (
                                     <TableRow key={agent.agentName}>
                                         <TableCell align='center'>{agent.agentName}</TableCell>
                                         <TableCell align='center'>{agent.agentInstalled}</TableCell>
                                         <TableCell align='center'>{agent.agentAppsGen}</TableCell>
                                     </TableRow>
-                                ))}
+                                ))} */}
                             </TableBody>
                         </Table>
 

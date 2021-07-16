@@ -34,7 +34,10 @@ const useStyles = makeStyles(theme => ({
       }
     },
     table: {
-        minWidth: 280
+        minWidth: 280,
+    },
+    container:{
+        maxHeight: 380
     }
   }));
 
@@ -54,14 +57,16 @@ const ApprovedUser = () => {
         }
     },[user.restrictionlevel]);
 
-    const handleChangePage = (e, newPage) => {
+    const handleChangePage = (event, newPage) => {
         setPage(newPage);
     }
 
-    const handleChangeRowsPerPage = e => {
-        setRowsPerPage(parseInt(e.target.value, 10));
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     }
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers?.length - page * rowsPerPage);
 
     return(
         <Grow in>
@@ -86,7 +91,7 @@ const ApprovedUser = () => {
                 />
             </Grid>
             <Divider className={classes.divider} />
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} className={classes.container}>
                 <Table stickyHeader className={classes.table} aria-label='For Approval' size='small'>
                     <TableHead>
                         <TableRow>
@@ -113,18 +118,23 @@ const ApprovedUser = () => {
                         .map(user => (
                             <Row key={user._id} user={user} allUsers={allUsers} />
                         ))}
+                        {emptyRows > 0 && (
+                            <TableRow style={{height: 73 * emptyRows }}>
+                                <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
                     </TableBody>
                 </Table>
+            </TableContainer>
                 <TablePagination 
                     rowsPerPageOptions={[5, 10, 15]}
                     component='div'
                     count={allUsers?.length -1}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
-            </TableContainer>
             </div>
         </Grow>
     )
