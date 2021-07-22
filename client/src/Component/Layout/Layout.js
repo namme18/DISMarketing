@@ -16,13 +16,19 @@ import ErrorSnackbar from '../../helper/ErrorSnackbar';
 import SuccessSnackbar from '../../helper/SuccessSnackbar';
 import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 
+function useQuery(){
+    return new URLSearchParams(useLocation().search);
+}
+
 const Layout = ({children}) => {
     const classes = useStyles();
     const history = useHistory();
     const location = useLocation();
     const dispatch = useDispatch();
+    const query = useQuery();
 
     const { user, isLoading } = useSelector(state => state.authReducer);
+    const dateFrom = query.get('dateFrom');
 
     useEffect(() => {
         if(!JSON.parse(localStorage.getItem('token'))){
@@ -38,7 +44,9 @@ const Layout = ({children}) => {
     },[isLoading]);
 
     useEffect(() => {
-        dispatch(validateUser());
+        if(!dateFrom){
+            dispatch(validateUser());
+        }
     },[location]);
 
     useEffect(() => {

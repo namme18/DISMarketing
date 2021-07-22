@@ -38,7 +38,7 @@ export default makeStyles((theme) => ({
     },
     conLogo: {
         padding: theme.spacing(2),
-        width: drawerWidth,
+        width: drawerWidth-1,
         cursor: 'pointer'
     },
     dislogo:{
@@ -52,7 +52,7 @@ export default makeStyles((theme) => ({
         }
     },
     backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
+        zIndex: 9000,
         color: '#fff',
       },
 }));

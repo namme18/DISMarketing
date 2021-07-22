@@ -1,3 +1,5 @@
+const { getTime, getMinutes, getMilliseconds, getHours } = require('date-fns');
+const { query, application } = require('express');
 const Subs = require('../model/Subs');
 const User = require('../model/User');
 
@@ -44,6 +46,59 @@ exports.deleteSubs = (req, res, next) => {
         .catch(() => {
             return;
         })
+}
+
+exports.getAllSubs = (req, res, next) => {
+   
+    const { dateFrom, dateTo, search } = req.query;
+    const currentDate = new Date();
+    const To = new Date(`${dateTo}, ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}.${currentDate.getUTCMilliseconds()}`);
+    if(dateFrom > dateTo) return res.status(400).json({msg: "Invalid date selected, 'Date From' should not be greater than 'Date To'"});
+
+    if(search === 'null' || search === ''){
+    return Subs.find({encodeddate:{
+            $gte:dateFrom,
+            $lte:To
+            }
+        })
+        .sort({encodeddate: -1})
+        .then(allsubs => {
+            return res.status(200).json(allsubs);
+        })
+        .catch(err => {
+            return next(err);
+        })
+        .catch(() => {
+            return;
+        })
+    }
+
+    if(search){
+    return Subs.find({encodeddate:{
+            $gte: dateFrom,
+            $lte: To
+            },
+            $or: [
+                {fullname:{$in : search.split(' ')}},
+                {applicationno: search},
+                {email: search},
+                {contactno: search},
+                {email: search},
+                {joborderno: search},
+                {accountno: search}
+            ]
+        })
+        .then(allsubs => {
+            return res.status(200).json(allsubs);
+        })
+        .catch(err => {
+            return next(err);
+        })
+        .catch(() => {
+            return;
+        })
+    }
+
 }
 
 exports.addMannySubs = (req, res, next) => {

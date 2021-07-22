@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const SubsSchema = mongoose.Schema({
     fullname:{
-        type: String,
+        type: [String],
         require: [true, 'Please provide subscribers full name!']
     },
     email: {
@@ -30,6 +30,10 @@ const SubsSchema = mongoose.Schema({
         required: [true ,'Please provide complete application number']
     },
     packagename: {
+        type: String,
+        default: null
+    },
+    remarks: {
         type: String,
         default: null
     },

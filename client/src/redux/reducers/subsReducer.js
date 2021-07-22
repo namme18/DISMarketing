@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { default_type } from "mime";
 
 export const subsReducer = createSlice({
     name:'subsReducer',
@@ -12,9 +11,16 @@ export const subsReducer = createSlice({
                 ...state,
                 subscribers: action.payload
             }
+        },
+
+        addNewSubs: (state, action) => {
+            return{
+                ...state,
+                subscribers: [action.payload, ...state.subscribers]
+            }
         }
     }
 });
 
-export const { getAllSubs } = subsReducer.actions;
+export const { loadSubs, addNewSubs } = subsReducer.actions;
 export default subsReducer.reducer;

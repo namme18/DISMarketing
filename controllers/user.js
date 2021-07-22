@@ -53,9 +53,7 @@ exports.registerUser = (req, res) => {
                     )
                 })
                 .catch(err => {
-                   return res.status(400).json({
-                        msg: err.message
-                    })
+                   return next(err);
                 })
                 .catch(() => {
                     return;
@@ -99,9 +97,7 @@ exports.loginUser = (req, res) => {
                     )
                 })
                 .catch(err => {
-                    return res.status(400).json({
-                        msg: err.mesage
-                    })
+                    return next(err);
                 })
                 .catch(() => {
                     return;
@@ -146,7 +142,7 @@ exports.forgotPassword = (req, res) => {
 
                     user.save();
 
-                    return res.status(400).json({msg: err.message});
+                    return next(err);
                 })
         })
 }
@@ -174,7 +170,7 @@ exports.resetPassword = (req, res) => {
             })
         })
         .catch(err => {
-            return res.status(400).json({msg: err.message});
+            return next(err);
         })
 }
 
@@ -214,7 +210,7 @@ exports.verifyEmail = (req, res) => {
 
                     user.save();
 
-                    return res.status(400).json({msg: err.message})
+                    return next(err);
                 })
         })
 }
@@ -234,7 +230,7 @@ exports.emailVerified = (req, res) => {
             return res.status(200).json(user);
         })
         .catch(err => {
-            return res.status(400).json({msg: err.message});
+            return next(err);
         })
 }
 
@@ -247,7 +243,7 @@ exports.validateUser = (req, res) => {
             return res.status(200).json(user);
         })
         .catch(err => {
-            return res.status(400).json({msg: err.message});
+            return next(err);
         })
 }
 
@@ -267,7 +263,7 @@ exports.approvedUser = (req, res) => {
             return res.status(200).json(user);
         })
         .catch(err => {
-            return res.status(400).json({msg: err.message});
+            return next(err);
         })
 }
 
@@ -278,6 +274,6 @@ exports.getAllUser = (req, res) => {
             return res.status(200).json(allUser);
         })
         .catch(err => {
-            return res.status(400).json({msg: err.message})
+            return next(err);
         })
 }
