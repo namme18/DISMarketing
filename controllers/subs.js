@@ -4,8 +4,8 @@ const Subs = require('../model/Subs');
 const User = require('../model/User');
 
 exports.addSubs = (req, res, next) => {
-    const { fullname, email, contactno, address, applicationno, packagename} = req.body;
-    if(!fullname || !email || !contactno || !address || !applicationno || !packagename) return res.status(400).json({msg: 'Please input required fields'});
+    const { fullname, email, contactno, address, applicationno, plan} = req.body;
+    if(!fullname || !email || !contactno || !address || !applicationno || !plan) return res.status(400).json({msg: 'Please input required fields'});
 
     Subs.findOne({fullname})
         .then(sub => {
@@ -19,7 +19,7 @@ exports.addSubs = (req, res, next) => {
                     })
             }
 
-            const newSubs = new Subs(req.body);
+            const newSubs = new Subs({...req.body, plan: req.body.plan.split(',')[0], packagename: req.body.plan.split(',')[1]});
         
             newSubs.save()
                 .then(newSubs => {
@@ -79,11 +79,10 @@ exports.getAllSubs = (req, res, next) => {
             $lte: To
             },
             $or: [
-                {fullname:{$in : search.split(' ')}},
+                {fullname:{$in : new RegExp(search.split(' '),'i')}},
                 {applicationno: search},
                 {email: search},
                 {contactno: search},
-                {email: search},
                 {joborderno: search},
                 {accountno: search}
             ]

@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Grow,
-    Chip,
-    Grid,
-    Divider,
     TableContainer,
     Table,
     TableHead,
@@ -12,13 +8,7 @@ import {
     TableBody,
     Paper,
     TablePagination,
-    TextField,
-    MenuItem,
-    Select,
-    FormControl,
-    InputBase,
-    IconButton,
-    Tooltip
+    Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -30,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
     },
     table:{
         minWidth: 280,
+    },
+    tableHeaderCell: {
+        fontWeight: 'bold',
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.getContrastText(theme.palette.primary.dark)
     }
 }));
 
@@ -59,26 +54,26 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
             <Table stickyHeader className={classes.table} aria-label='masterlist' size='small'>
                 <TableHead>
                     <TableRow className={classes.tableHeaders}>
-                        <TableCell align='left' key='APPLICATION'>
-                            <strong>APPLICATION#</strong>
+                        <TableCell align='left' className={classes.tableHeaderCell}>
+                            NAME|ADd|CTC#|EMAIL
                         </TableCell>
-                        <TableCell align='left' key='NAME'>
-                            <strong>NAME</strong>
+                        <TableCell align='left' className={classes.tableHeaderCell}>
+                            REMARKS
                         </TableCell>
-                        <TableCell align='left' key='ADDRESS'>
-                            <strong>ADDRESS</strong>
+                        <TableCell align='left' className={classes.tableHeaderCell}>
+                            PACKAGE_INFO
                         </TableCell>
-                        <TableCell align='left' key='CONTACT'>
-                            <strong>CONTACT#</strong>
+                        <TableCell align='left' className={classes.tableHeaderCell}>
+                            STATUS
                         </TableCell>
-                        <TableCell align='left' key='AGENT'>
-                            <strong>AGENT</strong>
+                        <TableCell align='left' className={classes.tableHeaderCell}>
+                            AGENT
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {subscribers.map(subs => (
-                        <Row key={subs._id} subs={subs} allUsers={allUsers}/>
+                        <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers}/>
                     ))}
                     {emptyRows > 0 && (
                             <TableRow style={{height: 73 * emptyRows }}>

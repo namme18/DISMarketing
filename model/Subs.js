@@ -29,13 +29,25 @@ const SubsSchema = mongoose.Schema({
         unique: [true, 'Application no. already exist!'],
         required: [true ,'Please provide complete application number']
     },
+    plan: {
+        type: String,
+        default: null
+    },
     packagename: {
+        type: String,
+        default: null
+    },
+    planinstalled: {
         type: String,
         default: null
     },
     remarks: {
         type: String,
         default: null
+    },
+    isActive: {
+        type: Boolean,
+        default: false
     },
     agent: {
         type: String,

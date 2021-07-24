@@ -44,7 +44,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
         contactno: '',
         address: '',
         applicationno: '',
-        packagename: '',
+        plan: '',
         remarks: '',
     })
 
@@ -64,7 +64,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
             contactno: '',
             address: '',
             applicationno: '',
-            packagename: '',
+            plan: '',
             remarks: '',
         });
     }
@@ -73,6 +73,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
         if(id === 'ADD_SUCCESS'){
             setOpenModal(false);
             clearFields();
+            setActiveStep(0);
         }
     },[id]);
 
@@ -97,7 +98,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
         e.preventDefault();
         if(msg ==='jwt expire') return history.push('/auth/login');
         const fullname = [data.lastname, data.firstname, data.middlename];
-        const { email, contactno, address, applicationno, packagename, remarks } = data;
+        const { email, contactno, address, applicationno, plan, remarks } = data;
 
         const newSubscriber = {
             fullname,
@@ -105,7 +106,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
             contactno, 
             address, 
             applicationno, 
-            packagename, 
+            plan, 
             remarks,
             agent: user._id,
             teamleader: user.restrictionlevel === 'operation manager' || 'teamleader' || 'owner' ? user._id : user.teamleader
@@ -114,6 +115,53 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
        dispatch(addSubs(newSubscriber));
 
     }
+
+    const plans = [
+        {
+            name: 'FiberX 35Mbps',
+            plan: 1500
+        },
+        {
+            name: 'FiberX 100Mbps',
+            plan: 2500
+        },
+        {
+            name: 'FiberX 200mbps',
+            plan: 3500
+        },
+        {
+            name: 'Air Internet 5Mbps',
+            plan: 1000
+        },
+        {
+            name: ' Air Internet 10Mbps',
+            plan: 1250
+        },
+        {
+            name: 'Air 299 + Internet 5Mbps',
+            plan: 1299
+        },
+        {
+            name: 'Air 499 + Internet 5Mbps',
+            plan: 1499
+        },
+        {
+            name: 'Air 699 + Internet 5Mbps',
+            plan: 1699
+        },
+        {
+            name: 'Air 299 + Internet 10Mbps',
+            plan: 1549
+        },
+        {
+            name: 'Air 499 + Internet 10Mbps',
+            plan: 1749
+        },
+        {
+            name: 'Air 699 + Internet 10Mbps',
+            plan: 1949
+        }
+    ]
 
     const getStepContent = step => {
         switch (step) {
@@ -220,16 +268,19 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
                             autoFocus
                         />
 
-                        <TextField 
-                            type='text'
-                            name='packagename'
-                            label='Plan Avail'
-                            placeholder='Fiber 35mbps'
-                            value={data.packagename}
+                        <Select 
+                            name='plan'
+                            inputProps={{ 'aria-label': 'Without label' }}
                             onChange={onChange}
                             fullWidth
+                            displayEmpty
                             className={classes.textField}
-                        />
+                        >
+                            <MenuItem disabled><Typography color='textSecondary' variant='body2'>Choose Plan...</Typography></MenuItem>
+                            {plans.map(plan => (
+                                <MenuItem value={[plan.plan,plan.name].join()}>{plan.name}</MenuItem>
+                                ))}
+                        </Select>
 
                         <Select
                             name='remarks'
@@ -239,7 +290,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
                             fullWidth
                             className={classes.textField}
                         >
-                            <MenuItem >Remarks</MenuItem>
+                            <MenuItem disabled>Remarks</MenuItem>
                             <MenuItem value='for installation' >For Installation</MenuItem>
                             <MenuItem value='standby' >StandBy</MenuItem>
                         </Select>
