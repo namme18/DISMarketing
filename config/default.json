@@ -1,0 +1,10 @@
+
+{
+    "mongoURI": "mongodb://emman:emman@emmancluster-shard-00-00.aqzyw.mongodb.net:27017,emmancluster-shard-00-01.aqzyw.mongodb.net:27017,emmancluster-shard-00-02.aqzyw.mongodb.net:27017/dismarketing?ssl=true&replicaSet=atlas-h4dwv5-shard-0&authSource=admin&retryWrites=true&w=majority",
+    "secret": "9290fd98208b65432db59e686e7e8805a51b2cdd20702cdcc6e8d87d8bc8f77a940e92",
+    "host": "smtp.mailtrap.io",
+    "port": "2525",
+    "user": "b3508866790465",
+    "pass": "7c95660d386b45",
+    "emailFrom": "nammeselarom@gmail.com"
+}
