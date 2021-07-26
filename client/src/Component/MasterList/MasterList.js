@@ -4,35 +4,36 @@ import {
     Chip,
     Grid,
     Divider,
-    TableContainer,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
     Paper,
-    TablePagination,
     TextField,
-    MenuItem,
-    Select,
-    FormControl,
     InputBase,
     IconButton,
-    Tooltip
+    Tooltip,
+    FormControlLabel,
+    Checkbox,
+    Typography,
+    Badge,
 } from '@material-ui/core';
 import { format } from 'date-fns';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import TodayIcon from '@material-ui/icons/Today';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 import ListIcon from '@material-ui/icons/List';
 import SearchIcon from '@material-ui/icons/Search';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import AddSubsModal from './AddSubsModal';
 import { getAllSubs } from '../../redux/reducers/subsActions/getAllSubs';
 import MasterlistTable from './MasterlistTable/MasterlistTable';
+
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+      right: -3,
+      top: 13,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: '0 4px',
+    },
+  }))(Badge);
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -95,19 +96,21 @@ const MasterList = () => {
         search: query.get('search')
     });
 
+    const [show, setShow] = useState(false);
+
     useEffect(() => {
         history.push(`/home/masterlist?dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&search=${data.search || ''}`);
     },[data]);
 
     useEffect(() => {
         dispatch(getAllSubs(data));
-    },[]);
+    },[data.dateTo, data.dateFrom]);
 
-    const [openModal, setOpenModal] = useState(false)
-
-    const handleOpen = () => {
-        setOpenModal(true);
-      };
+    useEffect(() => {
+        if(!data.search){
+            dispatch(getAllSubs(data));
+        }
+    },[data.search]);
       
     const onSubmit = e => {
         e.preventDefault();
@@ -119,6 +122,10 @@ const MasterList = () => {
             ...data,
             [e.target.name]: e.target.value
         });
+    }
+
+    const showInfo = () => {
+        setShow(!show);
     }
 
     return(
@@ -198,17 +205,19 @@ const MasterList = () => {
                             </Paper>
                         </Grid>
 
-                        <Grid item container md={1} lg={1} xl={1} sm={2} xs={2} justify='flex-end' >
-                            <IconButton size='medium' onClick={handleOpen}>
+                        <Grid item container md={1} lg={1} xl={1} sm={2} xs={2} justify='start' >
+                            <StyledBadge badgeContent={!show ? 'ShowDetails' : 'HideDetails'} color='secondary'>
+                            <Checkbox color='secondary' name='info' onChange={showInfo} />
+                            </StyledBadge>
+                            {/* <IconButton size='medium' onClick={handleOpen}>
                                 <Tooltip title='Add Subscriber'>
                                 <AddCircleOutlineIcon color='secondary' fontSize='large' />
                                 </Tooltip>
-                            </IconButton>
+                            </IconButton> */}
                         </Grid>
                     </Grid>
                 </form>
-                <AddSubsModal openModal={openModal} setOpenModal={setOpenModal} />
-                <MasterlistTable />
+                <MasterlistTable show={show} />
             </div>
         </Grow>
     )

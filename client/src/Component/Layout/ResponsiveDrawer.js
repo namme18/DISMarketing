@@ -12,6 +12,7 @@ import conlogo from '../../images/converge-logo.png';
 import  useStyles  from './style';
 import { useHistory, useLocation } from 'react-router-dom';
 import TouchAppIcon from '@material-ui/icons/TouchApp';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { useSelector } from 'react-redux';
 
 const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
@@ -25,8 +26,14 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
         {   
             for: 'public',
             text: 'Home',
-            icon:  <HomeIcon color='secondary'/>,
+            icon:  <AccountBoxIcon color='secondary'/>,
             path:  '/home/home'
+        },
+        {
+            for: 'public',
+            text: 'My Account',
+            icon:  <HomeIcon color='secondary'/>,
+            path:  '/home/myaccount'
         },
         {
             for: 'public',

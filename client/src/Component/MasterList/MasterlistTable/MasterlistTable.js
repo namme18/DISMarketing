@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const MasterlistTable = () => {
+const MasterlistTable = ({show}) => {
 
     const classes = useStyles();
     const { subscribers } = useSelector(state => state.subsReducer);
@@ -72,14 +72,22 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {subscribers.map(subs => (
-                        <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers}/>
-                    ))}
-                    {emptyRows > 0 && (
-                            <TableRow style={{height: 73 * emptyRows }}>
-                                <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
+                    {subscribers.length < 1 ? (
+                        <TableRow>
+                        <TableCell colSpan={6}>
+                            <Typography variant='h3' color='textSecondary' align='center'>No Records Found!</Typography>
+                        </TableCell>
+                        </TableRow>
+                    ) : 
+                        subscribers.map(subs => (
+                            <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers} show={show}/>
+                        ))}
+                        {emptyRows > 0 && (
+                                <TableRow style={{height: 73 * emptyRows }}>
+                                    <TableCell colSpan={6} />
+                                </TableRow>
+                            )
+                    }
                 </TableBody>
             </Table>
         </TableContainer>

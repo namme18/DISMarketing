@@ -17,7 +17,7 @@ import {
     StepContent
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import useStyles from './style';
+import useStyles from '../MasterList/style';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useDispatch, useSelector } from 'react-redux';
