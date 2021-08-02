@@ -290,7 +290,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
                             fullWidth
                             className={classes.textField}
                         >
-                            <MenuItem disabled>Remarks</MenuItem>
+                            <MenuItem disabled><Typography color='textSecondary' variant='body2'>Remarks</Typography></MenuItem>
                             <MenuItem value='for installation' >For Installation</MenuItem>
                             <MenuItem value='standby' >StandBy</MenuItem>
                         </Select>

@@ -152,7 +152,7 @@ const MasterList = () => {
             </Grid>
             <Divider className={classes.divider} />
                 <form noValidate onSubmit={onSubmit}>
-                    <Grid spacing={2} container direction='row'>
+                    <Grid spacing={2} container direction='row' >
                         <Grid item md={3} lg={3} xl={3} sm={12} xs={12}>
                             <TextField
                                 name='dateFrom'
@@ -209,11 +209,6 @@ const MasterList = () => {
                             <StyledBadge badgeContent={!show ? 'ShowDetails' : 'HideDetails'} color='secondary'>
                             <Checkbox color='secondary' name='info' onChange={showInfo} />
                             </StyledBadge>
-                            {/* <IconButton size='medium' onClick={handleOpen}>
-                                <Tooltip title='Add Subscriber'>
-                                <AddCircleOutlineIcon color='secondary' fontSize='large' />
-                                </Tooltip>
-                            </IconButton> */}
                         </Grid>
                     </Grid>
                 </form>

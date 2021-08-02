@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     table:{
         minWidth: 280,
+        width: 'inherit'
     },
     tableHeaderCell: {
         fontWeight: 'bold',
@@ -50,7 +51,7 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
 
     return(
         <>
-        <TableContainer component={Paper} className={classes.container}>
+        <TableContainer component={Paper} maxWidth='xl' className={classes.container}>
             <Table stickyHeader className={classes.table} aria-label='masterlist' size='small'>
                 <TableHead>
                     <TableRow className={classes.tableHeaders}>
@@ -79,7 +80,7 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
                         </TableCell>
                         </TableRow>
                     ) : 
-                        subscribers.map(subs => (
+                        subscribers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(subs => (
                             <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers} show={show}/>
                         ))}
                         {emptyRows > 0 && (

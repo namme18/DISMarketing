@@ -11,7 +11,7 @@ export default makeStyles((theme) => ({
         background: '#f4f4f4'
     },
     drawer: {
-        [theme.breakpoints.up('sm')]:{
+        [theme.breakpoints.up('lg')]:{
             width: drawerWidth,
             flexShrink: 0,
         }
@@ -20,14 +20,14 @@ export default makeStyles((theme) => ({
         width: drawerWidth
     },
     appBar: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('lg')]: {
           width: `calc(100% - ${drawerWidth}px)`,
           marginLeft: drawerWidth,
         }
     },
     menuButton:{
         marginRight: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('lg')]: {
             display:'none'
         }
     },

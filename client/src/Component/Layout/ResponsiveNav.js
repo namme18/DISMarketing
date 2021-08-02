@@ -18,7 +18,7 @@ const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen }
     return(
         <>
             <nav className={classes.drawer} aria-label='mailbox folders'>
-                <Hidden smUp implementation='css'>
+                <Hidden mdUp implementation='css'>
                     <Drawer
                         container={container}
                         variant='temporary'
@@ -31,7 +31,7 @@ const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen }
                         <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
                     </Drawer>
                 </Hidden>
-                <Hidden xsDown implementation='css'>
+                <Hidden mdDown implementation='css'>
                     <Drawer
                         classes={{paper: classes.drawerPaper}}
                         variant='permanent'

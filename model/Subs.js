@@ -59,11 +59,11 @@ const SubsSchema = mongoose.Schema({
     },
     joborderno: {
         type: String,
-        default: null
+        default: null,
     },
     accountno: {
         type: String,
-        default: null
+        default: null,
     },
     ispaidtoagent: {
         type: Boolean,

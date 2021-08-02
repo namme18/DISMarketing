@@ -35,6 +35,74 @@ exports.addSubs = (req, res, next) => {
 
 }
 
+exports.getUserSubs = (req, res, next) => {
+    const { dateFrom, dateTo, userId } = req.query;
+    const cDate = new Date();
+    const To = new Date(`${dateTo},${cDate.getHours()}:${cDate.getMinutes()}:${cDate.getSeconds()}.${cDate.getUTCMilliseconds()}`);
+
+    if(!dateFrom || !dateTo || !userId) return res.status(400).json({msg: 'No user found!'});
+
+    Subs.find({
+        encodeddate: {
+            $gte: new Date(dateFrom),
+            $lte: To
+        },
+        agent: userId
+    })
+    .sort({encodeddate: -1})
+    .then(subscribers => {
+        return res.status(200).json(subscribers);
+    })
+    .catch(err => {
+        return next(err);
+    })
+
+}
+
+exports.agentUpdate = (req, res, next) => {
+    const { installeddate, address, contactno, email, joborderno, accountno, remarks, plan, id } = req.body;
+
+    Subs.findOne({joborderno})
+        .then(subs => {
+            if(subs) return res.status(400).json({msg: 'J.O# Already Exist!'});
+
+            Subs.findOne({accountno})
+                .then(subs => {
+                    if(subs) return res.status(400).json({msg: 'Account# Already Exist!'});
+
+                    Subs.findById(id)
+                        .then(subs => {
+                            if(!subs) return res.status(400).json({msg: 'Subscriber does not exist!'});
+                            subs.address = address ? address : subs.address;
+                            subs.contactno = contactno ? contactno : subs.contactno;
+                            subs.email = email ? email : subs.email;
+                            subs.joborderno = joborderno ? joborderno : subs.joborderno;
+                            subs.accountno = accountno ? accountno : subs.accountno;
+                            subs.remarks = remarks ? remarks : subs.remarks;
+                            subs.plan = plan ? plan.split(',')[0] : subs.plan;
+                            subs.packagename = plan ? plan.split(',')[1] : subs.packagename;
+                            subs.installeddate = installeddate ? installeddate : subs.installeddate;
+                
+                            subs.save();
+                
+                            return res.status(200).json(subs);
+                
+                        })
+                        .catch(err => {
+                            return next(err);
+                        })
+                        .catch(() => {
+                            return;
+                        })
+                    
+
+                })
+        })
+
+
+
+}
+
 exports.deleteSubs = (req, res, next) => {
     Subs.deleteMany()
         .then(result => {

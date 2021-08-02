@@ -16,7 +16,20 @@ import { format } from 'date-fns';
 const useStyles = makeStyles(theme => ({
     nameAvatar:{
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.getContrastText(theme.palette.primary.light)
+        color: theme.palette.getContrastText(theme.palette.primary.light),
+        height: (show) => {
+            if(!show) {
+                return theme.spacing(3)
+            }
+                return null
+        },
+        width: (show) => {
+            if(!show) {
+                return theme.spacing(3)
+            }
+                return null
+        }
+
     },
     tableRowCell:{
         padding: theme.spacing(1)
@@ -38,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
 const Row = ({subs, allUsers, subscribers, show}) => {
 
-    const classes = useStyles();
+    const classes = useStyles(show);
 
     const handleModify = e => {
         e.preventDefault();
@@ -50,7 +63,7 @@ const Row = ({subs, allUsers, subscribers, show}) => {
                 <Grid container alignItems='center' spacing={1}>
                     <Hidden mdDown implementation='css'>
                     <Grid item lg={2}>
-                        <Avatar alt={subs.fullname[0].toUpperCase()} src='.' size='small' className={classes.nameAvatar} />
+                        <Avatar alt={subs.fullname[0].toUpperCase()} src='.' className={classes.nameAvatar} />
                     </Grid>
                     </Hidden>
                     <Grid item lg={2}>
@@ -96,7 +109,7 @@ const Row = ({subs, allUsers, subscribers, show}) => {
                 <Typography className={!subs.isActive ? classes.name : classes.activated}>{!subs.isActive ? 'Inactive' : 'Activated'}</Typography>
                 {show && (
                     <>
-                    <Typography  color='textSecondary' variant='body2' display='inline' noWrap>DateInstalled: {!subs.installeddate ? 'none' : subs.installeddate}</Typography>
+                    <Typography  color='textSecondary' variant='body2' display='inline' noWrap>DateInstalled: {!subs.installeddate ? 'none' : format(new Date(subs.installeddate), 'do MMMM Y')}</Typography>
                     <Typography  color='textSecondary' variant='body2'>PTA: {!subs.ispaidtoagent ? 'NO' : 'YES'}</Typography>
                     <Typography  color='textSecondary' variant='body2'>PFC: {!subs.ispaidfromconverge ? 'NO' : 'YES'}</Typography>
                     </>

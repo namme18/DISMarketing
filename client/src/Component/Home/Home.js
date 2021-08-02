@@ -11,13 +11,18 @@ import {
   Grow,
   Grid,
   Chip,
-  Divider
+  Divider,
+  Card,
+  CardHeader,
+  Avatar,
+  IconButton
 } from '@material-ui/core';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 import Row from './Row';
 import { format } from 'date-fns';
 import TodayIcon from '@material-ui/icons/Today';
 import { useSelector } from 'react-redux';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -66,6 +71,26 @@ const Home = () => {
                 />
             </Grid>
             <Divider className={classes.divider} />
+
+            <Grid container direction='row' justify='flex-start'>
+              <Grid item>
+                <Card className={classes.card}>
+                  <CardHeader 
+                    avatar={
+                      <Avatar>TI</Avatar>
+                    }
+                    action={
+                      <IconButton>
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title='TOTAL INSTALLED'
+                    subheader='All installed for current month'
+                  />
+                </Card>
+              </Grid>
+            </Grid>
+
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="collapsible table" size="small">
           <TableHead className={classes.thead}>
