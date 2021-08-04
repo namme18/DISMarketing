@@ -95,7 +95,7 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
         <TablePagination 
             rowsPerPageOptions={[10, 15, 20]}
             component='div'
-            count={subscribers?.length -1}
+            count={subscribers?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

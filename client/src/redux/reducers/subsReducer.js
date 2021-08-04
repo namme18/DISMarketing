@@ -4,7 +4,8 @@ export const subsReducer = createSlice({
     name:'subsReducer',
     initialState:{
         subscribers: [],
-        usersubs:[]
+        usersubs:[],
+        appsgen: []
     },
     reducers:{
         loadSubs: (state, action) => {
@@ -33,9 +34,16 @@ export const subsReducer = createSlice({
                 ...state,
                 usersubs: [...state.usersubs.map(sub => action.payload._id === sub._id ? action.payload : sub)]
             }
+        },
+
+        loadAppsGen: (state, action) => {
+            return{
+                ...state,
+                appsgen: action.payload
+            }
         }
     }
 });
 
-export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs } = subsReducer.actions;
+export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen } = subsReducer.actions;
 export default subsReducer.reducer;

@@ -88,8 +88,10 @@ const Row = ({subs, allUsers, subscribers, show}) => {
                 {show && (
                     <>
                     <Typography color='textSecondary' variant='body2' display='inline' noWrap >App#: {subs.applicationno}</Typography>
-                    <Typography color='textSecondary' variant='body2' >JO#: {!subs.joborderno ? 'none' : subs.joborderno}</Typography>
-                    <Typography color='textSecondary' variant='body2' >Acct#: {!subs.accountno ? 'none' : subs.accountno}</Typography>
+                    <br/>
+                    <Typography color='textSecondary' variant='body2' display='inline' noWrap >JO#: {!subs.joborderno ? 'none' : subs.joborderno}</Typography>
+                    <br/>
+                    <Typography color='textSecondary' variant='body2' display='inline' noWrap >Acct#: {!subs.accountno ? 'none' : subs.accountno}</Typography>
                     </>
                 )}
             </TableCell>

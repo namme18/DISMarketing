@@ -43,11 +43,15 @@ exports.getUserSubs = (req, res, next) => {
     if(!dateFrom || !dateTo || !userId) return res.status(400).json({msg: 'No user found!'});
 
     Subs.find({
-        encodeddate: {
-            $gte: new Date(dateFrom),
-            $lte: To
-        },
-        agent: userId
+        agent: userId,
+        $or:[
+            {installeddate: null},
+            {installeddate: {
+                $gte: new Date(dateFrom),
+                $lte: To
+            }},
+            {ispaidtoagent: false}
+        ]
     })
     .sort({encodeddate: -1})
     .then(subscribers => {
@@ -64,11 +68,11 @@ exports.agentUpdate = (req, res, next) => {
 
     Subs.findOne({joborderno})
         .then(subs => {
-            if(subs) return res.status(400).json({msg: 'J.O# Already Exist!'});
+            if(subs && subs._id.toString() !== id) return res.status(400).json({msg: 'J.O# Already Exist!'});
 
             Subs.findOne({accountno})
                 .then(subs => {
-                    if(subs) return res.status(400).json({msg: 'Account# Already Exist!'});
+                    if(subs && subs._id.toString() !== id) return res.status(400).json({msg: 'Account# Already Exist!'});
 
                     Subs.findById(id)
                         .then(subs => {
@@ -124,10 +128,10 @@ exports.getAllSubs = (req, res, next) => {
     if(dateFrom > dateTo) return res.status(400).json({msg: "Invalid date selected, 'Date From' should not be greater than 'Date To'"});
 
     if(search === 'null' || search === ''){
-    return Subs.find({encodeddate:{
-            $gte:dateFrom,
-            $lte:To
-            }
+    return Subs.find({installeddate:{
+                        $gte:dateFrom,
+                        $lte:To
+                    }
         })
         .sort({encodeddate: -1})
         .then(allsubs => {
@@ -142,10 +146,11 @@ exports.getAllSubs = (req, res, next) => {
     }
 
     if(search){
-    return Subs.find({encodeddate:{
-            $gte: dateFrom,
-            $lte: To
-            },
+    return Subs.find({
+            installeddate:{
+                    $gte: dateFrom,
+                    $lte: To
+               },
             $or: [
                 {fullname:{$in : new RegExp(search.split(' '),'i')}},
                 {applicationno: search},
@@ -165,6 +170,26 @@ exports.getAllSubs = (req, res, next) => {
             return;
         })
     }
+
+}
+
+exports.getAppsGen = (req, res, next) => {
+
+    const { todayDate } = req.query;
+    const today = new Date(todayDate);
+
+    Subs.find({encodeddate: {
+        $gte: today
+    }})
+    .then(appsgen => {
+        return res.status(200).json(appsgen);
+    })
+    .catch(err => {
+        return next(err);
+    })
+    .finally(err => {
+        return;
+    })
 
 }
 
