@@ -16,10 +16,10 @@ import {
   CardHeader,
   Avatar,
   IconButton,
-  TextField
+  TextField,
+  Typography
 } from '@material-ui/core';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
-import Row from './Row';
 import { format } from 'date-fns';
 import TodayIcon from '@material-ui/icons/Today';
 import { useSelector, useDispatch } from 'react-redux';
@@ -28,6 +28,7 @@ import { getAppsGen } from '../../redux/reducers/subsActions/getAppsGen';
 import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import Team from './Team';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -77,6 +78,7 @@ const Home = () => {
     const subscribers = useSelector(state => state.subsReducer.subscribers);
     const appsgen = useSelector(state => state.subsReducer.appsgen);
     const activeSubs = subscribers.filter(sub => sub.isActive).length;
+    const teams = allUsers?.filter(user => user.restrictionlevel === 'teamleader');
     
     const [data, setData] = useState({
       dateFrom: format(new Date, 'yyyy-MM-01'),
@@ -156,8 +158,8 @@ const Home = () => {
             <Divider className={classes.divider} />
 
             <Grid container direction='row' justify='flex-start' spacing={2}>
-              <Grid item lg={4} xl={4} md={4} sm={12}>
-                <Card className={classes.card}>
+              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+                <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
                     avatar={
@@ -172,8 +174,8 @@ const Home = () => {
                 </Card>
               </Grid>
 
-              <Grid item lg={4} xl={4} md={4} sm={12}>
-                <Card className={classes.card}>
+              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+                <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
                     avatar={
@@ -188,8 +190,8 @@ const Home = () => {
                 </Card>
               </Grid>
 
-              <Grid item lg={4} xl={4} md={4} sm={12}>
-                <Card className={classes.card}>
+              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+                <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
                     avatar={
@@ -206,25 +208,16 @@ const Home = () => {
             </Grid>
             <Divider className={classes.divider} />
 
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="collapsible table" size="small">
-          <TableHead className={classes.thead}>
-            <TableRow>
-              <TableCell />
-              <TableCell align='center'><strong>TEAMS</strong></TableCell>
-              <TableCell align='center'><strong>INSTALLED</strong></TableCell>
-              <TableCell align='center'><strong>APPSGEN</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {allUsers
-            ?.filter(user => user.restrictionlevel === 'teamleader')
-            .map(tl => (
-              <Row key={tl._id} tl={tl} />
+      <Grid container direction='row' spacing={2}>
+            {teams?.map(team => (
+              <>
+              <Grid item key={team._id} xl={4} lg={4} md={3} sm={12} xs={12}>
+                <Team team={team} subscribers={subscribers} appsgen={appsgen}/>
+              </Grid>
+              </>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      </Grid>
+
         </div>
     </Grow>
   );

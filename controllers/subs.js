@@ -177,7 +177,6 @@ exports.getAppsGen = (req, res, next) => {
 
     const { todayDate } = req.query;
     const today = new Date(todayDate);
-
     Subs.find({encodeddate: {
         $gte: today
     }})

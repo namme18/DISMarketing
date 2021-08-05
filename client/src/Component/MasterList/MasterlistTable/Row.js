@@ -35,11 +35,11 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1)
     },
     address:{
-        width: '200px'
+        width: '150px'
     },
     name:{
         fontWeight: 'bold',
-        width: 'inherit',
+        width: '170px',
         color: theme.palette.secondary.dark
     },
     activated:{
@@ -67,8 +67,9 @@ const Row = ({subs, allUsers, subscribers, show}) => {
                     </Grid>
                     </Hidden>
                     <Grid item lg={2}>
-                        <Typography className={classes.name} display='inline' noWrap>{subs.fullname.map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
-                        <br/>
+                        <Tooltip title={subs.fullname.map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}>
+                            <Typography className={classes.name} display='block' noWrap>{subs.fullname.map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
+                        </Tooltip>
                         {show && (
                             <>
                             <Tooltip title={subs.address}>
