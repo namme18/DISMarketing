@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     avatar:{
@@ -24,14 +25,19 @@ const useStyles = makeStyles(theme => ({
 const Team = ({team, subscribers, appsgen}) => {
 
     const classes = useStyles();
+    const history = useHistory();
     const target = 200;
     const appsGenTarget = 15;
+
+    const handleShowAgents = (id) => {
+        history.push(`/home/home/agents/${id}`);
+    }
 
     return(
         <Card className={classes.card} elevation={5}>
             <CardHeader 
                 avatar={<Avatar className={classes.avatar}>{team.username[0][0].toUpperCase()}</Avatar>}
-                action={<IconButton size='small' className={classes.action}><MoreVertIcon /></IconButton>}
+                action={<IconButton size='small' className={classes.action} onClick={() => handleShowAgents(team._id)}><MoreVertIcon /></IconButton>}
                 title={team.username.toUpperCase()}
                 subheader='Team Leader'
             />

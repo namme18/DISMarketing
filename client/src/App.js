@@ -14,6 +14,7 @@ import VerifiedEmail from './Component/Auth/VerifiedEmail';
 import OMRoute from './helper/OMRoute';
 import ApprovedUser from './Component/ApprovedUser/ApprovedUser';
 import MyAccount from './Component/MyAccount/MyAccount';
+import AgentsPerformance from './Component/Home/AgentsPerformance';
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function App() {
       <Router>
           <Switch>
         <Layout path='/home'>
+            <PrivateRoute exact path='/home/home/agents/:teamleader' component={AgentsPerformance} />
             <PrivateRoute exact path="/home" component={() => <Redirect to='/home/home' />} />
             <PrivateRoute exact path="/home/masterlist" component={MasterList} />
             <PrivateRoute exact path="/home/home" component={Home} />
