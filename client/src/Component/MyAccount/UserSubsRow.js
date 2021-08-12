@@ -7,7 +7,9 @@ import {
     Grid, 
     TextField,
     Select,
-    MenuItem
+    MenuItem,
+    Avatar,
+    Collapse
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import HomeIcon from '@material-ui/icons/Home';
@@ -38,7 +40,14 @@ const useStyles = makeStyles(theme => ({
             height: theme.spacing(2.5),
             fontSize: 'small'
         }
-    }
+    },
+    avatar:{
+        width: theme.spacing(2),
+        height: theme.spacing(2),
+        backgroundColor: theme.palette.secondary.light,
+        margin: theme.spacing(0, 1, 0, 0),
+        fontSize: 'small'
+    },
 }))
 
 const UserSubsRow = ({sub, index}) => {
@@ -186,10 +195,10 @@ const UserSubsRow = ({sub, index}) => {
         <TableRow key={sub._id}>
             <TableCell>
                 <Grid container direction='row' justify='space-between' display='inline' noWrap >
-                <Typography onClick={handleClick} style={{cursor: 'pointer', fontWeight:'bold'}} variant='subtitle2' >
+                <Typography onClick={handleClick} style={{cursor: 'pointer', fontWeight:'bold'}} variant='subtitle2'>
                     {showDetails ? <KeyboardArrowUpIcon color='secondary' className={classes.details} /> : <KeyboardArrowDownIcon color='secondary' className={classes.details} /> } 
                     <Badge badgeContent={sub.isActive ? 'A' : sub.remarks?.split(' ').map(i => i[0].toUpperCase())} color={sub.isActive ? 'primary' : 'secondary'}>
-                        {`${index+1}: ${sub.fullname.map(name => name.toLowerCase()).map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}
+                    <Avatar className={classes.avatar}>{index+1}</Avatar>{` ${sub.fullname.map(name => name.toLowerCase()).map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}
                     </Badge>
                 </Typography>
                     {!sub.isActive && (
@@ -213,8 +222,7 @@ const UserSubsRow = ({sub, index}) => {
                                 )
                     )}
                 </Grid>
-                {showDetails && (
-                    <>
+                <Collapse in={showDetails} timeout='auto' unmountOnExit>
                     <form noValidate autoComplete='off'>
                     <Typography color='textSecondary' variant='body2' >
                         <HomeIcon color='secondary' className={classes.details} /> 
@@ -340,8 +348,7 @@ const UserSubsRow = ({sub, index}) => {
                         )}
                         </Typography>
                     </form>
-                    </>
-                )}
+                </Collapse>
                 </TableCell>
         </TableRow>
     )

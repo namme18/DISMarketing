@@ -1,10 +1,10 @@
-import { Grid, Grow, Typography, Chip, Divider } from '@material-ui/core';
+import { Grid, Grow, Chip, Divider } from '@material-ui/core';
 import React from 'react';
 import { format } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 import TodayIcon from '@material-ui/icons/Today';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import APRow from './APRow';
 
@@ -27,7 +27,7 @@ const AgentsPerformance = () => {
     const classes = useStyles();
     const { teamleader } = useParams();
     const { allUsers } = useSelector(state => state.authReducer);
-    const agents = allUsers.filter(user => teamleader === user._id || teamleader === user.teamleader);
+    const agents = allUsers?.filter(user => teamleader === user._id || teamleader === user.teamleader);
 
     return(
         <Grow in>
@@ -55,7 +55,7 @@ const AgentsPerformance = () => {
                 <Divider className={classes.divider} />
 
                 <Grid container spacing={2} direction='row'>
-                    {agents.map(agent => (
+                    {agents?.map(agent => (
                         <>
                         <Grid item key={agent._id} xl={4} lg={4} md={3} sm={12} xs={12}>
                             <APRow agent={agent} />

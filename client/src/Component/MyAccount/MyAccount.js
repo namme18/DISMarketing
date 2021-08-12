@@ -7,10 +7,7 @@ import {
     Tooltip,
     Badge,
     Typography,
-    Button,
     TextField,
-    Box,
-    Tabs,
     Tab,
     AppBar,
     TableContainer,
@@ -20,7 +17,7 @@ import {
     Paper,
     TableCell,
     TableBody,
-    TablePagination
+    TablePagination,
 } from '@material-ui/core';
 import {
     TabContext,
@@ -37,6 +34,9 @@ import AddSubsModal from './AddSubsModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserSubs } from '../../redux/reducers/subsActions/getuserSubs';
 import UserSubsRow from './UserSubsRow';
+import InstalledSubsRow from './installedSubsRow';
+import Payout from './Payout';
+import dislogo from '../../images/converge-logo.png'
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -58,8 +58,11 @@ const useStyles = makeStyles(theme => ({
         }
     },
     tabAppbar:{
-        borderRadius: '30px',
+        borderRadius: '5px 5px 0 0',
         padding: 0,
+    },
+    tabPanel1:{
+        padding: '1px'
     },
     tableheaderCell:{
         fontWeight: 'bold',
@@ -67,10 +70,17 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.getContrastText(theme.palette.primary.dark)
     },
     container:{
-        maxHeight: '45vh',
+        maxHeight: '50vh',
     },
     table:{
         width: 'inherit'
+    },
+    avatarCard:{
+        background: theme.palette.warning.light,
+    },
+    card:{
+        maxHeight: '60vh',
+        overflowY: 'scroll'
     }
 }));
 
@@ -79,14 +89,30 @@ const MyAccount = () => {
     const classes = useStyles();
     const usersubs = useSelector(state => state.subsReducer?.usersubs);
     const userId = useSelector(state => state.authReducer.user._id);
+    const user = useSelector(state => state.authReducer.user);
     const installedCount = usersubs && usersubs.filter(sub => sub.remarks === 'installed')?.length;
+    const installedSubs = usersubs && usersubs.filter(sub => sub.remarks === 'installed');
+    const activePayout = usersubs.filter(sub => sub.isActive && !sub.ispaidtoagent);
+    const payoutFrom = activePayout?.map(sub => format(new Date(sub.installeddate), 'do MMMM Y')).reduce((a, b) => a < b && a !== format(new Date('01-01-1992'), 'do MMMM Y') ? a : b, format(new Date('01-01-1992'), 'do MMMM Y'));
+    const payoutTo = activePayout?.map(sub => format(new Date(sub.installeddate), 'do MMMM Y')).reduce((a, b) => a > b && a !== format(new Date('01-01-1992'), 'do MMMM Y') ? a : b, format(new Date('01-01-1992'), 'do MMMM Y'));
     const dispatch = useDispatch();
+
+    //commision declaration and computation
+    const commiPercentage = activePayout.length <= 4 ? .40 : activePayout.length >= 5 ? .50 : null;
+    const VAT = .05;
+    const SSS = 0;
+    const PHIC = 0;
+    const HDMF = 0;
+    const CA = user.cashadvance || 0;
+    const commiArray = activePayout?.map(sub => parseInt(sub.plan*commiPercentage));
+    const totalCommi = commiArray.reduce((a, b) => a + b, 0);
+    const deductions = parseFloat(totalCommi - ((totalCommi*VAT)+SSS+PHIC+HDMF+CA)).toFixed(2);
     
     const [openModal, setOpenModal] = useState(false);
 
     const [data, setData] = useState({
-        dateFrom: format(new Date, 'yyyy-MM-01'),
-        dateTo: format(new Date, 'yyyy-MM-dd'),
+        dateFrom: format(new Date(), 'yyyy-MM-01'),
+        dateTo: format(new Date(), 'yyyy-MM-dd'),
     });
 
     const [value, setValue] = useState('1');
@@ -128,6 +154,7 @@ const MyAccount = () => {
     }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, usersubs?.length - page * rowsPerPage);
+    const emptyRows2 = rowsPerPage - Math.min(rowsPerPage, installedSubs?.length - page * rowsPerPage);
 
     return (
         <Grow in>
@@ -199,11 +226,11 @@ const MyAccount = () => {
                         >
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={usersubs?.length} color='secondary'>AllSUBS</Badge></Typography>} value='1' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={installedCount ? installedCount : '0'} color='secondary'>INSTALLED</Badge></Typography>} value='2' />
-                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={5} color='secondary'>FOR PAYOUT</Badge></Typography>} value='3' />
+                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={activePayout.length || '0'} color='secondary'>FOR PAYOUT</Badge></Typography>} value='3' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={5} color='secondary'>PAIDSUBS</Badge></Typography>} value='4' />
                         </TabList>
                     </AppBar>
-                        <TabPanel value='1'>
+                        <TabPanel className={classes.tabPanel1} value='1'>
                             <>
                             <TableContainer component={Paper} className={classes.container} maxWidth='xl'>
                                 <Table stickyHeader aria-label='allsubs' classname={classes.table} size='small'>
@@ -246,9 +273,48 @@ const MyAccount = () => {
                             />
                             </>
                         </TabPanel>
-                        <TabPanel value='2'>item2</TabPanel>
-                        <TabPanel value='3'>item3</TabPanel>
-                        <TabPanel value='4'>item4</TabPanel>
+                        <TabPanel className={classes.tabPanel1} value='2'>
+                        <>
+                            <TableContainer component={Paper} className={classes.container} maxWidth='xl'>
+                                <Table stickyHeader aria-label='allsubs' classname={classes.table} size='small'>
+                                    <TableHead fullWidth    >
+                                        <TableRow>
+                                            <TableCell className={classes.tableheaderCell}>
+                                                <Grid container direction='row' justify='space-between'>
+                                                    <Typography className={classes.name}>Name</Typography>
+                                                </Grid>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {installedSubs?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                  .map((sub, index) => (
+                                            <InstalledSubsRow sub={sub} index={index + rowsPerPage * page}/>
+                                            ))}
+                                        {emptyRows2 > 0 && (
+                                                <TableRow style={{height: 33 * emptyRows2 }}>
+                                                    <TableCell colSpan={6} />
+                                                </TableRow>
+                                            )
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination 
+                                rowsPerPageOptions={[10, 15, 20]}
+                                component='div'
+                                count={installedSubs?.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={handleChangePage}
+                                onChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                            </>
+                        </TabPanel>
+                        <TabPanel className={classes.tabPanel1} value='3'>
+                            <Payout dislogo={dislogo} payoutFrom={payoutFrom} payoutTo={payoutTo} deductions={deductions} classes={classes} SSS={SSS} PHIC={PHIC} CA={CA} totalCommi={totalCommi} VAT={VAT} user={user} HDMF={HDMF} commiPercentage={commiPercentage} activePayout={activePayout}  />
+                        </TabPanel>
+                        <TabPanel className={classes.tabPanel1} value='4'>item4</TabPanel>
                 </TabContext>
                 <AddSubsModal openModal={openModal} setOpenModal={setOpenModal} />
             </div>

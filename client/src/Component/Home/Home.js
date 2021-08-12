@@ -1,13 +1,6 @@
 import React,{ useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Grow,
   Grid,
   Chip,
@@ -15,9 +8,7 @@ import {
   Card,
   CardHeader,
   Avatar,
-  IconButton,
   TextField,
-  Typography
 } from '@material-ui/core';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 import { format } from 'date-fns';
@@ -78,11 +69,11 @@ const Home = () => {
     const subscribers = useSelector(state => state.subsReducer.subscribers);
     const appsgen = useSelector(state => state.subsReducer.appsgen);
     const activeSubs = subscribers.filter(sub => sub.isActive).length;
-    const teams = allUsers?.filter(user => user.restrictionlevel === 'teamleader');
+    const teams = allUsers?.filter(user => user.restrictionlevel !== 'agent');
     
     const [data, setData] = useState({
-      dateFrom: format(new Date, 'yyyy-MM-01'),
-      dateTo: format(new Date, 'yyyy-MM-dd'),
+      dateFrom: format(new Date(), 'yyyy-MM-01'),
+      dateTo: format(new Date(), 'yyyy-MM-dd'),
       search: ''
     });
 

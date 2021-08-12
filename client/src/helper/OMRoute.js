@@ -2,7 +2,7 @@ import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const OMRoute = ({component: Component, ...rest}) => {
-    const { restrictionlevel } = useSelector(state => state.authReducer.user);
+    const restrictionlevel = useSelector(state => state.authReducer.user?.restrictionlevel);
     return(
         <Route 
             {...rest}

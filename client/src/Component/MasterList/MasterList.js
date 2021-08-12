@@ -8,18 +8,14 @@ import {
     TextField,
     InputBase,
     IconButton,
-    Tooltip,
-    FormControlLabel,
     Checkbox,
-    Typography,
     Badge,
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import TodayIcon from '@material-ui/icons/Today';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 import ListIcon from '@material-ui/icons/List';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
@@ -91,8 +87,8 @@ const MasterList = () => {
     const query = useQuery();
 
     const [data, setData] = useState({
-        dateFrom: query.get('dateFrom') || format(new Date, 'yyyy-MM-01'),
-        dateTo: query.get('dateTo') || format(new Date, 'yyyy-MM-dd'),
+        dateFrom: query.get('dateFrom') || format(new Date(), 'yyyy-MM-01'),
+        dateTo: query.get('dateTo') || format(new Date(), 'yyyy-MM-dd'),
         search: query.get('search')
     });
 

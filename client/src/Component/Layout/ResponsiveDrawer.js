@@ -20,7 +20,7 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
-    const { restrictionlevel } = useSelector(state => state.authReducer?.user);
+    const restrictionlevel = useSelector(state => state.authReducer.user?.restrictionlevel);
 
     const menuItem = [
         {   
@@ -43,9 +43,9 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
         },
         {
             for: 'private',
-            text: 'Approve Agents',
+            text: 'Admin',
             icon: <TouchAppIcon color='secondary' />,
-            path: '/home/approveduser'
+            path: '/home/admin'
         }
     ]
 
