@@ -171,7 +171,7 @@ const Auth = () => {
                     {data.isLogin ? 'Login' : data.isSignUp ? 'SignUp' : 'Forgot Password'}
                 </Typography>
 
-                <form className={classes.form} spacing={5} noValidate  autoComplete='off' onSubmit={onSubmit}>
+                <form className={classes.form} spacing={5} noValidate onSubmit={onSubmit}>
                     <Grid container spacing={2}>
                         {data.isSignUp && (
                             <>

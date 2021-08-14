@@ -188,10 +188,10 @@ const Row = ({user, users}) => {
                     </Grid>
 
                     <Grid container  direction='row' justify='flex-start' alignItems='center'>
-                    <Typography style={{marginLeft:'5%'}} variant='body2' color='textSecondary'><strong>Restriction Level:</strong></Typography>
+                        <Typography style={{marginLeft:'5%'}} variant='body2' color='textSecondary'><strong>Restriction Level:</strong></Typography>
                     &nbsp;&nbsp;
                         <div>
-                        <Select  name='restrictionlevel' displayEmpty className={classes.resSelect} onChange={onChange}>
+                        <Select name='restrictionlevel' displayEmpty className={classes.resSelect} onChange={onChange}>
                                 <MenuItem disabled><Typography variant='body2' color='textSecondary'>{user.restrictionlevel}</Typography></MenuItem>
                             {menuItem.map(item => (
                                 <MenuItem value={item.value}><Typography variant='body2' color='textSecondary'>{item.name}</Typography></MenuItem>

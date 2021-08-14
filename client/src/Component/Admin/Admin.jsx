@@ -18,6 +18,7 @@ import AccessibilityIcon from '@material-ui/icons/Accessibility';
 import TodayIcon from '@material-ui/icons/Today';
 import ApprovedUser from './ApprovedUser';
 import { makeStyles } from '@material-ui/core/styles';
+import Payroll from './Payroll/Payroll';
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -84,7 +85,7 @@ const Admin = () => {
                     scrollButtons='on'
                 >
                     <Tab value='1' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
-                    <Tab value='2' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
+                    <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
                     <Tab value='3' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
                     <Tab value='4' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
                 </TabList>
@@ -92,7 +93,9 @@ const Admin = () => {
                 <TabPanel className={classes.tabPanel1} value='1'>
                     <ApprovedUser />
                 </TabPanel>
-                <TabPanel className={classes.tabPanel1} value='2'>tab2</TabPanel>
+                <TabPanel className={classes.tabPanel1} value='2'>
+                    <Payroll />
+                </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='3'>tab3</TabPanel>
                 <TabPanel className={classes.tabPanel1} value='4'>tab4</TabPanel>
             </TabContext>

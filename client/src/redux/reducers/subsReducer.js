@@ -5,7 +5,8 @@ export const subsReducer = createSlice({
     initialState:{
         subscribers: [],
         usersubs:[],
-        appsgen: []
+        appsgen: [],
+        forpayout: null
     },
     reducers:{
         loadSubs: (state, action) => {
@@ -41,9 +42,16 @@ export const subsReducer = createSlice({
                 ...state,
                 appsgen: action.payload
             }
+        },
+
+        forPayoutList: (state, action) => {
+            return{
+                ...state,
+                forpayout: action.payload
+            }
         }
     }
 });
 
-export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen } = subsReducer.actions;
+export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList } = subsReducer.actions;
 export default subsReducer.reducer;

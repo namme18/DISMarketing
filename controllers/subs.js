@@ -107,6 +107,21 @@ exports.agentUpdate = (req, res, next) => {
 
 }
 
+exports.forPayout = (req, res, next) => {
+
+    Subs.find({isActive: true, ispaidtoagent: false})
+        .then(subs => {
+            return res.status(200).json(subs);
+        })
+        .catch(err => {
+            return next(err);
+        })
+        .finally(() => {
+            return;
+        })
+
+}
+
 exports.deleteSubs = (req, res, next) => {
     Subs.deleteMany()
         .then(result => {
