@@ -11,6 +11,7 @@ import PerAgent from './PerAgent';
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     teamleader:{
@@ -49,22 +50,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const PerTeam = ({teamleader, allusers, forpayout, setData, data}) => {
+const PerTeam = ({teamleader, allusers, forpayout}) => {
 
     const classes = useStyles();
+    const agentIncome = useSelector(state => state.subsReducer.agentIncome);
     const [showAgents, setShowAgents] = useState(true);
-    const [teamPayout, setTeamPayout] = useState([]);
-    const totalTeamPayout = teamPayout.map(pay => parseFloat(pay)).reduce((a, b) => a + b, 0).toFixed(2);
+    const teamPayout = agentIncome?.filter(agent => agent.id === teamleader._id).map(ic => ic.plan);
+    const totalTeamPayout = teamPayout?.map(pay => parseFloat(pay)).reduce((a, b) => a + b, 0).toFixed(2);
     const agents = allusers?.filter(user => user.teamleader === teamleader._id || user._id === teamleader._id);
     const payout = forpayout?.filter(sub => teamleader._id === sub.teamleader).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
-
-    // const [ team ] = allusers?.filter(user => user._id === teamleader);
-    // const payout = forpayout?.filter(sub => teamleader === sub.teamleader).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0);
 
     const handleClickteam = () => {
         setShowAgents(!showAgents);
     }
-
 
     return(
         <div>
@@ -80,8 +78,8 @@ const PerTeam = ({teamleader, allusers, forpayout, setData, data}) => {
                     <Typography className={classes.payout} variant='subtitle1'>{totalTeamPayout}</Typography>
                 </Grid>
                 <Collapse in={showAgents} timeout='auto' unmountOnExit>
-                    {agents.map(agent => (
-                        <PerAgent agent={agent} forpayout={forpayout} setTeamPayout={setTeamPayout} teamPayout={teamPayout} />
+                    {agents.map((agent) => (
+                        <PerAgent key={agent._id} teamleader={teamleader} agent={agent} forpayout={forpayout} />
                     ))}
                 </Collapse>
                  <Divider/>

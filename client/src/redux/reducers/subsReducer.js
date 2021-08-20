@@ -6,6 +6,8 @@ export const subsReducer = createSlice({
         subscribers: [],
         usersubs:[],
         appsgen: [],
+        agentIncome:[],
+        checkedSubs:[],
         forpayout: null
     },
     reducers:{
@@ -49,9 +51,30 @@ export const subsReducer = createSlice({
                 ...state,
                 forpayout: action.payload
             }
+        },
+
+        addAgentIncome: (state, action) => {
+            return{
+                ...state,
+                agentIncome: [
+                    ...state.agentIncome.filter(agent => agent.agentId !== action.payload.agentId),
+                    {agentId:action.payload.agentId, id: action.payload.id, plan: action.payload.plan}
+                    
+                ]
+            }
+        },
+
+        loadCheckedSubs: (state, action) => {
+            return{
+                ...state,
+                checkedSubs: [
+                    ...state.checkedSubs.filter(agent => agent.agentId !== action.payload.agentId),
+                    action.payload
+                ]
+            }
         }
     }
 });
 
-export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList } = subsReducer.actions;
+export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs } = subsReducer.actions;
 export default subsReducer.reducer;

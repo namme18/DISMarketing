@@ -9,12 +9,17 @@ import useStyles from './style';
 import PerSubs from './PerSubs';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { addAgentIncome } from '../../../redux/reducers/subsReducer';
+import { useDispatch } from 'react-redux';
+import { loadCheckedSubs } from '../../../redux/reducers/subsReducer';
 
-const PerAgent = ({agent, forpayout, setTeamPayout, teamPayout}) => {
+const PerAgent = ({agent, teamleader, forpayout}) => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [showSubs, setShowSubs] = useState(true);
-    const payout = forpayout?.filter(sub => sub.agent === agent._id).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
+    const [checkedSubs, setCheckedSubs] = useState([]);
+    const payout = checkedSubs?.filter(sub => sub.agent === agent._id).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
     const subscribers = forpayout?.filter(sub => sub.agent === agent._id);
     
     const handleClickAgent = () => {
@@ -27,15 +32,32 @@ const PerAgent = ({agent, forpayout, setTeamPayout, teamPayout}) => {
     const PHIC = 0;
     const HDMF = 0;
     const CA = agent.cashadvance || 0;
-    const totalCommi = parseInt(payout*commiPercentage);
+    const totalCommi = parseFloat(payout*commiPercentage);
     const deductions = parseFloat((totalCommi*VAT)+SSS+PHIC+HDMF+CA).toFixed(2);
     const netIncome = parseFloat(totalCommi - ((totalCommi*VAT)+SSS+PHIC+HDMF+CA)).toFixed(2);
-    
+
     useEffect(() => {
-        if(netIncome > 0){
-            setTeamPayout([...teamPayout, netIncome]);
+        if(subscribers.length > 0){
+            setCheckedSubs(subscribers);
         }
     },[]);
+
+    useEffect(() => {
+            const data = {
+                agentId: agent._id,
+                subs: checkedSubs.map(sub => sub)
+            }
+            dispatch(loadCheckedSubs(data));
+    },[checkedSubs]);
+
+    useEffect(() => {
+            const data = {
+                agentId: agent._id,
+                id:teamleader._id,
+                plan: netIncome
+            }
+            dispatch(addAgentIncome(data));
+    },[netIncome]);
 
     return(
         <div>
@@ -50,7 +72,7 @@ const PerAgent = ({agent, forpayout, setTeamPayout, teamPayout}) => {
                 </Grid>
                 <Collapse in={showSubs} timeout='auto' unmountOnExit>
                     {subscribers?.map((sub, index) => (
-                        <PerSubs sub={sub} index={index} commiPercentage={commiPercentage}/>
+                        <PerSubs key={sub._id} checkedSubs={checkedSubs} setCheckedSubs={setCheckedSubs} sub={sub} index={index} commiPercentage={commiPercentage}/>
                     ))}
                     <Grid container direction='column' justify='center' alignItems='flex-end'>
                         <Typography variant='caption' >Deductions - &nbsp;&nbsp;&nbsp;{deductions}</Typography>

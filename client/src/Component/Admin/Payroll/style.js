@@ -40,5 +40,11 @@ export default makeStyles(theme => ({
         backgroundColor: theme.palette.warning.light,
         padding: theme.spacing(0, 0.5),
         marginBottom: theme.spacing(0.5),
+    },
+    checked:{
+        '& .MuiSvgIcon-fontSizeSmall': {
+            fontSize: theme.spacing(2)
+        },
+        padding: theme.spacing(0, .5, 0,0),
     }
 }));
