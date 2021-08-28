@@ -80,6 +80,10 @@ const SubsSchema = mongoose.Schema({
     installeddate: {
         type: Date,
         default: null
+    },
+    datepaidtoagent: {
+        type: Date,
+        default: null
     }
 });
 

@@ -44,7 +44,38 @@ const UserSchema = mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     verifyEmailToken: String,
-    verifyEmailExpire: Date
+    verifyEmailExpire: Date,
+    incentives:{
+        type: [Object],
+        default: null
+    },
+    deductions:{
+        type: [Object],
+        default: null
+    },
+    fordeductions:{
+        type: [Object],
+        default: [
+            {
+                remarks: 'sample 1',
+                amount: 1000,
+                payment:[],
+                date: Date.now()
+            },
+            {
+                remarks: 'sample 2',
+                amount: 500,
+                payment:[],
+                date: Date.now()
+            },
+            {
+                remarks: 'sample 3',
+                amount: 300,
+                payment:[],
+                date: Date.now()
+            }
+        ]
+    }
 });
 
 const User = mongoose.model('User', UserSchema);

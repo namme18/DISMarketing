@@ -46,5 +46,25 @@ export default makeStyles(theme => ({
             fontSize: theme.spacing(2)
         },
         padding: theme.spacing(0, .5, 0,0),
+    },
+    incentivesDeductions:{
+        height: theme.spacing(1.5),
+        width: theme.spacing(1.5),
+        '&:hover':{
+            height: theme.spacing(2),
+             width: theme.spacing(2),
+        },
+        color: theme.palette.secondary.main,
+        marginRight: '4px',
+        cursor:'pointer'
+    },
+    IDTF:{
+        '& .MuiInputBase-input':{
+            padding: 0,
+            fontSize: 'small',
+        },
+        '& .MuiTypography-body2':{
+            fontSize: 'small'
+        }
     }
 }));

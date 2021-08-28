@@ -37,6 +37,7 @@ import UserSubsRow from './UserSubsRow';
 import InstalledSubsRow from './installedSubsRow';
 import Payout from './Payout';
 import dislogo from '../../images/converge-logo.png'
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -44,6 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
     chip:{
       marginRight: theme.spacing(2),
+      borderRadius: '0',
       [theme.breakpoints.down('sm')]:{
         marginBottom: theme.spacing(2),
         width: '100%'
@@ -87,6 +89,7 @@ const useStyles = makeStyles(theme => ({
 const MyAccount = () => {
 
     const classes = useStyles();
+    const history = useHistory();
     const usersubs = useSelector(state => state.subsReducer?.usersubs);
     const userId = useSelector(state => state.authReducer.user._id);
     const user = useSelector(state => state.authReducer.user);
@@ -159,7 +162,7 @@ const MyAccount = () => {
     return (
         <Grow in>
             <div>
-                <Grid container alignItems='center' justify='flex-start'>
+                <Grid container alignItems='flex-end' justify='flex-start'>
                     <Chip
                         sm={12}
                         className={classes.chip}

@@ -13,4 +13,5 @@ router.post('/validate', auth, validateUser);
 router.put('/approveduser', auth, approvedUser);
 router.get('/allusers', auth, getAllUser);
 
+
 module.exports = router;

@@ -37,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     },
     chip:{
       marginRight: theme.spacing(2),
+      borderRadius: '0',
       [theme.breakpoints.down('sm')]:{
         marginBottom: theme.spacing(2),
         width: '100%'

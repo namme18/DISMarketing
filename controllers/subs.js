@@ -1,5 +1,3 @@
-const { getTime, getMinutes, getMilliseconds, getHours } = require('date-fns');
-const { query, application } = require('express');
 const Subs = require('../model/Subs');
 const User = require('../model/User');
 
@@ -35,6 +33,60 @@ exports.addSubs = (req, res, next) => {
 
 }
 
+exports.removeIncentivesDeductions = (req, res, next) => {
+
+    const { type, userId, remarks } = req.body;
+    User.findById(userId)
+        .then(user => {
+            if(!user) return res.status(400).json({ msg: 'User does not exist!' });
+            if(type === 'incentives'){
+                user.incentives = user.incentives.filter(inc => inc.remarks !== remarks);
+            }else if(type === 'deductions'){
+                const [ forded ] = user.fordeductions?.filter(ded => ded.remarks === remarks);
+                const lastIndex = forded.payment.length - 1;
+                const [ lastIndexPayment ] = forded.payment.filter((a, i) => i === lastIndex);
+                const lastIndexAmount = lastIndexPayment.amount;
+                user.deductions = user.deductions.filter(ded => ded.remarks !== remarks);
+                user.fordeductions = [...user.fordeductions.map(ded => ded.remarks === remarks ? {...ded, amount: parseFloat(ded.amount) + parseFloat(lastIndexAmount), payment:[...ded.payment.filter((pay, index) => index !== lastIndex)]} : ded)];
+            }
+
+            user.save();
+
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
+exports.addIncentivesDeductions = (req, res, next) => {
+
+    const { type, userId, remarks, amount } = req.body;
+    const newData = {
+        remarks,
+        amount
+    }
+    User.findById(userId)
+        .then(user => {
+            if(!user) return res.status(400).json({ msg: 'User does not exist!' });
+            const index = type === 'incentives' ? user.incentives.findIndex(rem => rem.remarks === remarks) : user.deductions.findIndex(rem => rem.remarks === remarks) ;
+            if(index > -1) return res.status(400).json({ msg: 'Please enter unique remarks' });
+            if(type === 'incentives'){
+                user.incentives =  [ ...user.incentives, newData]
+            }else if(type === 'deductions'){
+                user.deductions =  [ ...user.deductions, newData];
+                user.fordeductions = [...user.fordeductions.map(ded => ded.remarks === remarks ? {...ded, amount: ded.amount - amount, payment:[...ded.payment, {amount: amount, date: new Date()}]} : ded)];
+            }
+            user.save();
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
 exports.getUserSubs = (req, res, next) => {
     const { dateFrom, dateTo, userId } = req.query;
     const cDate = new Date();
@@ -61,6 +113,32 @@ exports.getUserSubs = (req, res, next) => {
         return next(err);
     })
 
+}
+
+exports.paymentToAgent = (req, res, next) => {
+    const subscribers = req.body;
+
+    Subs.bulkWrite(
+        subscribers.map(sub => ({
+            updateOne:{
+               filter:{_id: sub._id,},
+               update:{$set:{ispaidtoagent: true, datepaidtoagent: new Date()}}
+            }
+        }))
+    )
+    .then(async result => {
+        const users = await User.find({});
+        users.map(user => {
+            user.incentives = [];
+            user.deductions = [];
+            user.fordeductions = [...user.fordeductions.filter(ded => ded.amount > 0)];
+            user.save();
+        })
+       return res.status(200).json({matched: result.nMatched, updated: result.nModified});
+    })
+    .catch(err => {
+        return next(err);
+    })
 }
 
 exports.agentUpdate = (req, res, next) => {

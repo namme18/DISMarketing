@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     chip:{
       marginRight: theme.spacing(2),
+      borderRadius: '0',
       [theme.breakpoints.down('sm')]:{
         marginBottom: theme.spacing(2),
         width: '100%'
@@ -92,7 +93,7 @@ const Home = () => {
   return (
     <Grow in>
         <div>
-            <Grid container alignItems='center' justify='flex-start' >
+            <Grid container alignItems='flex-end' justify='flex-start' >
                 <Chip
                     sm={12}
                     className={classes.chip}

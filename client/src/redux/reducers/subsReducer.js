@@ -72,9 +72,17 @@ export const subsReducer = createSlice({
                     action.payload
                 ]
             }
-        }
+        },
+
+        removedPaid: (state, action) => {
+            return{
+                ...state,
+                checkedSubs: [...state.checkedSubs.filter(ch => ch.agentId === action.payload.map(sub => `${sub.agent} ||`))],
+                agentIncome: [...state.agentIncome.filter(ch => ch.agentId === action.payload.map(sub => `${sub.agent} ||`))]
+            }
+        },
     }
 });
 
-export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs } = subsReducer.actions;
+export const { loadSubs, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
 export default subsReducer.reducer;
