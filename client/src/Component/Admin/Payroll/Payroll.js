@@ -111,8 +111,8 @@ const Payroll = () => {
         <Card elevation={6} className={classes.card}>
             <CardContent>
                 <Grid container direction='row' alignItems='center' justify='center' spacing={2} className={classes.container}>
-                    <Grid item key='DISMarketin'>
-                        <img alt='DISMarketin' src={dislogo} style={{height:80}} />
+                    <Grid item key='DISMarketing'>
+                        <img alt='DISMarketing' src={dislogo} style={{height:80}} />
                     </Grid>
                     <Grid item key='headers'>
                         <Typography align='center' style={{lineHeight:'17px'}} variant='h6' comnponent='p'>DIS Marketing Services</Typography>

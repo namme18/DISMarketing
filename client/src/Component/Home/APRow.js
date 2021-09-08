@@ -27,7 +27,6 @@ const APRow = ({agent}) => {
         }
     },[]);
 
-    console.log(installedSubs);
     return(
         <Card className={classes.card} elevation={5}>
             <CardHeader 

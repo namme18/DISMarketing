@@ -109,7 +109,7 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
             plan, 
             remarks,
             agent: user._id,
-            teamleader: user.restrictionlevel === 'operation manager' || 'teamleader' || 'owner' ? user._id : user.teamleader
+            teamleader: user.restrictionlevel === 'agent' ? user.teamleader : user._id
         }
 
        dispatch(addSubs(newSubscriber));

@@ -90,7 +90,8 @@ const MyAccount = () => {
 
     const classes = useStyles();
     const history = useHistory();
-    const usersubs = useSelector(state => state.subsReducer?.usersubs);
+    const usersubs1 = useSelector(state => state.subsReducer?.usersubs);
+    const usersubs = usersubs1?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
     const userId = useSelector(state => state.authReducer.user._id);
     const user = useSelector(state => state.authReducer.user);
     const installedCount = usersubs && usersubs.filter(sub => sub.remarks === 'installed')?.length;
@@ -107,7 +108,7 @@ const MyAccount = () => {
     const PHIC = 0;
     const HDMF = 0;
     const CA = user.cashadvance || 0;
-    const commiArray = activePayout?.map(sub => parseInt(sub.plan*commiPercentage));
+    const commiArray = activePayout?.map(sub => parseFloat(sub.plan*commiPercentage));
     const totalCommi = commiArray.reduce((a, b) => a + b, 0);
     const deductions = parseFloat(totalCommi - ((totalCommi*VAT)+SSS+PHIC+HDMF+CA)).toFixed(2);
     

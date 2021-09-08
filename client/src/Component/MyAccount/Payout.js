@@ -10,6 +10,8 @@ import {
 import { format } from 'date-fns';
 
 const Payout = ({dislogo, deductions, payoutFrom, payoutTo, classes, SSS, PHIC, CA, totalCommi, VAT, user, HDMF, commiPercentage, activePayout}) => {
+        const incentives = user.incentives?.map(inc => parseFloat(inc.amount)).reduce((a, b) => a + b, 0).toFixed(2);
+        const deductions2 = user.deductions?.map(ded => parseFloat(ded.amount)).reduce((a, b) => a + b, 0).toFixed(2);
     return(
         <Card className={classes.card} elevation={5}>
             <CardContent>
@@ -45,7 +47,18 @@ const Payout = ({dislogo, deductions, payoutFrom, payoutTo, classes, SSS, PHIC, 
                     <>
                     <Box display='flex' justifyContent='space-between' alignItems='center'>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${sub.fullname.map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
-                        <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{sub.plan}|P{parseInt(sub.plan)*commiPercentage}</Typography>
+                        <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{sub.plan}|P{(parseFloat(sub.plan)*parseFloat(commiPercentage)).toFixed(2)}</Typography>
+                    </Box>
+                    </>
+                ))}
+                <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    <Typography variant='subtitle1'><strong>Incentives</strong></Typography>
+                </Box>
+                {user.incentives?.map(inc => (
+                    <>
+                    <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${inc.remarks?.split(' ').map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
+                        <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>P{parseFloat(inc.amount).toFixed(2)}</Typography>
                     </Box>
                     </>
                 ))}
@@ -71,10 +84,18 @@ const Payout = ({dislogo, deductions, payoutFrom, payoutTo, classes, SSS, PHIC, 
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>VAT 5%</Typography>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{parseFloat(totalCommi*VAT).toFixed(2)}</Typography>
                     </Box>
+                    {user.deductions?.map(ded => (
+                        <>
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${ded.remarks?.split(' ').map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
+                            <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{parseFloat(ded.amount).toFixed(2)}</Typography>
+                        </Box>
+                        </>
+                     ))}
                     <Divider />
                     <Box display='flex' justifyContent='space-between' alignItems='center'>
                         <Typography variant='subtitle1'><strong>Net Income</strong></Typography>
-                        <Typography variant='subtitle1'><strong>P{deductions}</strong></Typography>
+                        <Typography variant='subtitle1'><strong>{parseFloat(deductions)+parseFloat(incentives)-parseFloat(deductions2).toFixed(2)}</strong></Typography>
                     </Box>
             </CardContent>
         </Card>

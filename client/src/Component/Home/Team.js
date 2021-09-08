@@ -54,7 +54,7 @@ const Team = ({team, subscribers, appsgen}) => {
                    </Grid>
                    <Grid container item spacing={1} direction='row' alignItems='center'>
                        <Grid item xs={11}>
-                        <LinearProgress variant='determinate' value={(subscribers.length/200)*100} /> 
+                        <LinearProgress variant='determinate' value={`${Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100)}`} /> 
                        </Grid>
                        <Grid item xs={1}>
                         <Typography variant='body2' color='textSecondary'>{`${Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100)}%`}</Typography>

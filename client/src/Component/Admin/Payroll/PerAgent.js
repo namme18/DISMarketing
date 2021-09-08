@@ -31,7 +31,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
     const [showSubs, setShowSubs] = useState(true);
     const [checkedSubs, setCheckedSubs] = useState([]);
     const payout = checkedSubs?.filter(sub => sub.agent === agent._id).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
-    const subscribers = forpayout?.filter(sub => sub.agent === agent._id);
+    const subscribers = forpayout?.filter(sub => sub.agent === agent._id)?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
     const commiPercentage = subscribers.length <= 4 ? .40 : subscribers.length >= 5 ? .50 : null;
     const VAT = .05;
     const SSS = 0;
@@ -52,11 +52,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
         remarks: '',
         amount: ''
     })
-    useEffect(() => {
-        if(grandTotalPayout < 1){
-            setCheckedSubs([]);
-        }
-    },[grandTotalPayout]);
+    
     const handleClickAgent = () => {
         setShowSubs(!showSubs);
     }
@@ -146,7 +142,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
             }
             return dispatch(getErrors(errData));
         }
-        console.log(data.remarks);
+
         const addData = {
             type: 'deductions',
             userId: agent._id,

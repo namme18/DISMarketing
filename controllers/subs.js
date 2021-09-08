@@ -1,3 +1,4 @@
+const { default: sub } = require('date-fns/sub');
 const Subs = require('../model/Subs');
 const User = require('../model/User');
 
@@ -30,6 +31,103 @@ exports.addSubs = (req, res, next) => {
                     return;
                 })
         })
+
+}
+
+exports.checkSubs = (req, res, next) => {
+
+    const item = req.body;
+    Subs.findOne({$or:[
+        {joborderno: item.JONO},
+        {accountno: item.COMPLETEACCTNO}
+    ]})
+        .then(subs => {
+            
+            if(subs){
+                    if(subs.isActive === true){
+                        const data = {
+                            status: 'Duplicate',
+                            subscriber: item
+                        }
+                        return res.status(200).json(data);
+                    }
+                const data = {
+                    status: 'Matched',
+                    subscriber: item
+                }
+                return res.status(200).json(data);
+            }
+
+            if(!subs){
+                const data = {
+                    status: 'Not Matched',
+                    subscriber: item
+                }
+                return res.status(200).json(data);
+            }
+        })
+        .catch(err => {
+            return next(err);
+        })
+}
+
+exports.encodeAccount = (req, res, next) => {
+
+    const {account, user} = req.body;
+
+    Subs.findOne({accountno: account.COMPLETEACCTNO, joborderno: account.JONO})
+        .then(sub => {
+            if(sub) return res.status(400).json({msg: 'Account already encoded'});
+            const name = account.SUBSCRIBERNAME.replace(',', '').split(' ');
+            const newSubs = new Subs({
+                isActive: true,
+                fullname: name,
+                email: account.EMAILADDRESS, 
+                contactno: account.CONTACTNO, 
+                address: account.COMPLETEADDRESS, 
+                applicationno: `unclaimed - ${account.SERIALNO}`,
+                plan: account.MLINECURRENTMONTHLYRATE, 
+                remarks: 'Installed',
+                agent: user._id,
+                teamleader: user._id,
+                accountno: account.COMPLETEACCTNO,
+                joborderno: account.JONO,
+                packagename: account.PACKAGENAME,
+                installeddate: new Date()
+            })
+
+            newSubs.save();
+
+            return res.status(200).json(newSubs);
+
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
+exports.activateAccount = (req, res, next) => {
+
+    const account = req.body;
+    Subs.findOne({
+        $or:[
+            {joborderno: account.JONO},
+            {accountno: account.COMPLETEACCTNO}
+        ]
+    })
+    .then(sub => {
+        if(!sub) return res.status(200).json({...account, STATUS: 'Error enocoding'});
+        sub.isActive = true;
+        sub.plan = account.MLINECURRENTMONTHLYRATE;
+
+        sub.save();
+        
+        return res.status(200).json(account);
+    })
+    .catch(err => {
+        return next(err);
+    })
 
 }
 

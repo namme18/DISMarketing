@@ -19,6 +19,7 @@ import TodayIcon from '@material-ui/icons/Today';
 import ApprovedUser from './ApprovedUser';
 import { makeStyles } from '@material-ui/core/styles';
 import Payroll from './Payroll/Payroll';
+import Activation   from './Activation';
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -87,7 +88,7 @@ const Admin = () => {
                 >
                     <Tab value='1' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
                     <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
-                    <Tab value='3' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
+                    <Tab value='3' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
                     <Tab value='4' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
                 </TabList>
             </AppBar>
@@ -97,7 +98,9 @@ const Admin = () => {
                 <TabPanel className={classes.tabPanel1} value='2'>
                     <Payroll />
                 </TabPanel>
-                <TabPanel className={classes.tabPanel1} value='3'>tab3</TabPanel>
+                <TabPanel className={classes.tabPanel1} value='3'>
+                    <Activation />
+                </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='4'>tab4</TabPanel>
             </TabContext>
             </div>
