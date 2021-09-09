@@ -194,7 +194,7 @@ const UserSubsRow = ({sub, index}) => {
     return(
         <TableRow key={sub._id}>
             <TableCell>
-                <Grid container direction='row' justify='space-between' display='inline' noWrap >
+                <Grid container direction='row' justify='space-between' display='inline' >
                 <Typography onClick={handleClick} style={{cursor: 'pointer', fontWeight:'bold'}} variant='subtitle2'>
                     {showDetails ? <KeyboardArrowUpIcon color='secondary' className={classes.details} /> : <KeyboardArrowDownIcon color='secondary' className={classes.details} /> } 
                     <Badge badgeContent={sub.isActive ? 'A' : sub.remarks?.split(' ').map(i => i[0].toUpperCase())} color={sub.isActive ? 'primary' : 'secondary'}>

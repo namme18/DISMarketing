@@ -113,7 +113,7 @@ const Home = () => {
                     color='secondary'
                 />
 
-                <Grid item className={classes.chip}>
+                <Grid item key='dateFrom' className={classes.chip}>
                         <TextField
                             name='dateFrom'
                             id='datefrom'
@@ -125,12 +125,12 @@ const Home = () => {
                             className={classes.TextField}
                             fullWidth
                             inputProps={{
-                                shrink: true
+                                shrink: 'true'
                             }}
                         />
                     </Grid>
 
-                    <Grid item className={classes.chip}>
+                    <Grid item key='dateTo' className={classes.chip}>
                         <TextField
                             name='dateTo'
                             id='date To'
@@ -142,7 +142,7 @@ const Home = () => {
                             className={classes.TextField}
                             fullWidth
                             inputProps={{
-                                shrink: true
+                                shrink: 'true'
                             }}
                         />
                     </Grid>
@@ -150,7 +150,7 @@ const Home = () => {
             <Divider className={classes.divider} />
 
             <Grid container direction='row' justify='flex-start' spacing={2}>
-              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+              <Grid key='totalInstalled' item xs={12} lg={4} xl={4} md={4} sm={12}>
                 <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
@@ -166,7 +166,7 @@ const Home = () => {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+              <Grid key='totalActivation' item xs={12} lg={4} xl={4} md={4} sm={12}>
                 <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
@@ -182,7 +182,7 @@ const Home = () => {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} lg={4} xl={4} md={4} sm={12}>
+              <Grid key='totalGenerated' item xs={12} lg={4} xl={4} md={4} sm={12}>
                 <Card className={classes.card} elevation={5}>
                   <CardHeader 
                     className={classes.tiCard}
@@ -202,11 +202,9 @@ const Home = () => {
 
       <Grid container direction='row' spacing={2}>
             {teams?.map(team => (
-              <>
               <Grid item key={team._id} xl={4} lg={4} md={3} sm={12} xs={12}>
                 <Team team={team} subscribers={subscribers} appsgen={appsgen}/>
               </Grid>
-              </>
             ))}
       </Grid>
 

@@ -141,9 +141,7 @@ const Payroll = () => {
                     </Button>
                 </Grid>
                 {teamLeaders?.map((teamleader) => (
-                <>
                 <PerTeam key={teamleader._id} grandTotalPayout={grandTotalPayout} teamleader={teamleader} allusers={allUsers} forpayout={forpayout} seData={setData} data={data} />
-                </>
                 ))}
             </CardContent>
         </Card>

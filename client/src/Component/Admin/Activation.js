@@ -303,7 +303,7 @@ const Activation = () => {
                     <Grid item key='progress-bar' xs={11}>
                         <LinearProgress variant='determinate' value={(checkingActivation?.length/data.allActivation?.length)*100 || 0} />
                     </Grid>
-                    <Grid item xs={1} key='percent-progress' justify='center' alignItems='center'>
+                    <Grid item xs={1} key='percent-progress'>
                         <Typography className={classes.processPercent} variant='body2' align='center' color='textSecondary'>{`${processPercent}%`}</Typography>
                     </Grid>
                 </Grid>
@@ -317,12 +317,10 @@ const Activation = () => {
                             </Grid>
                            <Divider style={{marginBottom: '8px', marginTop:'8px'}} />
                             {filSubs.matched?.map((sub, index) => (
-                                <>
                                 <Grid item key={index} container direction='row'>
                                     <Typography display='block' noWrap className={classes.typo} style={{flexGrow: '1'}} variant='body2' color='textSecondary'>{`${index+1}: ${sub.SUBSCRIBERNAME}`}</Typography>
                                     <Typography style={sub.STATUS === 'Duplicate' ? {color: 'red'}: {color: '#4caf50'}} className={classes.typo}>{sub.STATUS}</Typography>
                                 </Grid>
-                                </>
                             ))}
                        </Paper>
                     </Grid>
@@ -334,12 +332,10 @@ const Activation = () => {
                             </Grid>
                             <Divider style={{marginBottom: '8px', marginTop:'8px'}} />
                             {filSubs.unMatched?.map((sub, index) => (
-                                <>
                                 <Grid item key={index} container direction='row'>
                                     <Typography display='block' noWrap className={classes.typo} style={{flexGrow: '1'}} variant='body2' color='textSecondary'>{`${index+1}: ${sub.SUBSCRIBERNAME}`}</Typography>
                                     <Typography style={{color: '#4caf50'}} className={classes.typo}>{sub.STATUS}</Typography>
                                 </Grid>
-                                </>
                             ))}
                        </Paper>
                     </Grid>

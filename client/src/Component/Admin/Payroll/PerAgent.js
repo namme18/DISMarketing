@@ -245,18 +245,18 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
 
                             <Collapse in={data.showIncentives} timeout='auto' unmountOnExit >
                                 <Grid container item key='incentives' direction='column' alignItems='flex-end' justify='flex-start'>
-                                {agent.incentives?.map(inc => (
-                                    <>
+                                {agent.incentives?.map((inc, index) => (
+                                    <div key={index}>
                                      <Box display='flex' justifyContent='flex-end' direction='row' alignItems='center'>
-                                     <Tooltip title='remove'><RemoveIcon onClick={() => handleRemoveIncentives(inc.remarks)} className={classes.incentivesDeductions} /></Tooltip>
-                                    <Typography variant='caption' className={classes.perSubs} color='textSecondary'>{inc.remarks?.split(' ').map(fl => fl[0].toUpperCase()+fl.substring(1)).join(' ')} - &nbsp;&nbsp;&nbsp;{parseFloat(inc.amount).toFixed(2)}</Typography>
+                                        <Tooltip title='remove'><RemoveIcon onClick={() => handleRemoveIncentives(inc.remarks)} className={classes.incentivesDeductions} /></Tooltip>
+                                        <Typography variant='caption' className={classes.perSubs} color='textSecondary'>{inc.remarks?.split(' ').map(fl => fl[0].toUpperCase()+fl.substring(1)).join(' ')} - &nbsp;&nbsp;&nbsp;{parseFloat(inc.amount).toFixed(2)}</Typography>
                                     </Box>
-                                    </>
+                                    </div>
                                 ))}
 
                                 <Collapse in={data.addIncentives} timeout='auto' unmountOnExit>
                                     <Box display='flex' justifyContent='flex-end' direction='row' alignItems='center'>
-                                        <form noValidate autoCapitalize>
+                                        <form noValidate>
                                             <Tooltip title='Save'><SaveIcon onClick={handleSaveIncentives} type='submit' className={classes.incentivesDeductions} /></Tooltip>
                                             <TextField 
                                                 style={{width: '60px'}}
@@ -295,13 +295,13 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
                         <Collapse in={data.showDeductions} timeout='auto' unmountOnExit >
                                 <Grid container item key='deductions' direction='column' alignItems='flex-end' justify='flex-start'>
                                 <Typography variant='caption' className={classes.perSubs} color='textSecondary'>VSPH - &nbsp;&nbsp;&nbsp;{parseFloat(VSPH).toFixed(2)}</Typography>
-                                {agent.deductions?.map(ded => (
-                                    <>
+                                {agent.deductions?.map((ded, index) => (
+                                    <div key={index}>
                                      <Box display='flex' justifyContent='flex-end' direction='row' alignItems='center'>
-                                     <Tooltip title='remove'><RemoveIcon onClick={() => handleRemoveDeductions(ded.remarks)} className={classes.incentivesDeductions} /></Tooltip>
-                                    <Typography variant='caption' className={classes.perSubs} color='textSecondary'>{ded.remarks?.split(' ').map(fl => fl[0].toUpperCase()+fl.substring(1)).join(' ')} - &nbsp;&nbsp;&nbsp;{parseFloat(ded.amount).toFixed(2)}</Typography>
+                                        <Tooltip title='remove'><RemoveIcon onClick={() => handleRemoveDeductions(ded.remarks)} className={classes.incentivesDeductions} /></Tooltip>
+                                        <Typography variant='caption' className={classes.perSubs} color='textSecondary'>{ded.remarks?.split(' ').map(fl => fl[0].toUpperCase()+fl.substring(1)).join(' ')} - &nbsp;&nbsp;&nbsp;{parseFloat(ded.amount).toFixed(2)}</Typography>
                                     </Box>
-                                    </>
+                                    </div>
                                 ))}
 
                                 <Collapse in={data.addDeductions} timeout='auto' unmountOnExit>
@@ -315,8 +315,8 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
                                                 onChange={onChange}
                                             >
                                                 <MenuItem disabled><Typography variant='caption' color='textSecondary'>Choose...</Typography></MenuItem>
-                                                {agent.fordeductions.map(ded => (
-                                                    <MenuItem value={[ded.remarks,ded.amount].join(',')}><Typography variant='caption' color='textSecondary'>{`${ded.remarks} - max = ${ded.amount}`}</Typography></MenuItem>
+                                                {agent.fordeductions.map((ded, index) => (
+                                                    <MenuItem key={index} value={[ded.remarks,ded.amount].join(',')}><Typography variant='caption' color='textSecondary'>{`${ded.remarks} - max = ${ded.amount}`}</Typography></MenuItem>
                                                 ))}
                                             </Select> 
                                             &nbsp;&nbsp;

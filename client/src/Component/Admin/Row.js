@@ -137,7 +137,7 @@ const Row = ({user, users}) => {
         <TableRow>
             <TableCell>
                 <Grid container direction='row' justify='space-between' alignItems='center'>
-                    <Typography variant='subtitle2' onClick={handleClick}  style={{cursor:'pointer', fontWeight:'bold'}} alignItems='center'>
+                    <Typography variant='subtitle2' onClick={handleClick}  style={{cursor:'pointer', fontWeight:'bold'}}>
                         {!data.edit ? <KeyboardArrowDownIcon size='small' className={classes.arrowIcon} /> : <KeyboardArrowUpIcon className={classes.arrowIcon} size='small'/>}
                         <Badge badgeContent={user.restrictionlevel?.split(' ').map(n => n[0].toUpperCase())} color='secondary' ><Avatar className={classes.avatar}>{user.username[0].toUpperCase()}</Avatar>
                         {user.username}
@@ -194,7 +194,7 @@ const Row = ({user, users}) => {
                         <Select name='restrictionlevel' displayEmpty className={classes.resSelect} onChange={onChange}>
                                 <MenuItem disabled><Typography variant='body2' color='textSecondary'>{user.restrictionlevel}</Typography></MenuItem>
                             {menuItem.map(item => (
-                                <MenuItem value={item.value}><Typography variant='body2' color='textSecondary'>{item.name}</Typography></MenuItem>
+                                <MenuItem key={item.name} value={item.value}><Typography variant='body2' color='textSecondary'>{item.name}</Typography></MenuItem>
                             ))}
                         </Select>
                         </div>

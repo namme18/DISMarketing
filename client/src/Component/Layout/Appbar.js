@@ -76,9 +76,9 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
                         open={open}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                        <MenuItem key='Profile' onClick={handleClose}>Profile</MenuItem>
+                        <MenuItem key='My account' onClick={handleClose}>My account</MenuItem>
+                        <MenuItem key='logout' onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
 
                 </Toolbar>

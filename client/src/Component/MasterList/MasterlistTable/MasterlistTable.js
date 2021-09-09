@@ -51,7 +51,7 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
 
     return(
         <>
-        <TableContainer component={Paper} maxWidth='xl' className={classes.container}>
+        <TableContainer component={Paper} className={classes.container}>
             <Table stickyHeader className={classes.table} aria-label='masterlist' size='small'>
                 <TableHead>
                     <TableRow className={classes.tableHeaders}>

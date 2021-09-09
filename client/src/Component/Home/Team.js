@@ -33,6 +33,10 @@ const Team = ({team, subscribers, appsgen}) => {
         history.push(`/home/home/agents/${id}`);
     }
 
+    const installedPercenatge = parseInt(Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100));
+    const activatedPercentage = parseInt(Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers.filter(sub => sub.teamleader === team._id).length)*100) || 0);
+    const appgeneratedPercentage = parseInt(Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100));
+
     return(
         <Card className={classes.card} elevation={5}>
             <CardHeader 
@@ -54,7 +58,7 @@ const Team = ({team, subscribers, appsgen}) => {
                    </Grid>
                    <Grid container item spacing={1} direction='row' alignItems='center'>
                        <Grid item xs={11}>
-                        <LinearProgress variant='determinate' value={`${Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100)}`} /> 
+                        <LinearProgress variant='determinate' value={installedPercenatge} /> 
                        </Grid>
                        <Grid item xs={1}>
                         <Typography variant='body2' color='textSecondary'>{`${Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100)}%`}</Typography>
@@ -73,7 +77,7 @@ const Team = ({team, subscribers, appsgen}) => {
                    </Grid>
                    <Grid container item spacing={1} direction='row' alignItems='center'>
                        <Grid item xs={11}>
-                        <LinearProgress variant='determinate' value={Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers.filter(sub => sub.teamleader === team._id).length)*100)|| 0} /> 
+                        <LinearProgress variant='determinate' value={activatedPercentage} /> 
                        </Grid>
                        <Grid item xs={1}>
                         <Typography variant='body2' color='textSecondary'>{`${Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers?.filter(sub => sub.teamleader === team._id).length)*100) || 0}%`}</Typography>
@@ -92,7 +96,7 @@ const Team = ({team, subscribers, appsgen}) => {
                    </Grid>
                    <Grid container item spacing={1} direction='row' alignItems='center'>
                        <Grid item xs={11}>
-                        <LinearProgress variant='determinate' value={Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100)} /> 
+                        <LinearProgress variant='determinate' value={appgeneratedPercentage} /> 
                        </Grid>
                        <Grid item xs={1}>
                         <Typography variant='body2' color='textSecondary'>{`${Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100)}%`}</Typography>

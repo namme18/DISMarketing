@@ -277,8 +277,8 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
                             className={classes.textField}
                         >
                             <MenuItem disabled><Typography color='textSecondary' variant='body2'>Choose Plan...</Typography></MenuItem>
-                            {plans.map(plan => (
-                                <MenuItem value={[plan.plan,plan.name].join()}>{plan.name}</MenuItem>
+                            {plans.map((plan, index) => (
+                                <MenuItem key={index} value={[plan.plan,plan.name].join()}>{plan.name}</MenuItem>
                                 ))}
                         </Select>
 

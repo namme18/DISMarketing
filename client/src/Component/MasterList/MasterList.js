@@ -161,7 +161,7 @@ const MasterList = () => {
                                 className={classes.TextField}
                                 fullWidth
                                 inputProps={{
-                                    shrink: true
+                                    shrink: 'true'
                                 }}
                             />
                         </Grid>
@@ -177,7 +177,7 @@ const MasterList = () => {
                                 className={classes.TextField}
                                 fullWidth
                                 inputProps={{
-                                    shrink: true
+                                    shrink: 'true'
                                 }}
                             />
                         </Grid>
@@ -202,7 +202,7 @@ const MasterList = () => {
                             </Paper>
                         </Grid>
 
-                        <Grid item container md={1} lg={1} xl={1} sm={2} xs={2} justify='start' >
+                        <Grid item container md={1} lg={1} xl={1} sm={2} xs={2} justify='flex-start' >
                             <StyledBadge badgeContent={!show ? 'ShowDetails' : 'HideDetails'} color='secondary'>
                             <Checkbox color='secondary' name='info' onChange={showInfo} />
                             </StyledBadge>

@@ -183,7 +183,7 @@ const MyAccount = () => {
                         color='secondary'
                     />
 
-                    <Grid item className={classes.chip}>
+                    <Grid key="dateFrom" item className={classes.chip}>
                         <TextField
                             name='dateFrom'
                             id='datefrom'
@@ -195,12 +195,12 @@ const MyAccount = () => {
                             className={classes.TextField}
                             fullWidth
                             inputProps={{
-                                shrink: true
+                                shrink: 'true'
                             }}
                         />
                     </Grid>
 
-                    <Grid item className={classes.chip}>
+                    <Grid key='dateTo' item className={classes.chip}>
                         <TextField
                             name='dateTo'
                             id='date To'
@@ -212,7 +212,7 @@ const MyAccount = () => {
                             className={classes.TextField}
                             fullWidth
                             inputProps={{
-                                shrink: true
+                                shrink: 'true'
                             }}
                         />
                     </Grid>
@@ -236,16 +236,16 @@ const MyAccount = () => {
                     </AppBar>
                         <TabPanel className={classes.tabPanel1} value='1'>
                             <>
-                            <TableContainer component={Paper} className={classes.container} maxWidth='xl'>
-                                <Table stickyHeader aria-label='allsubs' classname={classes.table} size='small'>
-                                    <TableHead fullWidth    >
+                            <TableContainer component={Paper} className={classes.container}>
+                                <Table stickyHeader aria-label='allsubs' className={classes.table} size='small'>
+                                    <TableHead>
                                         <TableRow>
                                             <TableCell className={classes.tableheaderCell}>
                                                 <Grid container direction='row' justify='space-between'>
                                                     <Typography className={classes.name}>Name</Typography>
                                                     <IconButton size='small' onClick={handleOpen}>
                                                         <Tooltip title='Add Subscriber'>
-                                                        <AddCircleOutlineIcon color='secondary' fontSize='medium' />
+                                                        <AddCircleOutlineIcon color='secondary' size='medium' />
                                                         </Tooltip>
                                                     </IconButton>
                                                 </Grid>
@@ -255,7 +255,7 @@ const MyAccount = () => {
                                     <TableBody>
                                         {usersubs?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                   .map((sub, index) => (
-                                            <UserSubsRow sub={sub} index={index + rowsPerPage * page}/>
+                                            <UserSubsRow key={index} sub={sub} index={index + rowsPerPage * page}/>
                                             ))}
                                         {emptyRows > 0 && (
                                                 <TableRow style={{height: 33 * emptyRows }}>
@@ -279,9 +279,9 @@ const MyAccount = () => {
                         </TabPanel>
                         <TabPanel className={classes.tabPanel1} value='2'>
                         <>
-                            <TableContainer component={Paper} className={classes.container} maxWidth='xl'>
-                                <Table stickyHeader aria-label='allsubs' classname={classes.table} size='small'>
-                                    <TableHead fullWidth    >
+                            <TableContainer component={Paper} className={classes.container}>
+                                <Table stickyHeader aria-label='allsubs' className={classes.table} size='small'>
+                                    <TableHead>
                                         <TableRow>
                                             <TableCell className={classes.tableheaderCell}>
                                                 <Grid container direction='row' justify='space-between'>
@@ -293,7 +293,7 @@ const MyAccount = () => {
                                     <TableBody>
                                         {installedSubs?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                   .map((sub, index) => (
-                                            <InstalledSubsRow sub={sub} index={index + rowsPerPage * page}/>
+                                            <InstalledSubsRow key={index} sub={sub} index={index + rowsPerPage * page}/>
                                             ))}
                                         {emptyRows2 > 0 && (
                                                 <TableRow style={{height: 33 * emptyRows2 }}>
