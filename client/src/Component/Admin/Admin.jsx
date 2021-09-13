@@ -20,6 +20,7 @@ import ApprovedUser from './ApprovedUser';
 import { makeStyles } from '@material-ui/core/styles';
 import Payroll from './Payroll/Payroll';
 import Activation   from './Activation';
+import CashAdvance from './CashAdvance';
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -89,7 +90,7 @@ const Admin = () => {
                     <Tab value='1' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
                     <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
                     <Tab value='3' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
-                    <Tab value='4' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
+                    <Tab value='4' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
                 </TabList>
             </AppBar>
                 <TabPanel className={classes.tabPanel1} value='1'>
@@ -101,7 +102,9 @@ const Admin = () => {
                 <TabPanel className={classes.tabPanel1} value='3'>
                     <Activation />
                 </TabPanel>
-                <TabPanel className={classes.tabPanel1} value='4'>tab4</TabPanel>
+                <TabPanel className={classes.tabPanel1} value='4'>
+                    <CashAdvance />
+                </TabPanel>
             </TabContext>
             </div>
         </Grow>

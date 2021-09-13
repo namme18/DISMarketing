@@ -1,4 +1,3 @@
-const { default: sub } = require('date-fns/sub');
 const Subs = require('../model/Subs');
 const User = require('../model/User');
 
@@ -287,7 +286,8 @@ exports.forPayout = (req, res, next) => {
 
     Subs.find({isActive: true, ispaidtoagent: false})
         .then(subs => {
-            return res.status(200).json(subs);
+            const filtered = subs.filter(sub => sub.applicationno.search('unclaimed') === -1).filter(sub => sub.applicationno.search('inclaimed') === -1)
+            return res.status(200).json(filtered);
         })
         .catch(err => {
             return next(err);
@@ -383,30 +383,22 @@ exports.getAppsGen = (req, res, next) => {
 
 }
 
-exports.addMannySubs = (req, res, next) => {
-
-    const mannyData = req.body;
-    const names = [];
-    mannyData.map(sub => {
-        if(sub){
-            Subs.findOne({fullname: sub.fullname})
-            .then(existingSub => {
-                console.log(existingSub);
-            })
-        }
-    });
-    console.log(names);
-
-
-    Subs.insertMany(mannyData)
-        .then(result => {
-           return res.status(200).json(result);
-        })
-        .catch(err => {
-            return res.status(400).json({msg: err.message});
-        })
-        .catch(() => {
-            return;
-        })
+exports.addMannySubs = async (req, res, next) => {
+    const allSubs = await Subs.find({ispaidtoagent: true});
+    
+    Subs.bulkWrite(
+        allSubs.map(sub => ({
+            updateOne:{
+                filter:{_id: sub._id},
+                update:{$set:{ispaidtoagent: false, datepaidtoagent: null}}
+            }
+        }))
+    )
+    .then(subs => {
+        return res.status(200).json(subs);
+    })
+    .catch(err => {
+        return next(err);
+    })
 
 }

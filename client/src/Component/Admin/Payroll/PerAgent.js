@@ -31,7 +31,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
     const [showSubs, setShowSubs] = useState(true);
     const [checkedSubs, setCheckedSubs] = useState([]);
     const payout = checkedSubs?.filter(sub => sub.agent === agent._id).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
-    const subscribers = forpayout?.filter(sub => sub.agent === agent._id)?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
+    const subscribers = forpayout?.filter(sub => sub.agent === agent._id);
     const commiPercentage = subscribers.length <= 4 ? .40 : subscribers.length >= 5 ? .50 : null;
     const VAT = .05;
     const SSS = 0;

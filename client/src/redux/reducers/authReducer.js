@@ -105,9 +105,16 @@ export const authReducer = createSlice({
                 ...state,
                 allUsers: [...state.allUsers.map(user => {return {...user, incentives: [], deductions: [], fordeductions: [...user.fordeductions.filter(ded => ded.amount > 0)]}})]
             }
+        },
+
+        updateDedutions: (state, action) => {
+            return{
+                ...state,
+                allUsers: [...state.allUsers.map(user => user._id === action.payload._id ? action.payload : user)]
+            }
         }
     }
 });
 
-export const { loadUser, updateAllIncentives, updateAllUsers,  logoutUser, userLoading, userLoaded, userValidated, resetMsg, clearResetMsg, emailVerifiedSuccess, loadAllUsers, approvedUser } = authReducer.actions;
+export const { loadUser, updateAllIncentives, updateAllUsers, updateDedutions,  logoutUser, userLoading, userLoaded, userValidated, resetMsg, clearResetMsg, emailVerifiedSuccess, loadAllUsers, approvedUser } = authReducer.actions;
 export default authReducer.reducer;

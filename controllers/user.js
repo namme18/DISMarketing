@@ -105,6 +105,22 @@ exports.loginUser = (req, res) => {
         });
 }
 
+exports.addDeductions = (req, res, next) => {
+
+    const {agent, remarks, amount} = req.body;
+    User.findById(agent)
+        .then(user => {
+            if(!user) return res.status(400).json({msg: 'User Not Found'});
+            user.fordeductions = [...user.fordeductions, {remarks, amount,date: new Date(), payment: []}]
+            user.save();
+            return res.status(200).json(user);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
     console.log(req);

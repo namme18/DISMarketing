@@ -8,7 +8,7 @@
     "client": "npm start --prefix client",
     "server": "nodemon server.js",
     "dev": "concurrently \" npm run client \" \" npm run server  \" ",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Emmanuel F. Morales Jr.",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "mongoose": "^5.12.15",
     "nodemailer": "^6.6.2",
     "nodemon": "^2.0.7",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "react-masonry-css": "^1.0.16"
   }
 }

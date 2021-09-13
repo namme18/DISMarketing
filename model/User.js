@@ -55,26 +55,27 @@ const UserSchema = mongoose.Schema({
     },
     fordeductions:{
         type: [Object],
-        default: [
-            {
-                remarks: 'sample 1',
-                amount: 1000,
-                payment:[],
-                date: Date.now()
-            },
-            {
-                remarks: 'sample 2',
-                amount: 500,
-                payment:[],
-                date: Date.now()
-            },
-            {
-                remarks: 'sample 3',
-                amount: 300,
-                payment:[],
-                date: Date.now()
-            }
-        ]
+        default: null
+        // [ 
+        //     {
+        //         remarks: 'sample 1',
+        //         amount: 1000,
+        //         payment:[],
+        //         date: Date.now()
+        //     },
+        //     {
+        //         remarks: 'sample 2',
+        //         amount: 500,
+        //         payment:[],
+        //         date: Date.now()
+        //     },
+        //     {
+        //         remarks: 'sample 3',
+        //         amount: 300,
+        //         payment:[],
+        //         date: Date.now()
+        //     }
+        // ]
     }
 });
 
