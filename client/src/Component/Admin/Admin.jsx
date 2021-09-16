@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import {
     TabContext,
     TabList,
@@ -21,6 +21,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Payroll from './Payroll/Payroll';
 import Activation   from './Activation';
 import CashAdvance from './CashAdvance';
+import UnclaimedAcct from './UnclaimedAcct';
+import { useDispatch } from 'react-redux';
+import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
+import UnclaimedModal from './UnclaimedModal';
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -50,14 +54,26 @@ const Admin = () => {
 
     const classes = useStyles();
     const [value, setValue] = useState('1');
+    const dispatch = useDispatch();
+    const [data, setData] = useState({
+        newData: null,
+        applicationno: '',
+        claimant: '',
+    });
+    const [openModal, setOpenModal] = useState(false);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        dispatch(getUnclaimedSubs());
+    },[]);
+
     return(
         <Grow in>
             <div>
+            <UnclaimedModal openModal={openModal} setOpenModal={setOpenModal} newData={data.newData} />
             <Grid container alignItems='center' justify='flex-start' >
                 <Chip
                     sm={12}
@@ -91,6 +107,7 @@ const Admin = () => {
                     <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
                     <Tab value='3' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
                     <Tab value='4' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
+                    <Tab value='5' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
                 </TabList>
             </AppBar>
                 <TabPanel className={classes.tabPanel1} value='1'>
@@ -104,6 +121,9 @@ const Admin = () => {
                 </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='4'>
                     <CashAdvance />
+                </TabPanel>
+                <TabPanel className={classes.tabPanel1} value='5'>
+                    <UnclaimedAcct openModal={openModal} setOpenModal={setOpenModal} data={data} setData={setData}/>
                 </TabPanel>
             </TabContext>
             </div>

@@ -364,6 +364,34 @@ exports.getAllSubs = (req, res, next) => {
 
 }
 
+exports.getUnclaimedSubs = (req, res, next) => {
+
+    Subs.find({ispaidtoagent: false})
+        .then(allSubs => {
+            const filteredsubs = allSubs.filter(sub => sub.applicationno.search('claimed') !== -1);
+            return res.status(200).json(filteredsubs);
+        })
+        .catch(err => {
+            return next(err);
+        });
+
+}
+
+exports.getSubsViaApplicationNo = (req, res, next) => {
+
+    const { applicationno, userId } = req.query;
+
+    Subs.findOne({applicationno: new RegExp(applicationno, 'i'), agent: userId})
+        .then(sub => {
+            if(!sub) return res.status(400).json({msg: 'No Subscriber found!'});
+            return res.status(200).json(sub);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
 exports.getAppsGen = (req, res, next) => {
 
     const { todayDate } = req.query;

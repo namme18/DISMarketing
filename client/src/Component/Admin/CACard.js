@@ -34,7 +34,7 @@ const CACard = ({user}) => {
                     const remarks = `${index+1}: ${ded.remarks[0].toUpperCase()+ded.remarks.substring(1)}`;
                     const amount = `PHP - ${parseFloat(ded.amount).toFixed(2)}`;
                     const payments = ded.payment;
-                    console.log(payments);
+
                     return (
                         <div key={index}>
                             <Grid container key={index} alignItems='center' direction='row' justify='space-between'>

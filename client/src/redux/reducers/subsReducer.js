@@ -9,6 +9,7 @@ export const subsReducer = createSlice({
         agentIncome:[],
         checkedSubs:[],
         checkingActivation:[],
+        unclaimedSubs: [],
         forpayout: null
     },
     reducers:{
@@ -95,9 +96,16 @@ export const subsReducer = createSlice({
                 ...state,
                 checkingActivation: []
             }
+        },
+
+        loadUnclaimedSubs: (state, action) => {
+            return{
+                ...state,
+                unclaimedSubs: action.payload
+            }
         }
     }
 });
 
-export const { loadSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
+export const { loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
 export default subsReducer.reducer;
