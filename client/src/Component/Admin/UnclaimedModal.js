@@ -22,6 +22,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useDispatch } from 'react-redux';
 import { getSubsViaApplicationNo } from '../../redux/reducers/subsActions/getSubsViaApplicationNo';
 import { getErrors } from '../../redux/reducers/errorReducer';
+import { replaceClaimedSubs } from '../../redux/reducers/subsActions/replaceClaimedSubs';
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -90,16 +91,27 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
     },[newData]);
 
     useEffect(() => {
-            if(!data.claimantSubs?.ispaidtoagent){
+        if(data.claimantSubs){
+            if(!data.claimantSubs.ispaidtoagent && !data.claimantSubs.isActive){
                 setData({
                     ...data,
                     disabledButton: false
                 });
             }
+        }
     },[data.claimantSubs]);
 
     // const re = /NA,|,/gi
     // const test = data.claimantSubs?.address.replace(re, (match) => { return ''; });
+
+    const handleApprovedClick = () => {
+        dispatch(replaceClaimedSubs(newData));
+        setOpenModal(false);
+        setData({
+            ...data,
+            disabledButton: true
+        });
+    }
     
     const items = [
         {
@@ -120,7 +132,7 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
         {
             itemName: 'Contact#',
             claimant: data.claimantSubs?.contactno,
-            unclaimed: newData?.contactno
+            unclaimed: newData?.contactno.replace('+', '')
         },
         {
             itemName: 'Account#',
@@ -133,6 +145,7 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
             unclaimed: newData?.packagename
         }
     ]
+
     return(
         <Modal
         open={openModal}
@@ -162,6 +175,9 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
                         {data.claimantSubs?.ispaidtoagent && (
                             <Typography variant='body2' color='error'><strong>!Warning:</strong>&nbsp;Unable to approved claimant subscriber due to it is already paid!</Typography>
                         )}
+                        {data.claimantSubs?.isActive && (
+                            <Typography variant='body2' color='error'><strong>!Warning:</strong>&nbsp;Unable to approved claimant subscriber due to it is already active!</Typography>
+                        )}
                         <TableContainer component={Paper} className={classes.tableContainer}>
                             <Table stickyHeader aria-label='comparison' size='small' className={classes.table}>
                                 <TableHead className={classes.tableHeader}>
@@ -183,7 +199,7 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
                                 <TableBody className={classes.tableBody}>
                                     {data.claimantSubs && items.map(item => {
                                         const itemLength = Math.round(100/item.unclaimed?.split(' ').length);
-                                        const totalPercent = item.unclaimed?.split(' ').map(str => item.claimant?.search(new RegExp(str, 'i')) !== -1 ? itemLength : 0).reduce((a, b) => a + b, 0) || 0;
+                                        const totalPercent = item.unclaimed?.split(' ')?.map(str => item.claimant?.search(new RegExp(str, 'i')) !== -1 ? itemLength : 0).reduce((a, b) => a + b, 0) || 0;
                                         overallPercent.push(totalPercent);
                                        return (<TableRow>
                                             <TableCell align='left'>
@@ -220,6 +236,7 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
                                         size='small'
                                         className={classes.button}
                                         disabled={data.disabledButton}
+                                        onClick={handleApprovedClick}
                                     >
                                         approved
                                     </Button>

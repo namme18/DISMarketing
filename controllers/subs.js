@@ -92,7 +92,8 @@ exports.encodeAccount = (req, res, next) => {
                 accountno: account.COMPLETEACCTNO,
                 joborderno: account.JONO,
                 packagename: account.PACKAGENAME,
-                installeddate: new Date()
+                installeddate: new Date(),
+                remarks: "Installed",
             })
 
             newSubs.save();
@@ -119,6 +120,7 @@ exports.activateAccount = (req, res, next) => {
         if(!sub) return res.status(200).json({...account, STATUS: 'Error enocoding'});
         sub.isActive = true;
         sub.plan = account.MLINECURRENTMONTHLYRATE;
+        sub.remarks = 'Installed';
 
         sub.save();
         
@@ -298,17 +300,34 @@ exports.forPayout = (req, res, next) => {
 
 }
 
-exports.deleteSubs = (req, res, next) => {
-    Subs.deleteMany()
-        .then(result => {
-           return res.status(200).json({msg: `${result.deletedCount} is successfully deleted!`});
+exports.replaceClaimedSubs = (req, res, next) => {
+    
+    const newData = req.body;
+
+    Subs.findOne({applicationno: new RegExp(newData.applicationno2, 'i'), ispaidtoagent: false, agent: newData.claimant._id, isActive: false})
+        .then(sub => {
+            if(!sub) return res.status(400).json({msg: 'Invalid Subscriber'});
+            sub.remove().then(() => {
+                Subs.findById(newData._id)
+                    .then(unclaimedSubs => {
+                        if(!sub) return res.status(400).json({msg: 'Invalid Subscriber'});
+                        unclaimedSubs.applicationno = newData.applicationno2;
+                        unclaimedSubs.agent = newData.claimant._id;
+                        unclaimedSubs.teamleader = newData.claimant.teamleader !== null ? newData.claimant.teamleader : newData.claimant._id;
+
+                        unclaimedSubs.save();
+
+                        return res.status(200).json(unclaimedSubs);
+                    })
+                    .catch(err => {
+                        return next(err);
+                    })
+            })
+            .catch(err => {
+                return next(err);
+            })
         })
-        .catch(err => {
-            return next(err);
-        })
-        .catch(() => {
-            return;
-        })
+
 }
 
 exports.getAllSubs = (req, res, next) => {

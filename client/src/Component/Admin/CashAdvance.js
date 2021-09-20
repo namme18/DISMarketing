@@ -129,7 +129,7 @@ const CashAdvance = () => {
                         columnClassName={classes.mymasonrygridcolumn}
                     >
                     {userThatHasForDeductions?.map(user => (
-                        <div item key={user._id}>
+                        <div key={user._id}>
                             <CACard  user={user}/>
                         </div>
                     ))}

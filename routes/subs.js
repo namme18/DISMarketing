@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { addSubs, deleteSubs, addMannySubs, getAllSubs, getUserSubs, agentUpdate, getAppsGen, forPayout, paymentToAgent, removeIncentivesDeductions, addIncentivesDeductions, checkSubs, activateAccount, encodeAccount, getUnclaimedSubs, getSubsViaApplicationNo } = require('../controllers/subs');
+const { addSubs, deleteSubs, addMannySubs, getAllSubs, getUserSubs, agentUpdate, getAppsGen, forPayout, paymentToAgent, removeIncentivesDeductions, addIncentivesDeductions, checkSubs, activateAccount, encodeAccount, getUnclaimedSubs, getSubsViaApplicationNo, replaceClaimedSubs } = require('../controllers/subs');
 const auth = require('../middleware/auth');
 
 router.post('/addsubs', auth, addSubs);
-router.delete('/deletesubs', deleteSubs);
+router.put('/replaceclaimedsubs', auth, replaceClaimedSubs);
 router.put('/addmannysubs', addMannySubs);
 router.get('/getallsubs', auth, getAllSubs);
 router.get('/usersubs', auth, getUserSubs);

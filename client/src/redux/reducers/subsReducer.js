@@ -103,9 +103,16 @@ export const subsReducer = createSlice({
                 ...state,
                 unclaimedSubs: action.payload
             }
+        },
+
+        removedSingleClaimedSubs: (state, action) => {
+            return{
+                ...state,
+                unclaimedSubs: [...state.unclaimedSubs.filter(sub => sub._id !== action.payload._id)]
+            }
         }
     }
 });
 
-export const { loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
+export const { removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
 export default subsReducer.reducer;
