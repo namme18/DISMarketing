@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/reducers/authReducer';
+import { useHistory } from 'react-router-dom';
 
 const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
 
@@ -19,6 +20,7 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
     const open = Boolean(anchorEl);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleMenu = e => {
         setAnchorEl(e.currentTarget);
@@ -31,6 +33,12 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
     const handleLogout = () => {
         handleClose();
         dispatch(logoutUser());
+        history.push('/');
+    }
+
+    const handleClickProfile = () => {
+        handleClose();
+        history.push('/home/myprofile');
     }
 
     return(
@@ -76,7 +84,7 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
                         open={open}
                         onClose={handleClose}
                     >
-                        <MenuItem key='Profile' onClick={handleClose}>Profile</MenuItem>
+                        <MenuItem key='Profile' onClick={handleClickProfile}>Profile</MenuItem>
                         <MenuItem key='My account' onClick={handleClose}>My account</MenuItem>
                         <MenuItem key='logout' onClick={handleLogout}>Logout</MenuItem>
                     </Menu>

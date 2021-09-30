@@ -25,6 +25,7 @@ import UnclaimedAcct from './UnclaimedAcct';
 import { useDispatch } from 'react-redux';
 import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
 import UnclaimedModal from './UnclaimedModal';
+import EmpTracker from './Map/EmpTracker'
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -108,6 +109,7 @@ const Admin = () => {
                     <Tab value='3' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
                     <Tab value='4' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
                     <Tab value='5' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
+                    <Tab value='6' label={<Typography className={classes.buttonLabel}>EMP. MAP</Typography>} />
                 </TabList>
             </AppBar>
                 <TabPanel className={classes.tabPanel1} value='1'>
@@ -124,6 +126,9 @@ const Admin = () => {
                 </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='5'>
                     <UnclaimedAcct openModal={openModal} setOpenModal={setOpenModal} data={data} setData={setData}/>
+                </TabPanel>
+                <TabPanel className={classes.tabPanel1} value='6'>
+                    <EmpTracker />
                 </TabPanel>
             </TabContext>
             </div>

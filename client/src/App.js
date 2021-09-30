@@ -15,6 +15,7 @@ import OMRoute from './helper/OMRoute';
 import Admin from './Component/Admin/Admin';
 import MyAccount from './Component/MyAccount/MyAccount';
 import AgentsPerformance from './Component/Home/AgentsPerformance';
+import MyProfile from './Component/Profile/MyProfile';
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
             <PrivateRoute exact path="/home/home" component={Home} />
             <PrivateRoute exact path='/home/verifiedemail/:verifyToken' component={VerifiedEmail} />
             <PrivateRoute exact path='/home/myaccount' component={MyAccount} />
+            <PrivateRoute exact path='/home/myprofile' component={MyProfile} /> 
             <OMRoute exact path='/home/admin' component={Admin} />
         </Layout>
             <AuthRoute exact path="/" component={() => <Redirect to="/auth/login" />} />

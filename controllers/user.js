@@ -121,6 +121,29 @@ exports.addDeductions = (req, res, next) => {
 
 }
 
+exports.insertLocationInfo = (req, res, next) => {
+
+    const {lng, lat, timein, timeout } = req.body;
+    const userId = req.user._id;
+
+    User.findById(userId)
+        .then(user => {
+            if(!user) return res.status(400).json({msg: 'User does not exist'});
+            const existTimeinDate = `${new Date(user?.inoutinfo?.timein).getMonth()}-${new Date(user?.inoutinfo?.timein).getDate()}-${new Date(user?.inoutinfo?.timein).getFullYear()}`;
+            const newTimeinDate = `${new Date(timein).getMonth()}-${new Date(timein).getDate()}-${new Date(timein).getFullYear()}`;
+            const timeIn = existTimeinDate === newTimeinDate ? user.inoutinfo.timein : timein;
+            user.inoutinfo = {lng: lng, lat: lat, timein: timeIn, timeout: timeout};
+
+            user.save();
+
+            return res.status(200).json(user);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
     console.log(req);

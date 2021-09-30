@@ -15,6 +15,7 @@ import Appbar from './Appbar';
 import ErrorSnackbar from '../../helper/ErrorSnackbar';
 import SuccessSnackbar from '../../helper/SuccessSnackbar';
 import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
+import { InsertLocation } from '../../redux/reducers/authActions/InsertLocation';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -29,6 +30,25 @@ const Layout = ({children}) => {
 
     const { user, isLoading } = useSelector(state => state.authReducer);
     const dateFrom = query.get('dateFrom');
+
+    const [dataLoc, setDataLoc] = useState({
+        lng: '',
+        lat: '',
+        timein: new Date(),
+        timeout: new Date()
+    });
+
+    const myLocation = (position) => {
+        setDataLoc({
+            ...dataLoc,
+            lng: position.coords.longitude,
+            lat: position.coords.latitude
+        });
+    }
+
+    useEffect(() => {
+        dispatch(InsertLocation(dataLoc));
+    },[dataLoc.lng, dataLoc.lat]);
 
     useEffect(() => {
         if(!JSON.parse(localStorage.getItem('token'))){
@@ -47,6 +67,11 @@ const Layout = ({children}) => {
         if(!dateFrom){
             dispatch(validateUser());
         }
+
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(myLocation);
+        }
+
     },[location]);
 
     useEffect(() => {

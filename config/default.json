@@ -6,5 +6,6 @@
     "port": "2525",
     "user": "b3508866790465",
     "pass": "7c95660d386b45",
-    "emailFrom": "nammeselarom@gmail.com"
+    "emailFrom": "nammeselarom@gmail.com",
+    "mapAccessKey": "pk.eyJ1IjoibmFtbWVzZWxhcm9tIiwiYSI6ImNrdTUwcDlidDI5aWkybm9xODM3YWl4bGUifQ.02hxUVODo5RMTe23XMFCjw"
 }

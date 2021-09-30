@@ -53,6 +53,10 @@ const UserSchema = mongoose.Schema({
         type: [Object],
         default: null
     },
+    inoutinfo:{
+        type: Object,
+        default: null
+    },
     fordeductions:{
         type: [Object],
         default: null
