@@ -8,7 +8,7 @@ export const InsertLocation = createAsyncThunk('InsertLocation', async(dataLoc, 
     const body = JSON.stringify(dataLoc);
     return axios.post('/auth/insertlocationinfo', body, tokenConfig(getState))
         .then(res => {
-            return alert(JSON.stringify(res.data.inoutinfo));
+            return res.data.info;
         })
         .catch(err => {
             const errData = {
