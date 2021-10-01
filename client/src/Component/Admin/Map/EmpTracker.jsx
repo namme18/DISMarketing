@@ -6,6 +6,9 @@ import Markers from './Markers';
 import bbox from "@turf/bbox";
 import { multiPoint } from "@turf/helpers";
 
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+
 const EmpTracker = () => {
     
     const [ map, setMap ] = useState(null);
@@ -59,6 +62,7 @@ const EmpTracker = () => {
             navigator.geolocation.getCurrentPosition(currentLocation, onError, {enableHighAccuracy: true});
         }
         mapboxgl.accessToken = 'pk.eyJ1IjoibmFtbWVzZWxhcm9tIiwiYSI6ImNrdTUwcDlidDI5aWkybm9xODM3YWl4bGUifQ.02hxUVODo5RMTe23XMFCjw';
+        
         const map = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
