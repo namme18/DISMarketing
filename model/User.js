@@ -54,6 +54,10 @@ const UserSchema = mongoose.Schema({
         default: null
     },
     inoutinfo:{
+        type: [Object],
+        default: [null]
+    },
+    profilePicture: {
         type: Object,
         default: null
     },

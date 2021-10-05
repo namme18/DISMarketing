@@ -30,7 +30,7 @@ const APRow = ({agent}) => {
     return(
         <Card className={classes.card} elevation={5}>
             <CardHeader 
-                avatar={<Avatar className={classes.avatar}>{agent.username[0][0].toUpperCase()}</Avatar>}
+                avatar={<Avatar className={classes.avatar} src={agent.profilePicture}>{agent.username[0][0].toUpperCase()}</Avatar>}
                 action={<ListIcon />}
                 title={agent.username.toUpperCase()}
                 subheader='Agent Name'

@@ -1,4 +1,4 @@
-import React,{ useReducer } from 'react';
+import React,{ useReducer, useState } from 'react';
 import {
     Avatar,
     Grid,
@@ -7,7 +7,9 @@ import {
     Divider,
     TextField,
     Typography,
-    Box
+    Box,
+    IconButton,
+    Tooltip
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
@@ -20,7 +22,9 @@ import { format } from 'date-fns';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SaveIcon from '@mui/icons-material/Save';
-import { spacing } from '@mui/system';
+import { useDispatch } from 'react-redux';
+import { addProfilePicture } from '../../redux/reducers/authActions/addProfilePicture';
+import { getErrors } from '../../redux/reducers/errorReducer';
 
 const reducer = (data, action) => {
     switch(action.type){
@@ -33,6 +37,7 @@ const reducer = (data, action) => {
 
 const MyProfile = () => {
     
+    const dispatch = useDispatch();
     const user = useSelector(state => state.authReducer?.user);
     const allUsers = useSelector(state => state.authReducer?.allUsers);
 
@@ -41,8 +46,10 @@ const MyProfile = () => {
     const fordeduction = user?.fordeductions?.map(item => parseFloat(item.amount)).reduce((a, b) => a + b, 0).toFixed(2);
     
     const [data, setData] = useReducer(reducer, {
-        profilePicture: []
+        profilePicture: [user.profilePicture]
     });
+
+    const [profile, setProfile] = useState(false);
 
     console.log(fordeduction);
 
@@ -58,6 +65,21 @@ const MyProfile = () => {
                 })
             }
         })
+        setProfile(true);
+    }
+
+    const handleClickSave = () => {
+        if(profile){
+            dispatch(addProfilePicture(data.profilePicture[0]));
+        }else{
+            const errData = {
+                msg: 'No change made!',
+                status: 400,
+                id: 'FAILED!'
+            }
+            dispatch(getErrors(errData));
+        }
+        setProfile(false);
     }
 
     const updateInfo = e => {
@@ -83,23 +105,34 @@ const MyProfile = () => {
                             {user?.username[0]?.toUpperCase()}
                     </Avatar>
                 </Grid>
-                <Grid item key='uploadButton'>
-                    <input name='filebase64' multiple type='file' id='filebase64' style={{display:'none'}} onChange={onChange} />
-                    <label htmlFor='filebase64'>
-                        <Button sx={{
-                            borderRadius: 0,
-                            fontSize: 'x-small',
-                            px: 0.5,
-                            py: 0.2
-                        }} variant='contained' component='span' startIcon={<ChangeCircleIcon />}>Change</Button>
-                    </label>
+
+                <Grid item container key='upload-save-wrapper' direction='row' justifyContent='center' alignItems='center'>
+                    <Grid item key='uploadButton'>
+                        <input name='filebase64' multiple type='file' id='filebase64' style={{display:'none'}} onChange={onChange} />
+                        <label htmlFor='filebase64'>
+                            <Button sx={{
+                                borderRadius: 0,
+                                fontSize: 'x-small',
+                                px: 0.5,
+                                py: 0.2
+                            }} variant='contained' component='span' startIcon={<ChangeCircleIcon />}>Change</Button>
+                        </label>
+                    </Grid>
+
+                    <Grid item key='savePic'>
+                        <Tooltip title='Save'>
+                            <IconButton onClick={handleClickSave}>
+                                <SaveIcon color='success'/>
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
                 </Grid>
                 
                 <Divider sx={{width: '100%', my: 2, lineHeight: 0}}>
                     Current Information
                 </Divider>
 
-                <Grid ite container direction='column' alignItems='flex-start' key='information'>
+                <Grid item container direction='column' alignItems='flex-start' key='information'>
                     <Stack direction='row' spacing={1} alignItems='center' sx={{marginBottom: 1, width: '100%'}}>
                             <PointersTypography variant='body2'><DnsIcon sx={{fontSize:'small'}} />Name:</PointersTypography>
                             <ValuesTypography variant='body2' >{user.username}</ValuesTypography>

@@ -127,16 +127,64 @@ exports.insertLocationInfo = (req, res, next) => {
     const userId = req.user._id;
 
     User.findById(userId)
+    .then(user => {
+        if(!user) return res.status(400).json({msg: 'User does not exist'});
+        const newTimeinDate = `${new Date(timein).getMonth()}-${new Date(timein).getDate()}-${new Date(timein).getFullYear()}`;
+        
+        const hasIn = user.inoutinfo.map(io => {
+            const existTimeinDate = `${new Date(io?.timein).getMonth()}-${new Date(io?.timein).getDate()}-${new Date(io?.timein).getFullYear()}`;
+            const result = existTimeinDate === newTimeinDate ? true : false;
+            return result;
+        }).some(res => res === true);
+        
+        if(hasIn){
+            user.inoutinfo = [...user.inoutinfo.map(io => {
+                const existTimeinDate = `${new Date(io?.timein).getMonth()}-${new Date(io?.timein).getDate()}-${new Date(io?.timein).getFullYear()}`;
+                if(existTimeinDate === newTimeinDate){
+                    const data = {
+                        longitude: lng,
+                        latitude: lat,
+                        timein: io.timein,
+                        timeout: timeout !== 0 ? timeout : io.timeout,
+                    }
+                    return data;
+                }else{
+                    return io;
+                }
+            })]
+        }else{
+            user.inoutinfo = [...user.inoutinfo,{
+                longitude: lng,
+                latitude: lat,
+                timein: timein,
+                timeout: timeout,
+            } ]
+        }
+        
+        user.save();
+                
+        return res.status(200).json(user);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
+exports.addProfilePicture = (req, res, next) => {
+
+    const { profilePicture } = req.body;
+    const userId = req.user._id;
+
+    User.findById(userId)
         .then(user => {
-            if(!user) return res.status(400).json({msg: 'User does not exist'});
-            const existTimeinDate = `${new Date(user?.inoutinfo?.timein).getMonth()}-${new Date(user?.inoutinfo?.timein).getDate()}-${new Date(user?.inoutinfo?.timein).getFullYear()}`;
-            const newTimeinDate = `${new Date(timein).getMonth()}-${new Date(timein).getDate()}-${new Date(timein).getFullYear()}`;
-            const timeIn = existTimeinDate === newTimeinDate ? user.inoutinfo.timein : timein;
-            user.inoutinfo = {lng: lng, lat: lat, timein: timeIn, timeout: timeout};
+            if(!user) return res.status(400).json({msg: 'No user found!'});
+
+            user.profilePicture = profilePicture;
 
             user.save();
 
-            return res.status(200).json(user);
+            return res.status(200).json(user.profilePicture);
         })
         .catch(err => {
             return next(err);

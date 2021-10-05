@@ -40,7 +40,7 @@ const Team = ({team, subscribers, appsgen}) => {
     return(
         <Card className={classes.card} elevation={5}>
             <CardHeader 
-                avatar={<Avatar className={classes.avatar}>{team.username[0][0].toUpperCase()}</Avatar>}
+                avatar={<Avatar className={classes.avatar} src={team.profilePicture}>{team.username[0][0].toUpperCase()}</Avatar>}
                 action={<IconButton size='small' className={classes.action} onClick={() => handleShowAgents(team._id)}><MoreVertIcon /></IconButton>}
                 title={team.username.toUpperCase()}
                 subheader='Team Leader'

@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material"
-import { styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles' 
 
 export const PointersTypography = styled(Typography)(({theme}) => ({
     fontWeight: 'bold',

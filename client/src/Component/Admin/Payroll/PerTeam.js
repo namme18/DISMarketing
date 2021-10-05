@@ -71,7 +71,7 @@ const PerTeam = ({teamleader, allusers, forpayout, grandTotalPayout}) => {
                 <Grid container direction='row' justify='space-between' alignItems='center' className={classes.container}>
                     <Box display='flex' direction='column' alignItems='center' justifyContent='flex-start' style={{cursor:'pointer'}} onClick={handleClickteam}>
                         {showAgents ? <KeyboardArrowUpIcon className={classes.arrow} /> : <KeyboardArrowDownIcon className={classes.arrow} />}
-                        <Avatar className={classes.avatar}>{teamleader.username[0].toUpperCase()}</Avatar>
+                        <Avatar className={classes.avatar} src={teamleader.profilePicture}>{teamleader.username[0].toUpperCase()}</Avatar>
                         <Typography className={classes.teamleader} variant='subtitle1'>{teamleader?.username?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
                         <Typography className={classes.restrictionlevel} variant='caption' color='textSecondary'>&nbsp;- {teamleader.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
                     </Box>

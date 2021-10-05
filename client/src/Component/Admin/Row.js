@@ -139,7 +139,7 @@ const Row = ({user, users}) => {
                 <Grid container direction='row' justify='space-between' alignItems='center'>
                     <Typography variant='subtitle2' onClick={handleClick}  style={{cursor:'pointer', fontWeight:'bold'}}>
                         {!data.edit ? <KeyboardArrowDownIcon size='small' className={classes.arrowIcon} /> : <KeyboardArrowUpIcon className={classes.arrowIcon} size='small'/>}
-                        <Badge badgeContent={user.restrictionlevel?.split(' ').map(n => n[0].toUpperCase())} color='secondary' ><Avatar className={classes.avatar}>{user.username[0].toUpperCase()}</Avatar>
+                        <Badge badgeContent={user.restrictionlevel?.split(' ').map(n => n[0].toUpperCase())} color='secondary' ><Avatar className={classes.avatar} src={user.profilePicture}>{user.username[0].toUpperCase()}</Avatar>
                         {user.username}
                         </Badge>
                     </Typography>

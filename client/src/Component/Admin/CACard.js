@@ -25,7 +25,7 @@ const CACard = ({user}) => {
     return (
         <Card className={classes.card}>
             <CardHeader 
-                avatar={<Avatar className={classes.avatar}>{cardAvatarName}</Avatar>}
+                avatar={<Avatar className={classes.avatar} src={user.profilePicture}>{cardAvatarName}</Avatar>}
                 title={`PHP - ${cardTitle}`}
                 subheader={cardSubHeader}
             />

@@ -35,7 +35,7 @@ const Layout = ({children}) => {
         lng: '',
         lat: '',
         timein: new Date(),
-        timeout: new Date()
+        timeout: 0,
     });
 
     const myLocation = (position) => {
@@ -45,7 +45,6 @@ const Layout = ({children}) => {
             lat: position.coords.latitude
         });
     }
-
     useEffect(() => {
         dispatch(InsertLocation(dataLoc));
     },[dataLoc.lng, dataLoc.lat]);
@@ -95,7 +94,7 @@ const Layout = ({children}) => {
             <CssBaseline />
             <ErrorSnackbar />
             <SuccessSnackbar />
-            <Appbar handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} user={user}  />
+            <Appbar handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} user={user}  data={dataLoc} />
             <ResponsiveNav handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
 
             <Grid className={classes.page}>

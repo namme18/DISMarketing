@@ -2,19 +2,30 @@ import React, { useState } from 'react';
 import dislogo from '../../images/dislogo-transparent.png';
 import MenuIcon from '@material-ui/icons/Menu';
 import useStyles from './style';
+import { styled } from '@mui/material/styles';
 import {
     AppBar,
     Toolbar,
     IconButton,
     Avatar,
     Menu,
-    MenuItem
+    MenuItem,
+    Typography
 } from '@material-ui/core';
+import { Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/reducers/authReducer';
 import { useHistory } from 'react-router-dom';
+import { InsertLocation } from '../../redux/reducers/authActions/InsertLocation';
 
-const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
+const StyledDivider = styled(Divider)(({theme}) => ({
+    height: theme.spacing(2),
+    margin: theme.spacing(0, 1),
+    width: '2px',
+    color: theme.palette.getContrastText(theme.palette.primary.dark),
+}));
+
+const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -31,6 +42,11 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
     }
 
     const handleLogout = () => {
+        const dataLoc = {
+            ...data,
+            timeout: new Date()
+        }
+        dispatch(InsertLocation(dataLoc));
         handleClose();
         dispatch(logoutUser());
         history.push('/');
@@ -57,6 +73,9 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
                     <img alt='DISMarketing' src={dislogo} style={{height:'inherit'}} />
                     </div>
 
+                    <Typography variant='caption' >{`${user.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}</Typography>
+                    <StyledDivider orientation='vertical' />
+                    <Typography onClick={handleClickProfile} style={{cursor: 'pointer'}}>{user.username?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
                     <IconButton
                         aria-label={user?.username}
                         aria-controls='menu-appbar'
@@ -64,13 +83,13 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user}) => {
                         color='primary'
                         onClick={handleMenu}
                     >
-                        <Avatar>
+                        <Avatar src={user.profilePicture}>
                             {user?.username?.[0].toUpperCase()}
                         </Avatar>
                     </IconButton>
 
                     <Menu
-                        id='menu=appbar'
+                        id='menu-appbar'
                         anchorEl={anchorEl}
                         anchorOrigin={{
                             vertical:'top',
