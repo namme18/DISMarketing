@@ -7,8 +7,8 @@ const StyledDiv = styled('div',{
 })(({theme,profilePicture}) => ({
     backgroundImage: `url(${profilePicture})`,
     cursor: 'pointer',
-    width: '50px',
-    height: '50px',
+    width: '25px',
+    height: '25px',
     borderRadius: '50%',
     backgroundSize: 'cover',
     boxShadow: 6
@@ -18,7 +18,7 @@ const Marker = ({map, place}) => {
     const markerRef = useRef();
 
     useEffect(() => {
-        const marker = new mapboxgl.Marker(markerRef.current)
+        const marker = new mapboxgl.Marker(place.profilePicture ? markerRef.current: markerRef)
             .setLngLat([place.longitude, place.latitude])
             .addTo(map);
 

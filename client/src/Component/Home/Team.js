@@ -7,7 +7,7 @@ import {
     IconButton,
     LinearProgress,
     Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -39,11 +39,19 @@ const Team = ({team, subscribers, appsgen}) => {
 
     return(
         <Card className={classes.card} elevation={5}>
-            <CardHeader 
-                avatar={<Avatar className={classes.avatar} src={team.profilePicture}>{team.username[0][0].toUpperCase()}</Avatar>}
-                action={<IconButton size='small' className={classes.action} onClick={() => handleShowAgents(team._id)}><MoreVertIcon /></IconButton>}
-                title={team.username.toUpperCase()}
-                subheader='Team Leader'
+            <CardHeader
+                sx={{
+                    backgroundImage: `url(${team.profilePicture})`,
+                    backgroundPosition: 'center center',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundBlendMode: 'darken',
+                }} 
+                avatar={<Avatar className={classes.avatar} sx={{backgroundColor: 'rgba(255,255,255,0.2)'}}>{team.username[0][0].toUpperCase()}</Avatar>}
+                action={<IconButton size='small' className={classes.action} onClick={() => handleShowAgents(team._id)} sx={{color:'floralwhite', backgroundColor: 'rgba(255,255,255,0.2)'}}><MoreVertIcon /></IconButton>}
+                title={<Typography variant='subtitle2' sx={{color: 'floralwhite'}}>{team.username.toUpperCase()}</Typography>}
+                subheader={<Typography variant='subtitle2' sx={{color: 'floralwhite'}}>{team.restrictionlevel?.split(' ').map(name => name[0].toUpperCase() + name.substring(1)).join(' ') || 'None'}</Typography>}
             />
             <CardContent>
                 {/* Total installed */}

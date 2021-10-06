@@ -21,7 +21,7 @@ const EmpTracker = () => {
 
     const mapContainer = useRef(null);
     const allUsers = useSelector(state => state.authReducer?.allUsers);
-    const userWithLocation = allUsers?.filter(user => user.inoutinfo[user.inoutinfo.length-1]?.longitude > 0);
+    const userWithLocation = allUsers?.filter(user => isNaN(user.inoutinfo[user.inoutinfo.length-1]?.longitude) === false);
     const allUsersForSearch = userWithLocation.filter(user => user.username.search(new RegExp(search, 'i')) !== -1);
     const places = userWithLocation.map(user1 => {
         const currentIO = user1.inoutinfo[user1.inoutinfo.length-1];
@@ -33,7 +33,7 @@ const EmpTracker = () => {
         }
         return data;
     });
-    console.log(places);
+    console.log(userWithLocation);
     
     
     const onChange = e => {

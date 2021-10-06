@@ -11,7 +11,7 @@ import {
     Menu,
     MenuItem,
     Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import { Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/reducers/authReducer';
@@ -73,8 +73,8 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
                     <img alt='DISMarketing' src={dislogo} style={{height:'inherit'}} />
                     </div>
 
-                    <Typography variant='caption' >{`${user.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}</Typography>
-                    <StyledDivider orientation='vertical' />
+                    <Typography variant='caption' sx={{display: {xs: 'none', sm:'none', md: 'block'}}}>{`${user.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}</Typography>
+                    <StyledDivider orientation='vertical' sx={{display: {xs: 'none', sm:'none', md: 'block'}}}/>
                     <Typography onClick={handleClickProfile} style={{cursor: 'pointer'}}>{user.username?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
                     <IconButton
                         aria-label={user?.username}
