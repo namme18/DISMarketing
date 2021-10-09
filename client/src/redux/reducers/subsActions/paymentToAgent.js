@@ -25,7 +25,6 @@ export const paymentToAgent = createAsyncThunk('paymentToAgent', async(subscribe
             return dispatch(userLoaded());
         })
         .catch(err => {
-            console.log(err);
             const errData = {
                 msg: err.response.data.msg,
                 status: err.response.status,

@@ -1,5 +1,5 @@
 import React,{ useState, useRef, useEffect } from 'react';
-import { Grid, IconButton, InputBase, Divider, Stack, Typography  } from '@mui/material';
+import { Grid, IconButton, InputBase, Divider, Stack, Typography, Skeleton  } from '@mui/material';
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Markers from './Markers';
@@ -22,8 +22,8 @@ const EmpTracker = () => {
     const mapContainer = useRef(null);
     const allUsers = useSelector(state => state.authReducer?.allUsers);
     const userWithLocation = allUsers?.filter(user => isNaN(user.inoutinfo[user.inoutinfo.length-1]?.longitude) === false);
-    const allUsersForSearch = userWithLocation.filter(user => user.username.search(new RegExp(search, 'i')) !== -1);
-    const places = userWithLocation.map(user1 => {
+    const allUsersForSearch = userWithLocation?.filter(user => user.username.search(new RegExp(search, 'i')) !== -1);
+    const places = userWithLocation?.map(user1 => {
         const currentIO = user1.inoutinfo[user1.inoutinfo.length-1];
         const data = {
             name: user1.username,
@@ -32,15 +32,15 @@ const EmpTracker = () => {
             profilePicture: user1.profilePicture
         }
         return data;
-    });
-    console.log(userWithLocation);
-    
+    });    
     
     const onChange = e => {
         setSearch(e.target.value);
     }
 
     useEffect(() => {
+        if(!mapContainer.current) return;
+        
         mapboxgl.accessToken = 'pk.eyJ1IjoibmFtbWVzZWxhcm9tIiwiYSI6ImNrdTUwcDlidDI5aWkybm9xODM3YWl4bGUifQ.02hxUVODo5RMTe23XMFCjw';
         
         const map = new mapboxgl.Map({
@@ -49,20 +49,21 @@ const EmpTracker = () => {
             zoom: 14,
             center: [120.68158844273964, 15.576040746360363]
         });
-
+        
         map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
+        
         setMap(map);
+    
+            return () => map.remove();
 
-        return () => map.remove();
     },[]);
 
     useEffect(() => {
         if(!map) return;
 
-        if(places.length !== 0){
+        if(places?.length > 0){
             const coords = [];
-            places.map(place => {
+            places?.map(place => {
                 coords.push([place.longitude, place.latitude]);
             })
             const feature = multiPoint(coords);
@@ -85,7 +86,7 @@ const EmpTracker = () => {
                 duration: 2000,
             })
         }
-    },[map]);
+    },[map,places]);
 
     return(
         <Grid container  direction='row'>
@@ -111,8 +112,8 @@ const EmpTracker = () => {
                 </Stack>
 
                 <Stack direction='column' alignItems='flex-start' sx={{padding: theme => theme.spacing(1, .5), width:'100%'}} elevation={3}>
-                    {allUsersForSearch.length < 1 && (<Typography variant='h6' color='textSecondary'>No data found!</Typography>)}
-                    {allUsersForSearch.length > 0 && allUsersForSearch.map(user => (
+                    {allUsersForSearch?.length < 1 && (<Typography variant='h6' color='textSecondary'>No data found!</Typography>)}
+                    {allUsersForSearch?.length > 0 && allUsersForSearch.map(user => (
                         <UserCard user={user} key={user._id} map={map} mapContainer={mapContainer}/>
                     ))}
                 </Stack>

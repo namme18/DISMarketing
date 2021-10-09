@@ -27,7 +27,7 @@ const Layout = ({children}) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const query = useQuery();
-
+ 
     const { user, isLoading } = useSelector(state => state.authReducer);
     const dateFrom = query.get('dateFrom');
 

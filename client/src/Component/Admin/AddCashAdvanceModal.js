@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const AddCashAdvanceModal = ({openModal, setOpenModal}) => {
+const AddCashAdvanceModal = ({openModal, setOpenModal, operation, setOperation}) => {
 
     const classes = useStyles();
 
@@ -46,12 +46,34 @@ const AddCashAdvanceModal = ({openModal, setOpenModal}) => {
         remarks: '',
         amount: null
     });
+
+    const forDeductionOfSelectedUser = users?.filter(user => user._id === data.agent)[0]?.fordeductions;
     
     const handleCloseModal = (e, reason) => {
         if(reason === 'backdropClick'){
             return;
         }
         setOpenModal(false);
+        setOperation({
+            ...data,
+            isAddCA: false,
+            isAddPayments: false
+        });
+        clearFields();
+    }
+
+    const clearFields = () => {
+        setData({
+            ...data,
+            agent: '',
+            remarks: '',
+            amount: null,
+        });
+        setOperation({
+            ...data,
+            isAddCA: false,
+            isAddPayments: false
+        })
     }
 
     const onSubmit = e => {
@@ -65,19 +87,37 @@ const AddCashAdvanceModal = ({openModal, setOpenModal}) => {
             }
             return dispatch(getErrors(errData));
         }
-
-        const [ selectedUser ] = users?.filter(user => user._id === data.agent);
-        const existingRemarks = selectedUser.fordeductions?.map(ded => data.remarks.localeCompare(ded.remarks, undefined, {sensitivity: 'base'})).some(res => res === 0);
-        if(existingRemarks){
-            const errData = {
-                msg:'Remarks already exist!',
-                status: 400,
-                id: 'TYPO_ERROR'
+        if(operation.isAddCA){
+            const [ selectedUser ] = users?.filter(user => user._id === data.agent);
+            const existingRemarks = selectedUser.fordeductions?.map(ded => data.remarks.localeCompare(ded.remarks, undefined, {sensitivity: 'base'})).some(res => res === 0);
+            if(existingRemarks){
+                const errData = {
+                    msg:'Remarks already exist!',
+                    status: 400,
+                    id: 'TYPO_ERROR'
+                }
+                return dispatch(getErrors(errData));
             }
-            return dispatch(getErrors(errData));
         }
-        dispatch(updateForDedutions(data));
+
+        if(operation.isAddPayments){
+            if(data.remarks.split('|')[1] < data.amount){
+                const errData = {
+                    msg:'Max deduction reach!',
+                    status: 400,
+                    id: 'TYPO_ERROR'
+                }
+                return dispatch(getErrors(errData));
+            }
+        }
+        const dataToSend = {
+            ...data,
+            status: operation.isAddCA ? 'addCA' : 'addPayments'
+        }
+
+        dispatch(updateForDedutions(dataToSend));
         setOpenModal(false);
+        clearFields();
     }
 
     const onChange = e => {
@@ -114,7 +154,7 @@ const AddCashAdvanceModal = ({openModal, setOpenModal}) => {
                         <CreditCardIcon color='secondary'/>
                     </Avatar>
                     <Grid container alignItems='center' direction='column' className={classes.formContainer}>
-                        <Typography variant='h5'>Add Cash Advance</Typography>
+                        <Typography variant='h5'>{operation.isAddCA ? 'Add Cash Advance' : 'Add Payments'}</Typography>
                         <Divider orientation='horizontal' className={classes.divider} />
                         <form onSubmit={onSubmit} autoComplete='off' noValidate className={classes.form}>
                             <Select
@@ -126,22 +166,40 @@ const AddCashAdvanceModal = ({openModal, setOpenModal}) => {
                                 className={classes.textField}
                             >
                                 <MenuItem disabled><Typography variant='subtitle1' color='textSecondary'>Choose account ...</Typography></MenuItem>
-                                {users.filter(u => u._id !== currentUser._id)?.map(user => (
+                                {users?.filter(u => u._id !== currentUser._id)?.map(user => (
                                     <MenuItem key={user._id} value={user._id}>{user.username}</MenuItem>
                                 ))}
                             </Select>
 
-                            <TextField
+                            {operation.isAddPayments && (
+                                <Select
                                 name='remarks'
-                                onChange={onChange}
+                                inputProps={{'aria-label': 'without-label'}}
                                 fullWidth
+                                displayEmpty
+                                onChange={onChange}
                                 className={classes.textField}
-                                placeholder='Reamarks'
-                                label='Remarks'
-                                inputProps={{
-                                    style:{textTransform: 'capitalize'}
-                                }}
-                            />
+                                >
+                                    <MenuItem disabled><Typography variant='subtitle1' color='textSecondary'>Choose remarks ...</Typography></MenuItem>
+                                    {forDeductionOfSelectedUser?.map(ded => (
+                                        <MenuItem key={ded.remarks} value={`${ded.remarks}|${ded.amount}`}>{`${ded.remarks} - Max = ${ded.amount}`}</MenuItem>
+                                    ))}
+                                </Select>
+                            )}
+
+                            {operation.isAddCA && (
+                                <TextField
+                                    name='remarks'
+                                    onChange={onChange}
+                                    fullWidth
+                                    className={classes.textField}
+                                    placeholder='Reamarks'
+                                    label='Remarks'
+                                    inputProps={{
+                                        style:{textTransform: 'capitalize'}
+                                    }}
+                                />
+                            )}
 
                             <TextField
                                 name='amount'

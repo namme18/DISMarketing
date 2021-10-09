@@ -1,4 +1,4 @@
-import React,{ useReducer, useState } from 'react';
+import React,{ useReducer, useState, useEffect } from 'react';
 import {
     Avatar,
     Grid,
@@ -9,7 +9,8 @@ import {
     Typography,
     Box,
     IconButton,
-    Tooltip
+    Tooltip,
+    Skeleton
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
@@ -25,6 +26,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useDispatch } from 'react-redux';
 import { addProfilePicture } from '../../redux/reducers/authActions/addProfilePicture';
 import { getErrors } from '../../redux/reducers/errorReducer';
+import { updateInformation } from '../../redux/reducers/authActions/updateInformation';
+import { logoutUser } from '../../redux/reducers/authReducer';
+import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 
 const reducer = (data, action) => {
     switch(action.type){
@@ -41,17 +45,25 @@ const MyProfile = () => {
     const user = useSelector(state => state.authReducer?.user);
     const allUsers = useSelector(state => state.authReducer?.allUsers);
 
-    const regData = format(new Date(user.registerDate), 'MMMM d, Y');
-    const [ teamLeader ] = allUsers?.filter(account => account._id === user.teamleader);
+    const regData = format(new Date(user?.registerDate || '05-24-1992'), 'MMMM d, Y');
+    const teamLeader = allUsers?.filter(account => account._id === user.teamleader);
     const fordeduction = user?.fordeductions?.map(item => parseFloat(item.amount)).reduce((a, b) => a + b, 0).toFixed(2);
     
     const [data, setData] = useReducer(reducer, {
-        profilePicture: [user.profilePicture]
+        profilePicture: [user.profilePicture],
+
+    });
+
+    const [newData, setNewData] = useState({
+        username: '',
+        email: '',
+        currentpassword: '',
+        newpassword: '',
+        confirmnewpassword: '',
+        isdisabledsave: true
     });
 
     const [profile, setProfile] = useState(false);
-
-    console.log(fordeduction);
 
     const onChange =(e) => {
         setData({type: "CLEARIMAGE"});
@@ -83,14 +95,108 @@ const MyProfile = () => {
     }
 
     const updateInfo = e => {
-        console.log(e.target.value);
+        setNewData({
+            ...newData,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const clearNewData = () => {
+        setNewData({
+            username: '',
+            email: '',
+            currentpassword: '',
+            newpassword: '',
+            confirmnewpassword: '',
+            isdisabledsave: true
+        });
     }
 
     const onSubmit = e => {
         e.preventDefault();
-        alert(e);
+        if(newData.username.split(' ').length < 3 && newData.username !== ''){
+            const errData = {
+                msg: 'Please follow correct format of username! sample(firstname middlename lastname)',
+                status: 400,
+                id: 'UPDATE_FAILED'
+            }
+           return dispatch(getErrors(errData));
+        }
+        if(newData.email.length < 10 && newData.email !== ''){
+            const errData = {
+                msg: 'Please enter valid email',
+                status: 400,
+                id: 'UPDATE_FAILED'
+            }
+           return dispatch(getErrors(errData));
+        }
+        if(newData.newpassword.localeCompare(newData.confirmnewpassword) !== 0 && newData.currentpassword !== ''){
+            const errData = {
+                msg: 'Password do not match!',
+                status: 400,
+                id: 'UPDATE_FAILED'
+            }
+           return dispatch(getErrors(errData));
+        }
+
+        if(newData.currentpassword !== '' && newData.newpassword === ''){
+            const errData = {
+                msg: 'Please enter required fields!',
+                status: 400,
+                id: 'UPDATE_FAILED'
+            }
+           return dispatch(getErrors(errData));
+        }
+
+        dispatch(updateInformation(newData))
+            .then(res => {
+                const isPasswordChange = res.payload.ispasswordnew;
+                if(isPasswordChange){
+                    setTimeout(() => {
+                        const errData = {
+                            msg: 'Redirecting please login with your new password!',
+                            status: 400,
+                            id: 'WARNING'
+                        }
+                        dispatch(getErrors(errData));
+                        setTimeout(() => {
+                            return dispatch(logoutUser());
+                        }, 4000);
+                    },4000);
+                };
+                return clearNewData();
+            })
     }
     
+    useEffect(() => {
+
+        if(newData.username !== '' || newData.email !== '' || newData.newpassword !== '' || newData.currentpassword !== '' || newData.confirmnewpassword){
+            setNewData({
+                ...newData,
+                isdisabledsave: false
+            });
+        }else{
+            setNewData({
+                ...newData,
+                isdisabledsave: true
+            });
+        }
+
+    },[newData.username, newData.email, newData.newpassword, newData.currentpassword, newData.confirmnewpassword]);
+
+    useEffect(() => {
+        dispatch(getAllUsers());
+    },[dispatch]);
+
+    if(!user || !teamLeader){
+        return (
+            <Stack spacing={2} justifyContent='center' alignItems='center'>
+                <Skeleton animation='wave' variant='circular' width={200} height={200} />
+                <Skeleton animation='wave' variant='rectangular' width={500} height={400} />
+            </Stack>
+        )
+    }
+
     return(
         <Grid container spacing={2}>
             <Grid item container direction='column' xs={12} sm={12} md={5} key='avatar' spacing={1} justify='center' alignItems='center'>
@@ -155,7 +261,7 @@ const MyProfile = () => {
 
                     <Stack direction='row' spacing={1} alignItems='center' sx={{marginBottom: 1,  width: '100%'}}>
                             <PointersTypography variant='body2'><LeaderboardIcon sx={{fontSize:'small'}}/>TeamLeader:</PointersTypography>
-                            <ValuesTypography variant='body2' >{teamLeader?.username || 'none'}</ValuesTypography>
+                            <ValuesTypography variant='body2' >{teamLeader[0]?.username || 'none'}</ValuesTypography>
                     </Stack>
 
                     <Stack direction='row' spacing={1} alignItems='center' sx={{marginBottom: 1,  width: '100%'}}>
@@ -168,12 +274,12 @@ const MyProfile = () => {
             <Grid item direction='column' container xs={12} sm={12} md={7} key='details' alignItems='flex-start' sx={{mt: {xs: 0, sm: 0, md: 5}}}>
                     <Typography variant='h5' color='textSecondary'> Update Information</Typography>
                     <Box component='form' noValidate autoComplete='off' onSubmit={onSubmit} sx={{width:'100%', '& > :not(style)':{width:{xs:'100%',sm:'100%', md:'70%' }, margin:{xs:'8px 0%', sm: '8px 0%', md:'8px 10%'}}}}>
-                        <TextField inputProps={{style:{textTransform:'capitalize'}}} InputLabelProps={{shrink: true}} name='username' variant='standard' onChange={updateInfo} label='Full Name' placeholder={user.username} />
-                        <TextField InputLabelProps={{shrink: true}} name='gmail' variant='standard' onChange={updateInfo} label='Email' placeholder={user.email} />
-                        <TextField InputLabelProps={{shrink: true}} name='currentpassword' variant='standard' onChange={updateInfo} label='Current Password' type='password' placeholder='password'/>
-                        <TextField InputLabelProps={{shrink: true}} name='newpassword' variant='standard' onChange={updateInfo} label='New Password' type='password' placeholder='New Password' />
-                        <TextField InputLabelProps={{shrink: true}} name='confirmnewpassword' variant='standard' onChange={updateInfo} label='Confirm New Password' type='password' placeholder='Confirm New Password' />
-                        <Button variant='contained' startIcon={<SaveIcon sx={{width:theme =>  theme.spacing(2), height:theme => theme.spacing(2)}} />} type='submit' fullWidth sx={{margin:'0 10%', padding: 0, borderRadius: 0}} >
+                        <TextField value={newData.username} inputProps={{style:{textTransform:'capitalize'}}} InputLabelProps={{shrink: true}} name='username' variant='standard' onChange={updateInfo} label='Full Name' placeholder={user.username} />
+                        <TextField value={newData.email} InputLabelProps={{shrink: true}} name='email' variant='standard' onChange={updateInfo} label='Email' placeholder={user.email} />
+                        <TextField value={newData.currentpassword} InputLabelProps={{shrink: true}} name='currentpassword' variant='standard' onChange={updateInfo} label='Current Password' type='password' placeholder='password'/>
+                        <TextField value={newData.newpassword} InputLabelProps={{shrink: true}} name='newpassword' variant='standard' onChange={updateInfo} label='New Password' type='password' placeholder='New Password' />
+                        <TextField value={newData.confirmnewpassword} InputLabelProps={{shrink: true}} name='confirmnewpassword' variant='standard' onChange={updateInfo} label='Confirm New Password' type='password' placeholder='Confirm New Password' />
+                        <Button variant='contained' disabled={newData.isdisabledsave} startIcon={<SaveIcon sx={{width:theme =>  theme.spacing(2), height:theme => theme.spacing(2)}} />} type='submit' fullWidth sx={{margin:'0 10%', padding: 0, borderRadius: 0}} >
                             Save
                         </Button>
                     </Box>

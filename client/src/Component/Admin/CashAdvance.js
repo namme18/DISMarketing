@@ -9,8 +9,9 @@ import {
     InputBase,
     Paper,
     TextField,
-    Typography
-} from '@material-ui/core';
+    Typography,
+    Button
+} from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import DnsIcon from '@material-ui/icons/Dns';
 import SearchIcon from '@material-ui/icons/Search';
@@ -75,12 +76,29 @@ const CashAdvance = () => {
     
     const [openModal, setOpenModal] = useState(false);
     const [data, setData] = useState({
-        search: ''
+        search: '',
+        isAddPayments: false,
+        isAddCA: false
     });
+
     const userThatHasForDeductions = users?.filter(user => user.fordeductions.length > 0)?.filter(use => use.username.search(new RegExp(data.search, 'i')) !== -1);
 
-    const handleClickAdd = () => {
+    const handleClickAddCA = () => {
         setOpenModal(true);
+        setData({
+            ...data,
+            isAddCA: true,
+            isAddPaymets: false,
+        });
+    }
+
+    const handleClickAddpayments = () => {
+        setOpenModal(true);
+        setData({
+            ...data,
+            isAddPayments: true,
+            isAddCA: false
+        });
     }
 
     const breakpointColumnsObj = {
@@ -100,8 +118,8 @@ const CashAdvance = () => {
     return(
         <Card elevation={6} className={classes.card}>
             <CardContent>
-                <Grid container spacing={1} direction='row' justify='flex-start'>
-                    <Paper component='form' className={classes.paper}>
+                <Grid container direction='row' justify='flex-start'>
+                    <Paper component='form' className={classes.paper} sx={{width: {xs: '100%', sm: '100%', md:'25%'}, borderRadius: 0}}>
                         <IconButton className={classes.iconButton} aria-label='DNS'>
                             <DnsIcon />
                         </IconButton>
@@ -117,10 +135,23 @@ const CashAdvance = () => {
                             <SearchIcon />
                         </IconButton>
                     </Paper>
-                    <IconButton onClick={handleClickAdd}>
-                        <AddCircleOutlineIcon color='secondary'/>
-                    </IconButton>
-                    <AddCashAdvanceModal openModal={openModal} setOpenModal={setOpenModal}/>
+                
+                    <Button variant='contained' onClick={handleClickAddCA} startIcon={<AddCircleOutlineIcon color='secondary'/>} sx={{
+                        margin: {xs: '0 0 8px 0', sm: '0 0 8px 0', md: '0 8px'},
+                        width: {xs: '100%', sm: '100%', md: 'auto'},
+                        height: '100%',
+                        borderRadius: 0,
+                    }}>Add C.A</Button>
+
+                    
+                    <Button variant='contained' onClick={handleClickAddpayments} startIcon={<AddCircleOutlineIcon color='secondary'/>} sx={{
+                        margin: {xs: '0 0 8px 0', sm: '0 0 8px 0', md: '0 8px'},
+                        height: '100%',
+                        width: {xs: '100%', sm: '100%', md: 'auto'},
+                        borderRadius: 0,
+                    }}>Add Payments</Button>
+
+                    <AddCashAdvanceModal openModal={openModal} setOpenModal={setOpenModal} operation={data} setOperation={setData}/>
                 </Grid>
                 <Divider />
                     <Mansonry

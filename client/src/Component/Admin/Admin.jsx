@@ -26,6 +26,11 @@ import { useDispatch } from 'react-redux';
 import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
 import UnclaimedModal from './UnclaimedModal';
 import EmpTracker from './Map/EmpTracker'
+import { useLocation, useHistory } from 'react-router-dom';
+
+function useQuery(){
+    return new URLSearchParams(useLocation().search);
+}
 
 const useStyles = makeStyles(theme => ({
     tabAppbar:{
@@ -53,14 +58,19 @@ const useStyles = makeStyles(theme => ({
 
 const Admin = () => {
 
-    const classes = useStyles();
-    const [value, setValue] = useState('1');
+    const history = useHistory();
+    const query = useQuery();
     const dispatch = useDispatch();
+    const classes = useStyles();
+
+    const [value, setValue] = useState(query.get('value') || '1');
+
     const [data, setData] = useState({
         newData: null,
         applicationno: '',
         claimant: '',
     });
+
     const [openModal, setOpenModal] = useState(false);
 
     const handleChange = (event, newValue) => {
@@ -70,6 +80,10 @@ const Admin = () => {
     useEffect(() => {
         dispatch(getUnclaimedSubs());
     },[]);
+
+    useEffect(() => {
+        history.push(`/home/admin?value=${value}`);
+    },[value]);
 
     return(
         <Grow in>

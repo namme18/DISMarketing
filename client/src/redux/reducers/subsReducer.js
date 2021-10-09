@@ -10,7 +10,8 @@ export const subsReducer = createSlice({
         checkedSubs:[],
         checkingActivation:[],
         unclaimedSubs: [],
-        forpayout: null
+        forpayout: null,
+        clearCS: false
     },
     reducers:{
         loadSubs: (state, action) => {
@@ -79,8 +80,16 @@ export const subsReducer = createSlice({
         removedPaid: (state, action) => {
             return{
                 ...state,
+                clearCS: true,
                 checkedSubs: [...state.checkedSubs.filter(ch => ch.agentId === action.payload.map(sub => `${sub.agent} ||`))],
                 agentIncome: [...state.agentIncome.filter(ch => ch.agentId === action.payload.map(sub => `${sub.agent} ||`))]
+            }
+        },
+
+        setClearCSToFalse: (state, action) => {
+            return{
+                ...state,
+                clearCS: false,
             }
         },
 
@@ -114,5 +123,5 @@ export const subsReducer = createSlice({
     }
 });
 
-export const { removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid } = subsReducer.actions;
+export const { removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid, setClearCSToFalse } = subsReducer.actions;
 export default subsReducer.reducer;

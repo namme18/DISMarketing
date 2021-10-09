@@ -37,7 +37,11 @@ import UserSubsRow from './UserSubsRow';
 import InstalledSubsRow from './installedSubsRow';
 import Payout from './Payout';
 import dislogo from '../../images/converge-logo.png'
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+
+function useQuery(){
+    return new URLSearchParams(useLocation().search);
+}
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -90,6 +94,8 @@ const MyAccount = () => {
 
     const classes = useStyles();
     const history = useHistory();
+    const query = useQuery();
+    const location = useLocation();
     const usersubs1 = useSelector(state => state.subsReducer?.usersubs);
     const usersubs = usersubs1?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
     const userId = useSelector(state => state.authReducer.user._id);
@@ -119,7 +125,11 @@ const MyAccount = () => {
         dateTo: format(new Date(), 'yyyy-MM-dd'),
     });
 
-    const [value, setValue] = useState('1');
+    const [value, setValue] = useState(query.get('value') || '1');
+
+    useEffect(() => {
+        history.push(`/home/myaccount?value=${value}`);
+    },[value]);
 
     useEffect(() => {
         const userData = {

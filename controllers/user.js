@@ -5,7 +5,6 @@ const config = require('config');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
-
 exports.registerUser = (req, res) => {
    
     const { username, email, password } = req.body;
@@ -62,6 +61,41 @@ exports.registerUser = (req, res) => {
     })
 }
 
+exports.updateInfo = async(req, res, next) => {
+
+    const { username, email, currentpassword, newpassword } = req.body;
+    const userId = req.user._id;
+    User.findById(userId)
+    .select('+password')
+    .then(async(user) => {
+        if(!user) return res.status(400).json({msg: 'Invalid user'});
+        if(username.split(' ').length < 3 && username !== '') return res.status(400).json({msg: 'Invalid username'});
+        const isMatch = newpassword !== '' && await bcrypt.compare(currentpassword, user.password);
+        const salt = newpassword !== '' && await bcrypt.genSalt(10);
+        const hash = newpassword !== '' && await bcrypt.hash(newpassword, salt);
+        if(newpassword !== '' && !isMatch) return res.status(400).json({msg: 'Invalid password'});
+        
+        user.username = username === '' ? user.username : username;
+        if(email !== '' && localeCompare(email, undefined, {sensitivity: 'base'}) !== 0){
+            user.email = email;
+            user.emailVerified === false;
+        }
+        if(newpassword !== ''){
+            user.password = hash;
+        }
+        
+        user.save();
+
+        const ispasswordnew = newpassword === '' ? false : true;
+        return res.status(200).json({user, ispasswordnew});
+                
+        })
+    .catch(err => {
+        return next(err);
+    })
+
+}
+
 exports.loginUser = (req, res) => {
     const { email, password } = req.body;
 
@@ -106,12 +140,17 @@ exports.loginUser = (req, res) => {
 }
 
 exports.addDeductions = (req, res, next) => {
-
-    const {agent, remarks, amount} = req.body;
+    
+    const {agent, remarks, amount, status} = req.body;
     User.findById(agent)
         .then(user => {
             if(!user) return res.status(400).json({msg: 'User Not Found'});
-            user.fordeductions = [...user.fordeductions, {remarks, amount,date: new Date(), payment: []}]
+            if(status === 'addCA'){
+                user.fordeductions = [...user.fordeductions, {remarks, amount,date: new Date(), payment: []}]
+            }
+            if(status === 'addPayments'){
+                user.fordeductions = [...user.fordeductions.map(ded => ded.remarks === remarks.split('|')[0] ? {...ded, amount: ded.amount - amount, payment:[...ded.payment, {amount: amount, date: new Date()}]}: ded)];
+            }
             user.save();
             return res.status(200).json(user);
         })
@@ -194,7 +233,6 @@ exports.addProfilePicture = (req, res, next) => {
 
 exports.forgotPassword = (req, res) => {
     const { email } = req.body;
-    console.log(req);
 
     if(!email) return res.status(400).json({msg: 'Please enter email'});
 

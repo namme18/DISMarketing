@@ -6,14 +6,15 @@ import { clearErrors, getErrors } from "../errorReducer";
 import { updateDedutions } from "../authReducer";
 import { clearSuccess, getSuccess } from "../successReducer";
 
-export const updateForDedutions = createAsyncThunk('updateForDeductions', async({agent, remarks, amount},{dispatch, getState, rejectWithValue}) => {
+export const updateForDedutions = createAsyncThunk('updateForDeductions', async({agent, remarks, amount, status},{dispatch, getState, rejectWithValue}) => {
 
     dispatch(userLoading());
 
     const body = JSON.stringify({
         agent,
         remarks,
-        amount
+        amount,
+        status
     })
     
     return axios.post('/auth/adddeductions', body, tokenConfig(getState))

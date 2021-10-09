@@ -13,8 +13,8 @@ import useStyles from './style';
 import PerSubs from './PerSubs';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { addAgentIncome } from '../../../redux/reducers/subsReducer';
-import { useDispatch } from 'react-redux';
+import { addAgentIncome, setClearCSToFalse } from '../../../redux/reducers/subsReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import { loadCheckedSubs } from '../../../redux/reducers/subsReducer';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -28,6 +28,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
+    const clearCS = useSelector(state => state.subsReducer.clearCS);
     const [showSubs, setShowSubs] = useState(true);
     const [checkedSubs, setCheckedSubs] = useState([]);
     const payout = checkedSubs?.filter(sub => sub.agent === agent._id).map(sub => parseInt(sub.plan)).reduce((a, b) => a + b, 0).toFixed(2);
@@ -219,8 +220,17 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
                 plan: netIncome
             }
             dispatch(addAgentIncome(data));
-    },[netIncome]);
+        },[netIncome]);
 
+    useEffect(() => {
+        if(clearCS){
+            setCheckedSubs([]);
+            setTimeout(() => {
+                dispatch(setClearCSToFalse());
+            },1000);
+        }
+    },[clearCS]);
+        
     return(
         <div>
             {payout > 1 && (
