@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Collapse,
     Grid, 
@@ -23,8 +23,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import { getErrors } from '../../../redux/reducers/errorReducer';
 import { removeIncentivesDeductions } from '../../../redux/reducers/authActions/removeIncentivesDeductions';
 import { addIncentivesDeductions } from '../../../redux/reducers/authActions/addIncentivesDeductions';
+import domtoimage from 'dom-to-image';
 
-const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
+const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout, setImagePerAgent}) => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -53,6 +54,8 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
         remarks: '',
         amount: ''
     })
+
+    const payoutContent = useRef();
     
     const handleClickAgent = () => {
         setShowSubs(!showSubs);
@@ -211,6 +214,15 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
                 subs: checkedSubs.map(sub => sub)
             }
             dispatch(loadCheckedSubs(data));
+
+            domtoimage.toPng(payoutContent.current)
+                .then(res =>{
+                    const data = {
+                        image: res,
+                        id: agent._id
+                    }
+                    setImagePerAgent({type: "ADDIMAGE", payload: data});
+                })
     },[checkedSubs]);
 
     useEffect(() => {
@@ -234,7 +246,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
     return(
         <div>
             {payout > 1 && (
-                <>
+                <div ref={payoutContent}>
                 <Grid container direction='row' justify='space-between' alignItems='center' className={classes.container}>
                     <Box display='flex' justifyContent='flex-start' alignItems='center' style={{cursor:'pointer'}} onClick={handleClickAgent}>
                         {showSubs ? <KeyboardArrowUpIcon className={classes.arrow} /> : <KeyboardArrowDownIcon className={classes.arrow} />}
@@ -348,7 +360,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout}) => {
 
                     </Grid>
                 </Collapse>
-                </>
+                </div>
             )}
         </div>
     )

@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const PerTeam = ({teamleader, allusers, forpayout, grandTotalPayout}) => {
+const PerTeam = ({teamleader, allusers, forpayout, grandTotalPayout, setImagePerAgent}) => {
 
     const classes = useStyles();
     const agentIncome = useSelector(state => state.subsReducer.agentIncome);
@@ -79,7 +79,7 @@ const PerTeam = ({teamleader, allusers, forpayout, grandTotalPayout}) => {
                 </Grid>
                 <Collapse in={showAgents} timeout='auto' unmountOnExit>
                     {agents.map((agent) => (
-                        <PerAgent key={agent._id} grandTotalPayout={grandTotalPayout} teamleader={teamleader} agent={agent} forpayout={forpayout} />
+                        <PerAgent key={agent._id} setImagePerAgent={setImagePerAgent} grandTotalPayout={grandTotalPayout} teamleader={teamleader} agent={agent} forpayout={forpayout} />
                     ))}
                 </Collapse>
                  <Divider/>

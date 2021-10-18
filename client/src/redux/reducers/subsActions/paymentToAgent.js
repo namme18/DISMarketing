@@ -8,21 +8,22 @@ import { clearErrors, getErrors } from "../errorReducer";
 import { removedPaid } from "../subsReducer";
 import { updateAllIncentives } from "../authReducer";
 
-export const paymentToAgent = createAsyncThunk('paymentToAgent', async(subscribers, {dispatch, rejectWithValue, getState}) => {
+export const paymentToAgent = createAsyncThunk('paymentToAgent', async({subscribers, password, myImage, imagePerAgent}, {dispatch, rejectWithValue, getState}) => {
 
     dispatch(userLoading());
 
-    const body = JSON.stringify(subscribers);
+    const body = JSON.stringify({subscribers, password, myImage, imagePerAgent});
 
     return axios.post('/subs/paymenttoagent', body, tokenConfig(getState))
         .then(res => {
-            const upd = JSON.parse(res.config.data);
+            const upd = JSON.parse(res.config.data).subscribers;
             dispatch(getForPayout());
             dispatch(removedPaid(upd));
             dispatch(updateAllIncentives());
             dispatch(clearErrors());
             dispatch(getSuccess({msg:`Matched ${res.data.matched}, Updated ${res.data.updated}`, status: 200, id: 'UPDATE_SUCCESS'}));
-            return dispatch(userLoaded());
+            dispatch(userLoaded());
+            return true;
         })
         .catch(err => {
             const errData = {
@@ -33,7 +34,8 @@ export const paymentToAgent = createAsyncThunk('paymentToAgent', async(subscribe
             dispatch(getErrors(errData));
             dispatch(clearSuccess());
             dispatch(userLoaded());
-            return rejectWithValue(err);
+            rejectWithValue(err);
+            return false;
         })
 
 });

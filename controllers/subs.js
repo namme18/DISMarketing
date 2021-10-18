@@ -1,5 +1,7 @@
 const Subs = require('../model/Subs');
 const User = require('../model/User');
+const Trans = require('../model/Trans');
+const bcrypt = require('bcryptjs');
 
 exports.addSubs = (req, res, next) => {
     const { fullname, email, contactno, address, applicationno, plan} = req.body;
@@ -214,8 +216,14 @@ exports.getUserSubs = (req, res, next) => {
 
 }
 
-exports.paymentToAgent = (req, res, next) => {
-    const subscribers = req.body;
+exports.paymentToAgent = async(req, res, next) => {
+    const {subscribers, password, myImage, imagePerAgent} = req.body;
+    const userId = req.user._id;
+
+    const Currentuser = await User.findById(userId).select('+password');
+    if(!Currentuser) return res.status(400).json({msg:"Invalid user can't proceed!"});
+    const isMatch = await bcrypt.compare(password, Currentuser.password);
+    if(!isMatch) return res.status(400).json({msg:"Invalid user can't proceed!"});
 
     Subs.bulkWrite(
         subscribers.map(sub => ({
@@ -233,7 +241,24 @@ exports.paymentToAgent = (req, res, next) => {
             user.fordeductions = [...user.fordeductions.filter(ded => ded.amount > 0)];
             user.save();
         })
-       return res.status(200).json({matched: result.nMatched, updated: result.nModified});
+
+        const newTrans = new Trans({
+            userId: 'GRAND',
+            allPayout: myImage
+        });
+
+        newTrans.save();
+
+        imagePerAgent.map(data => {
+            const newData = new Trans({
+                userId: data.id,
+                payout: data.image
+            });
+
+            newData.save();
+        })
+
+        return res.status(200).json({matched: result.nMatched, updated: result.nModified});
     })
     .catch(err => {
         return next(err);

@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from 'react';
+import React,{ useEffect, useState, useRef, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Card,
@@ -16,11 +16,15 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import PaymentIcon from '@material-ui/icons/Payment';
 import { getErrors } from '../../../redux/reducers/errorReducer';
 import { paymentToAgent } from '../../../redux/reducers/subsActions/paymentToAgent';
+import ConfirmPaymentModal from './ConfirmPaymentModal';
+import PrintIcon from '@mui/icons-material/Print';
+import { useReactToPrint } from 'react-to-print';
+import domtoimage from 'dom-to-image';
 
 const useStyles = makeStyles(theme => ({
     card:{
-        maxHeight: '63vh',
-        overflowY: 'scroll'
+       // maxHeight: '63vh',
+        //overflowY: 'scroll'
     },
     container:{
         marginBottom: theme.spacing(2),
@@ -57,6 +61,13 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+const reducer = (imagePerAgent, action) => {
+    switch(action.type){
+        case "ADDIMAGE":
+            return [...imagePerAgent.filter(agent => agent.id !== action.payload.id), action.payload]
+    }
+}
+
 const Payroll = () => {
 
     const classes = useStyles();
@@ -71,11 +82,27 @@ const Payroll = () => {
     const filteredCheckedSubs = checkedSubs?.map(sub => sub.subs).filter(sub => sub.length > 0);
     const isHaveNegative = agentIncome.map(ai => ai.plan < 0 ? 1 : 0).reduce((a, b) => a + b, 0);
 
+    const [open, setOpen] = useState(false);
+    const contentToPrint = useRef();
+    const [myImage, setMyImage] = useState('');
+    const [imagePerAgent, setImagePerAgent] = useReducer(reducer, []);
+
+    const handleClickPrint = useReactToPrint({
+        content: () => contentToPrint.current,
+        pageStyle: "",
+        documentTitle: 'DISMarketing-Payout'
+    })
+
     useEffect(() => {
         if(checkedSubs.length > 0){
                 filteredCheckedSubs.map(subs => subs.map(su => checkedSubsCount.push(su)))
         }
         setCs(checkedSubsCount);
+
+        domtoimage.toPng(contentToPrint.current)
+            .then(dataUrl => {
+                setMyImage(dataUrl);
+            })
     },[checkedSubs]);
 
     const teamLeaders = allUsers?.filter(user => user.restrictionlevel !== 'agent');
@@ -86,7 +113,7 @@ const Payroll = () => {
         dispatch(getForPayout());
     }, [dispatch]);
 
-    const handleClickPaid = () => {
+    const handleClickPaid = (password) => {
         if(isHaveNegative > 0){
             const errData = {
                 msg: 'Please remove negative payout',
@@ -104,12 +131,22 @@ const Payroll = () => {
           return dispatch(getErrors(errData));
        }
        const subscribers = cs;
-       dispatch(paymentToAgent(subscribers));
+       dispatch(paymentToAgent({subscribers, password, myImage, imagePerAgent})).then(res => {
+           if(res.payload){
+               setOpen(false);
+           }
+       });
+    }
+
+    const handleClickConfirm = () => {
+        setOpen(true);
     }
 
     return(
-        <Card elevation={6} className={classes.card}>
+        <Card elevation={6} className={classes.card} ref={contentToPrint}>
             <CardContent>
+                <ConfirmPaymentModal open={open} setOpen={setOpen} handleClickPaid={handleClickPaid} contentToPrint={contentToPrint}/>
+                <Grid container direction='row' justify='flex-end'><PrintIcon style={{marginRight: '10px', cursor:'pointer'}} onClick={handleClickPrint}/></Grid>
                 <Grid container direction='row' alignItems='center' justify='center' spacing={2} className={classes.container}>
                     <Grid item key='DISMarketing'>
                         <img alt='DISMarketing' src={dislogo} style={{height:80}} />
@@ -135,13 +172,13 @@ const Payroll = () => {
                     disableElevation
                     className={classes.paidButton}
                     startIcon={<PaymentIcon />}
-                    onClick={handleClickPaid}
+                    onClick={handleClickConfirm}
                     >
                         mark as paid
                     </Button>
                 </Grid>
                 {teamLeaders?.map((teamleader) => (
-                <PerTeam key={teamleader._id} grandTotalPayout={grandTotalPayout} teamleader={teamleader} allusers={allUsers} forpayout={forpayout} seData={setData} data={data} />
+                <PerTeam key={teamleader._id} setImagePerAgent={setImagePerAgent} grandTotalPayout={grandTotalPayout} teamleader={teamleader} allusers={allUsers} forpayout={forpayout} seData={setData} data={data} />
                 ))}
             </CardContent>
         </Card>

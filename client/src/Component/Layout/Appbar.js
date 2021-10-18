@@ -73,9 +73,9 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
                     <img alt='DISMarketing' src={dislogo} style={{height:'inherit'}} />
                     </div>
 
-                    <Typography variant='caption' sx={{display: {xs: 'none', sm:'none', md: 'block'}}}>{`${user.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}</Typography>
+                    <Typography variant='caption' sx={{display: {xs: 'none', sm:'none', md: 'block'}}}>{`${user?.restrictionlevel?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}</Typography>
                     <StyledDivider orientation='vertical' sx={{display: {xs: 'none', sm:'none', md: 'block'}}}/>
-                    <Typography onClick={handleClickProfile} style={{cursor: 'pointer'}}>{user.username?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
+                    <Typography onClick={handleClickProfile} style={{cursor: 'pointer'}}>{user?.username?.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}</Typography>
                     <IconButton
                         aria-label={user?.username}
                         aria-controls='menu-appbar'
@@ -83,7 +83,7 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
                         color='primary'
                         onClick={handleMenu}
                     >
-                        <Avatar src={user.profilePicture}>
+                        <Avatar src={user?.profilePicture}>
                             {user?.username?.[0].toUpperCase()}
                         </Avatar>
                     </IconButton>
