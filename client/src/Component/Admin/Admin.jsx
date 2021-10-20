@@ -134,15 +134,14 @@ const Admin = () => {
                     <Tab value='3' label={<Typography className={classes.buttonLabel}>TRANSACTIONS</Typography>} />
                     <Tab value='4' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
                     {currentUser.restrictionlevel === 'owner' ? (
-                        <>
                         <Tab value='5' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
-                        <Tab value='6' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
-                        </>
                     ) : (
-                        <>
                         <Tab style={{display: 'none'}} />
+                    )}
+                    {currentUser.restrictionlevel === 'owner' ? (
+                        <Tab value='6' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
+                    ) : (
                         <Tab style={{display: 'none'}} />
-                        </>
                     )}
                     <Tab value='7' label={<Typography className={classes.buttonLabel}>EMP. MAP</Typography>} />
                 </TabList>
