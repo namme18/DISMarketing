@@ -126,11 +126,7 @@ const Row = ({user, users}) => {
         {
             name: 'Operation Manager',
             value:'operation manager'
-        },
-        {
-            name: 'Owner',
-            value:'owner'
-        },
+        }
     ]
 
     return(

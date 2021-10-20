@@ -7,7 +7,7 @@ const OMRoute = ({component: Component, ...rest}) => {
         <Route 
             {...rest}
             render={props => 
-                restrictionlevel !== ('operation manager' || 'owner') ? (
+                restrictionlevel !== 'operation manager' && restrictionlevel !== 'owner' ? (
                     <Redirect to='/home' />
                 ) : (
                     <Component {...props} />

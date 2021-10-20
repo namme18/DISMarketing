@@ -1,10 +1,12 @@
-import React from 'react';
+import React,{ useRef } from 'react';
 import {
     Avatar,
     Card, CardContent, CardHeader, Typography, Grid, Divider
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
+import PrintIcon from '@mui/icons-material/Print';
+import { useReactToPrint } from 'react-to-print';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -22,10 +24,20 @@ const CACard = ({user}) => {
     const cardAvatarName = user.username[0].toUpperCase();
     const cardTitle = user.fordeductions?.map(ded => parseFloat(ded.amount))?.reduce((a, b) => a + b, 0).toFixed(2);
     const cardSubHeader = user.username.split(' ').map(n => n[0].toUpperCase()+n.substring(1)).join(' ');
+
+    const contentToPrint = useRef();
+
+    const onClickPrint = useReactToPrint({
+        content: () => contentToPrint.current,
+        pageStyle: '',
+        documentTitle: 'Credit'
+    });
+
     return (
-        <Card className={classes.card}>
+        <Card className={classes.card} ref={contentToPrint}>
             <CardHeader 
                 avatar={<Avatar className={classes.avatar} src={user.profilePicture}>{cardAvatarName}</Avatar>}
+                action={<PrintIcon onClick={onClickPrint} sx={{cursor: 'pointer'}} />}
                 title={`PHP - ${cardTitle}`}
                 subheader={cardSubHeader}
             />

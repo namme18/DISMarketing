@@ -25,6 +25,7 @@ mongoose
 
 app.use('/auth', require('./routes/user'));
 app.use('/subs', require('./routes/subs'));
+app.use('/trans', require('./routes/trans'));
 
 //error handler
 app.use(errorHandler);

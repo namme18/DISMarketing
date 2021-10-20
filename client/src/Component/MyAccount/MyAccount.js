@@ -38,6 +38,7 @@ import InstalledSubsRow from './installedSubsRow';
 import Payout from './Payout';
 import dislogo from '../../images/converge-logo.png'
 import { useHistory, useLocation } from 'react-router-dom';
+import Transactions from './Transactions';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -96,6 +97,7 @@ const MyAccount = () => {
     const history = useHistory();
     const query = useQuery();
     const location = useLocation();
+    const userTrans = useSelector(state => state.transReducer.userTrans);
     const usersubs1 = useSelector(state => state.subsReducer?.usersubs);
     const usersubs = usersubs1?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
     const userId = useSelector(state => state.authReducer.user._id);
@@ -241,7 +243,7 @@ const MyAccount = () => {
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={usersubs?.length} color='secondary'>AllSUBS</Badge></Typography>} value='1' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={installedCount ? installedCount : '0'} color='secondary'>INSTALLED</Badge></Typography>} value='2' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={activePayout.length || '0'} color='secondary'>FOR PAYOUT</Badge></Typography>} value='3' />
-                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={5} color='secondary'>PAIDSUBS</Badge></Typography>} value='4' />
+                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={userTrans?.length} color='secondary'>PAIDSUBS</Badge></Typography>} value='4' />
                         </TabList>
                     </AppBar>
                         <TabPanel className={classes.tabPanel1} value='1'>
@@ -328,7 +330,9 @@ const MyAccount = () => {
                         <TabPanel className={classes.tabPanel1} value='3'>
                             <Payout dislogo={dislogo} payoutFrom={payoutFrom} payoutTo={payoutTo} deductions={deductions} classes={classes} SSS={SSS} PHIC={PHIC} CA={CA} totalCommi={totalCommi} VAT={VAT} user={user} HDMF={HDMF} commiPercentage={commiPercentage} activePayout={activePayout}  />
                         </TabPanel>
-                        <TabPanel className={classes.tabPanel1} value='4'>item4</TabPanel>
+                        <TabPanel className={classes.tabPanel1} value='4'>
+                            <Transactions />
+                        </TabPanel>
                 </TabContext>
                 <AddSubsModal openModal={openModal} setOpenModal={setOpenModal} />
             </div>

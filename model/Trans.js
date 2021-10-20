@@ -13,7 +13,7 @@ const TransSchema = mongoose.Schema({
         type: String,
         default: null
     },
-    data: {
+    date: {
         type: Date,
         default: Date.now()
     },

@@ -14,13 +14,16 @@ import {
 import { format } from 'date-fns';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import TodayIcon from '@material-ui/icons/Today';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import ListIcon from '@material-ui/icons/List';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
 import { getAllSubs } from '../../redux/reducers/subsActions/getAllSubs';
 import MasterlistTable from './MasterlistTable/MasterlistTable';
+import { styled } from '@mui/material/styles';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import { CSVLink } from 'react-csv';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -30,6 +33,12 @@ const StyledBadge = withStyles((theme) => ({
       padding: '0 4px',
     },
   }))(Badge);
+
+const StyledGrow = styled(Grow)(({theme}) => ({
+    [theme.breakpoints.up('lg')]:{
+        maxWidth: '78vw'
+    }
+}));
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -86,6 +95,15 @@ const MasterList = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const query = useQuery();
+    const subscribers = useSelector(state => state.subsReducer.subscribers);
+    const subscriberThatChangeDate = subscribers.map(sub => {
+        const modSub = {
+            ...sub,
+            encodeddate: format(new Date(sub.encodeddate), 'MM-d-yyyy'),
+            installeddate: format(new Date(sub.installeddate), 'MM-d-yyyy'),
+        }
+        return modSub;
+    })
 
     const [data, setData] = useState({
         dateFrom: query.get('dateFrom') || format(new Date(), 'yyyy-MM-01'),
@@ -126,7 +144,7 @@ const MasterList = () => {
     }
 
     return(
-        <Grow in>
+        <StyledGrow in>
             <div>
             <Grid container alignItems='center' justify='flex-start' >
                 <Chip
@@ -146,6 +164,19 @@ const MasterList = () => {
                     clickable
                     color='secondary'
                 />
+
+                <CSVLink data={subscriberThatChangeDate} filename={`From:${data.dateFrom}To:${data.dateTo}.csv`} style={{textDecoration: 'none'}} className={classes.chip}>
+                <Chip
+                    className={classes.chip}
+                    label='Download'
+                    variant='outlined'
+                    icon= {<ArrowCircleDownIcon />}
+                    clickable
+                    color='secondary'
+                />
+                </CSVLink>
+
+                
             </Grid>
             <Divider className={classes.divider} />
                 <form noValidate onSubmit={onSubmit}>
@@ -211,7 +242,7 @@ const MasterList = () => {
                 </form>
                 <MasterlistTable show={show} />
             </div>
-        </Grow>
+        </StyledGrow>
     )
 }
 

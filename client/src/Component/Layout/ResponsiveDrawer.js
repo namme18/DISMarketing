@@ -56,7 +56,7 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
                 </div>
                 <Divider />
                 <List>
-                   {restrictionlevel !== ('operation manager' || 'owner') ? (
+                   {restrictionlevel !== 'operation manager' && restrictionlevel !== 'owner' ? (
                        menuItem.filter(item => item.for !== 'private').map((item, index) => (
                     <div key={index}>
                     <ListItem

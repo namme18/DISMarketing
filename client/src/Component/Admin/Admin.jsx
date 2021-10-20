@@ -8,11 +8,12 @@ import {
     Tab,
     Typography,
     AppBar,
-    Grow,
     Chip,
     Grid,
     Divider,
  } from '@material-ui/core';
+ import { Grow } from '@mui/material';
+ import { styled } from '@mui/material/styles';
 import { format } from 'date-fns';
 import AccessibilityIcon from '@material-ui/icons/Accessibility';
 import TodayIcon from '@material-ui/icons/Today';
@@ -22,11 +23,12 @@ import Payroll from './Payroll/Payroll';
 import Activation   from './Activation';
 import CashAdvance from './CashAdvance';
 import UnclaimedAcct from './UnclaimedAcct';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
 import UnclaimedModal from './UnclaimedModal';
-import EmpTracker from './Map/EmpTracker'
+import EmpTracker from './Map/EmpTracker';
 import { useLocation, useHistory } from 'react-router-dom';
+import Transactions from './Transactions';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -56,12 +58,19 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const StyledGrow = styled(Grow)(({theme}) => ({
+    [theme.breakpoints.up('lg')]:{
+        maxWidth: '78vw'
+    }
+}));
+
 const Admin = () => {
 
     const history = useHistory();
     const query = useQuery();
     const dispatch = useDispatch();
     const classes = useStyles();
+    const currentUser = useSelector(state => state.authReducer.user);
 
     const [value, setValue] = useState(query.get('value') || '1');
 
@@ -86,7 +95,7 @@ const Admin = () => {
     },[value]);
 
     return(
-        <Grow in>
+        <StyledGrow in>
             <div>
             <UnclaimedModal openModal={openModal} setOpenModal={setOpenModal} newData={data.newData} />
             <Grid container alignItems='center' justify='flex-start' >
@@ -119,34 +128,55 @@ const Admin = () => {
                     scrollButtons='on'
                 >
                     <Tab value='1' label={<Typography className={classes.buttonLabel}>EMPLOYEE</Typography>} />
-                    <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
-                    <Tab value='3' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
-                    <Tab value='4' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
-                    <Tab value='5' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
-                    <Tab value='6' label={<Typography className={classes.buttonLabel}>EMP. MAP</Typography>} />
+                    {currentUser?.restrictionlevel === 'owner' ? (
+                        <Tab value='2' label={<Typography className={classes.buttonLabel}>PAYROLL</Typography>} />
+                    ) : <Tab style={{display: 'none'}} />}
+                    <Tab value='3' label={<Typography className={classes.buttonLabel}>TRANSACTIONS</Typography>} />
+                    <Tab value='4' label={<Typography className={classes.buttonLabel}>ACTIVATION</Typography>} />
+                    {currentUser.restrictionlevel === 'owner' ? (
+                        <>
+                        <Tab value='5' label={<Typography className={classes.buttonLabel}>CA MONITORING</Typography>} />
+                        <Tab value='6' label={<Typography className={classes.buttonLabel}>UNCLAIMED ACCT</Typography>} />
+                        </>
+                    ) : (
+                        <>
+                        <Tab style={{display: 'none'}} />
+                        <Tab style={{display: 'none'}} />
+                        </>
+                    )}
+                    <Tab value='7' label={<Typography className={classes.buttonLabel}>EMP. MAP</Typography>} />
                 </TabList>
             </AppBar>
                 <TabPanel className={classes.tabPanel1} value='1'>
                     <ApprovedUser />
                 </TabPanel>
-                <TabPanel className={classes.tabPanel1} value='2'>
-                    <Payroll />
-                </TabPanel>
+                    <TabPanel className={classes.tabPanel1} value='2'>
+                        {currentUser.restrictionlevel === 'owner' && (
+                        <Payroll />
+                        )}
+                    </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='3'>
-                    <Activation />
+                    <Transactions />
                 </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='4'>
-                    <CashAdvance />
+                    <Activation />
                 </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='5'>
-                    <UnclaimedAcct openModal={openModal} setOpenModal={setOpenModal} data={data} setData={setData}/>
+                {currentUser.restrictionlevel === 'owner' && (
+                    <CashAdvance />
+                )}
                 </TabPanel>
                 <TabPanel className={classes.tabPanel1} value='6'>
+                {currentUser.restrictionlevel === 'owner' && (
+                    <UnclaimedAcct openModal={openModal} setOpenModal={setOpenModal} data={data} setData={setData}/>
+                )}
+                </TabPanel>
+                <TabPanel className={classes.tabPanel1} value='7'>
                     <EmpTracker />
                 </TabPanel>
             </TabContext>
             </div>
-        </Grow>
+        </StyledGrow>
     )
 }
 

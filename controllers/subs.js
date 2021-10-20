@@ -254,8 +254,10 @@ exports.paymentToAgent = async(req, res, next) => {
                 userId: data.id,
                 payout: data.image
             });
-
-            newData.save();
+            
+            if(data.image.length > 30){
+                newData.save();
+            }
         })
 
         return res.status(200).json({matched: result.nMatched, updated: result.nModified});
