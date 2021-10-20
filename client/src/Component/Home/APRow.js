@@ -22,7 +22,7 @@ const APRow = ({agent}) => {
     const active = subscribers?.filter(sub => sub.agent === agent._id && sub.isActive);
 
     useEffect(() => {
-        if(subscribers.length < 1){
+        if(appsgen.length < 1){
             history.push('/home/home');
         }
     },[]);
