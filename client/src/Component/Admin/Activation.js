@@ -9,7 +9,6 @@ import {
     Typography,
     LinearProgress,
     Paper,
-    Box
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PublishIcon from '@material-ui/icons/Publish';
@@ -21,7 +20,6 @@ import { resetCheckActivation } from '../../redux/reducers/subsReducer';
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { activateAccount } from '../../redux/reducers/subsActions/activateAcount';
 import { encodeAccount } from '../../redux/reducers/subsActions/encodeAccount';
-import { userLoaded, userLoading } from '../../redux/reducers/authReducer';
 
 const useStyles = makeStyles(theme => ({
     input:{

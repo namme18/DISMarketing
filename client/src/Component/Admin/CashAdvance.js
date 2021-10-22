@@ -4,12 +4,9 @@ import {
     CardContent, 
     Divider, 
     Grid,
-    Icon,
     IconButton,
     InputBase,
     Paper,
-    TextField,
-    Typography,
     Button
 } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
@@ -72,7 +69,6 @@ const CashAdvance = () => {
 
     const classes = useStyles();
     const users = useSelector(state => state.authReducer?.allUsers);
-    const currentUser = useSelector(state => state.authReducer?.user);
     
     const [openModal, setOpenModal] = useState(false);
     const [data, setData] = useState({

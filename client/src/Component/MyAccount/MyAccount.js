@@ -86,8 +86,7 @@ const useStyles = makeStyles(theme => ({
         background: theme.palette.warning.light,
     },
     card:{
-        maxHeight: '60vh',
-        overflowY: 'scroll'
+       
     }
 }));
 

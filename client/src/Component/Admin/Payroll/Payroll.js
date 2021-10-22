@@ -8,7 +8,7 @@ import {
     Button,
 } from '@material-ui/core';
 import dislogo from '../../../images/converge-logo.png'
-import { closestIndexTo, format } from 'date-fns';
+import {format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import PerTeam from './PerTeam';
 import { getForPayout } from '../../../redux/reducers/subsActions/getForPayout';

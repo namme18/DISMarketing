@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Markers from './Markers';
 import bbox from "@turf/bbox";
 import { multiPoint } from "@turf/helpers";
-import {useDispatch, useSelector } from 'react-redux';
+import {useSelector } from 'react-redux';
 import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import { SearchPaper } from './styles';
