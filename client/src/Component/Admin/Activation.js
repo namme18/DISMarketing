@@ -126,20 +126,20 @@ const Activation = () => {
         if(!data.allActivation){
             dispatch(resetCheckActivation());
         }
-    },[data.allActivation]);
+    },[data.allActivation,dispatch]);
 
     useEffect(() => {
         if(processPercent === 100){
-            setData({
+            setData(data => ({
                 ...data,
                 disableActivate: false,
                 disabledProcess: true
-            });
+            }));
         }else{
-            setData({
+            setData(data => ({
                 ...data,
                 disableActivate: true
-            });
+            }));
         }
     },[processPercent]);
 
@@ -193,8 +193,9 @@ const Activation = () => {
     }
 
     const handleClickProcess = () => {
+        if(processPercent > 0) return;
         dispatch(resetCheckActivation());
-            data.allActivation?.map((i, index)=> {
+            data.allActivation?.forEach((i, index)=> {
                 dispatch(checkSubs(i))
                 .then(res => {
                     if(res.payload.status === 'Not Matched'){
@@ -217,7 +218,7 @@ const Activation = () => {
             }
             return dispatch(getErrors(errData));
         }
-        filSubs.matched.map(data => {
+        filSubs.matched.forEach(data => {
             dispatch(activateAccount(data))
             .then(res => {
                 return setFilSubs({type: "UPDATEMATCHED", payload: res.payload});
@@ -236,7 +237,7 @@ const Activation = () => {
             return dispatch(getErrors(errData));
         }
 
-        filSubs.unMatched?.map(account => {
+        filSubs.unMatched?.forEach(account => {
             const data = {
                 user,
                 account

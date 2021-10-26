@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const MasterlistTable = ({show}) => {
+const MasterlistTable = ({show, subscriberThatChangeDate}) => {
 
     const classes = useStyles();
-    const { subscribers } = useSelector(state => state.subsReducer);
+    const subscribers = subscriberThatChangeDate;
     const { allUsers } = useSelector(state => state.authReducer);
 
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -47,8 +47,7 @@ const MasterlistTable = ({show}) => {
         setPage(0);
     }
 
-const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page * rowsPerPage);
-
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page * rowsPerPage);
     return(
         <>
         <TableContainer component={Paper} className={classes.container}>
@@ -73,15 +72,15 @@ const emptyRows = rowsPerPage - Math.min(rowsPerPage, subscribers?.length - page
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {subscribers.length < 1 ? (
+                    {!subscribers ? (
                         <TableRow>
                         <TableCell colSpan={6}>
                             <Typography variant='h3' color='textSecondary' align='center'>No Records Found!</Typography>
                         </TableCell>
                         </TableRow>
                     ) : 
-                        subscribers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(subs => (
-                            <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers} show={show}/>
+                    subscribers?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(subs => (
+                        <Row key={subs._id} subs={subs} allUsers={allUsers} subscribers={subscribers} show={show}/>
                         ))}
                         {emptyRows > 0 && (
                                 <TableRow style={{height: 73 * emptyRows }}>

@@ -7,7 +7,7 @@ import {
     Drawer
 } from '@material-ui/core';
 
-const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen }) => {
+const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen, dateFrom, dateTo }) => {
     
     const theme = useTheme();
     const window = props;
@@ -28,7 +28,7 @@ const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen }
                         classes={{paper: classes.drawerPaper}}
                         ModalProps={{keepMounted:true}}
                     >
-                        <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
+                        <ResponsiveDrawer dateFrom={dateFrom} dateTo={dateTo} handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
                     </Drawer>
                 </Hidden>
                 <Hidden mdDown implementation='css'>
@@ -37,7 +37,7 @@ const ResponsiveNav = ({ props, handleDrawerToggle, onClickDislogo, mobileOpen }
                         variant='permanent'
                         open
                     >
-                       <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
+                       <ResponsiveDrawer dateFrom={dateFrom} dateTo={dateTo} handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
                     </Drawer>
                 </Hidden>
             </nav>

@@ -20,6 +20,7 @@ import AllInclusiveIcon from '@material-ui/icons/AllInclusive';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Team from './Team';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -66,27 +67,36 @@ const Home = () => {
   
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const { allUsers } = useSelector(state => state.authReducer);
     const subscribers = useSelector(state => state.subsReducer.subscribers);
     const appsgen = useSelector(state => state.subsReducer.appsgen);
-    const activeSubs = subscribers.filter(sub => sub.isActive).length;
+    const activeSubs = subscribers?.filter(sub => sub.isActive).length;
     const teams = allUsers?.filter(user => user.restrictionlevel !== 'agent');
     
     const [data, setData] = useState({
       dateFrom: format(new Date(), 'yyyy-MM-01'),
       dateTo: format(new Date(), 'yyyy-MM-dd'),
-      search: ''
+      isChange: false,
     });
 
     useEffect(() => {
-      dispatch(getAllSubs(data));
-      dispatch(getAppsGen());
+      history.push(`/home/home?dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`);
+      if(!appsgen && !subscribers && !data.isChange){
+        dispatch(getAllSubs(data));
+        dispatch(getAppsGen());
+      }
+      if(appsgen && subscribers && data.isChange){
+        dispatch(getAllSubs(data));
+        dispatch(getAppsGen());
+      }
     },[data]);
 
     const onChange = e =>{
       setData({
         ...data,
-        [e.target.name]: e.target.value
+        isChange: true,
+        [e.target.name]: e.target.value,
       });
     }
 
@@ -158,7 +168,7 @@ const Home = () => {
                       <Avatar className={classes.ti}><AllInclusiveIcon /></Avatar>
                     }
                     action={
-                      <Avatar className={classes.totalInstalled}>{subscribers.length}</Avatar>
+                      <Avatar className={classes.totalInstalled}>{subscribers?.length}</Avatar>
                     }
                     title='TOTAL INSTALLED'
                     subheader='All installed for current month'
@@ -190,7 +200,7 @@ const Home = () => {
                       <Avatar className={classes.appsGen}><GetAppIcon /></Avatar>
                     }
                     action={
-                      <Avatar className={classes.appsGenAction}>{appsgen.length}</Avatar>
+                      <Avatar className={classes.appsGenAction}>{appsgen?.length}</Avatar>
                     }
                     title='APPS GENERATED'
                     subheader='Application generate for today'

@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 export const transReducer = createSlice({
     name: 'transReducer',
     initialState: {
-        userTrans: [],
-        grandTrans: []
+        userTrans: null,
+        grandTrans: null
     },
     reducers:{
         loadUserTrans: (state, action) => {

@@ -95,8 +95,12 @@ const MasterList = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const query = useQuery();
+
+    const [search, setSearch] = useState(query.get('search'))
+
     const subscribers = useSelector(state => state.subsReducer.subscribers);
-    const subscriberThatChangeDate = subscribers.map(sub => {
+    const subscribersSearch = subscribers?.filter(sub => JSON.stringify(sub).search(new RegExp(search, 'i')) !== -1);
+    const subscriberThatChangeDate = subscribersSearch?.map(sub => {
         const modSub = {
             ...sub,
             encodeddate: format(new Date(sub.encodeddate), 'MM-d-yyyy'),
@@ -108,24 +112,20 @@ const MasterList = () => {
     const [data, setData] = useState({
         dateFrom: query.get('dateFrom') || format(new Date(), 'yyyy-MM-01'),
         dateTo: query.get('dateTo') || format(new Date(), 'yyyy-MM-dd'),
-        search: query.get('search')
+        isChange: false,
     });
 
     const [show, setShow] = useState(false);
 
     useEffect(() => {
-        history.push(`/home/masterlist?dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&search=${data.search || ''}`);
-    },[data]);
+        history.push(`/home/masterlist?dateFrom=${data.dateFrom}&dateTo=${data.dateTo}&search=${search || ''}`);
+    },[search]);
 
     useEffect(() => {
-        dispatch(getAllSubs(data));
-    },[data.dateTo, data.dateFrom]);
-
-    useEffect(() => {
-        if(!data.search){
+        if(subscribers && data.isChange){
             dispatch(getAllSubs(data));
         }
-    },[data.search]);
+    },[data.dateTo, data.dateFrom]);
       
     const onSubmit = e => {
         e.preventDefault();
@@ -135,14 +135,17 @@ const MasterList = () => {
     const onChange = e => {
         setData({
             ...data,
+            isChange: true,
             [e.target.name]: e.target.value
         });
+        if(e.target.name === 'search'){
+            setSearch(e.target.value);
+        }
     }
 
     const showInfo = () => {
         setShow(!show);
     }
-
     return(
         <StyledGrow in>
             <div>
@@ -155,7 +158,7 @@ const MasterList = () => {
                     icon= {<ListIcon />}
                     clickable
                     color='secondary'
-                />
+                    />
                  <Chip
                     className={classes.chip}
                     label={`Today is ${format(new Date(), 'do MMMM Y')}`}
@@ -163,9 +166,9 @@ const MasterList = () => {
                     icon= {<TodayIcon />}
                     clickable
                     color='secondary'
-                />
+                    />
 
-                <CSVLink data={subscriberThatChangeDate} filename={`From:${data.dateFrom}To:${data.dateTo}.csv`} style={{textDecoration: 'none'}} className={classes.chip}>
+                <CSVLink data={subscriberThatChangeDate || []} filename={`From:${data.dateFrom}To:${data.dateTo}.csv`} style={{textDecoration: 'none'}} className={classes.chip}>
                 <Chip
                     className={classes.chip}
                     label='Download'
@@ -240,7 +243,7 @@ const MasterList = () => {
                         </Grid>
                     </Grid>
                 </form>
-                <MasterlistTable show={show} />
+                <MasterlistTable show={show} subscriberThatChangeDate={subscriberThatChangeDate} />
             </div>
         </StyledGrow>
     )

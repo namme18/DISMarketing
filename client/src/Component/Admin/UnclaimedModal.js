@@ -101,8 +101,8 @@ const UnclaimedModal = ({openModal, setOpenModal, newData}) => {
         }
     },[data.claimantSubs]);
 
-    // const re = /NA,|,/gi
-    // const test = data.claimantSubs?.address.replace(re, (match) => { return ''; });
+    //const re = /NA,|,/gi
+    //const test = data.claimantSubs?.address.replace(re, (match) => { return ''; });
 
     const handleApprovedClick = () => {
         dispatch(replaceClaimedSubs(newData));

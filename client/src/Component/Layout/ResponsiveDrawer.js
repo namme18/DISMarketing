@@ -15,7 +15,7 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { useSelector } from 'react-redux';
 
-const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
+const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen, dateFrom, dateTo}) => {
 
     const classes = useStyles();
     const location = useLocation();
@@ -27,7 +27,7 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
             for: 'public',
             text: 'Home',
             icon:  <AccountBoxIcon color='secondary'/>,
-            path:  '/home/home'
+            path:  `/home/home?dateFrom=${dateFrom}&dateTo=${dateTo}`
         },
         {
             for: 'public',
@@ -45,7 +45,7 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen}) => {
             for: 'private',
             text: 'Admin',
             icon: <TouchAppIcon color='secondary' />,
-            path: '/home/admin'
+            path: `/home/admin?dateFrom=${dateFrom}&dateTo=${dateTo}`
         }
     ]
 

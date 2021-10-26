@@ -34,7 +34,7 @@ const Team = ({team, subscribers, appsgen}) => {
     }
 
     const installedPercenatge = parseInt(Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100));
-    const activatedPercentage = parseInt(Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers.filter(sub => sub.teamleader === team._id).length)*100) || 0);
+    const activatedPercentage = parseInt(Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers?.filter(sub => sub.teamleader === team._id).length)*100) || 0);
     const appgeneratedPercentage = parseInt(Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100));
 
     return(

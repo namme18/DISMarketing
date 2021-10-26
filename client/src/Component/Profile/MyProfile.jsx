@@ -28,14 +28,15 @@ import { addProfilePicture } from '../../redux/reducers/authActions/addProfilePi
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { updateInformation } from '../../redux/reducers/authActions/updateInformation';
 import { logoutUser } from '../../redux/reducers/authReducer';
-import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 
 const reducer = (data, action) => {
     switch(action.type){
         case "ADDIMAGE":
             return {...data , profilePicture: [...data.profilePicture, action.payload]};
         case "CLEARIMAGE":
-            return {...data, profilePicture: []}
+            return {...data, profilePicture: []};
+        default: 
+            return {...data}
     }
 }
 
@@ -76,6 +77,7 @@ const MyProfile = () => {
                     type: "ADDIMAGE", payload: e.target.result
                 })
             }
+            return fileReader;
         })
         setProfile(true);
     }
@@ -169,24 +171,12 @@ const MyProfile = () => {
     }
     
     useEffect(() => {
-
         if(newData.username !== '' || newData.email !== '' || newData.newpassword !== '' || newData.currentpassword !== '' || newData.confirmnewpassword){
-            setNewData({
-                ...newData,
-                isdisabledsave: false
-            });
+            setNewData(newData => ({...newData, isdisabledsave: false}));
         }else{
-            setNewData({
-                ...newData,
-                isdisabledsave: true
-            });
+            setNewData(newData => ({...newData, isdisabledsave: true}));
         }
-
     },[newData.username, newData.email, newData.newpassword, newData.currentpassword, newData.confirmnewpassword]);
-
-    useEffect(() => {
-        dispatch(getAllUsers());
-    },[dispatch]);
 
     if(!user || !teamLeader){
         return (

@@ -95,28 +95,27 @@ const MyAccount = () => {
     const classes = useStyles();
     const history = useHistory();
     const query = useQuery();
-    const location = useLocation();
     const userTrans = useSelector(state => state.transReducer.userTrans);
-    const usersubs1 = useSelector(state => state.subsReducer?.usersubs);
+    const usersubs1 = useSelector(state => state.subsReducer.usersubs);
     const usersubs = usersubs1?.filter(sub => sub.applicationno.search('unclaimed') === -1)?.filter(subs => subs.applicationno.search('inclaimed') === -1);
     const userId = useSelector(state => state.authReducer.user._id);
     const user = useSelector(state => state.authReducer.user);
     const installedCount = usersubs && usersubs.filter(sub => sub.remarks === 'installed')?.length;
     const installedSubs = usersubs && usersubs.filter(sub => sub.remarks === 'installed');
-    const activePayout = usersubs.filter(sub => sub.isActive && !sub.ispaidtoagent);
+    const activePayout = usersubs?.filter(sub => sub.isActive && !sub.ispaidtoagent);
     const payoutFrom = activePayout?.map(sub => format(new Date(sub.installeddate), 'do MMMM Y')).reduce((a, b) => a < b && a !== format(new Date('01-01-1992'), 'do MMMM Y') ? a : b, format(new Date('01-01-1992'), 'do MMMM Y'));
     const payoutTo = activePayout?.map(sub => format(new Date(sub.installeddate), 'do MMMM Y')).reduce((a, b) => a > b && a !== format(new Date('01-01-1992'), 'do MMMM Y') ? a : b, format(new Date('01-01-1992'), 'do MMMM Y'));
     const dispatch = useDispatch();
 
     //commision declaration and computation
-    const commiPercentage = activePayout.length <= 4 ? .40 : activePayout.length >= 5 ? .50 : null;
+    const commiPercentage = activePayout?.length <= 4 ? .40 : activePayout?.length >= 5 ? .50 : null;
     const VAT = .05;
     const SSS = 0;
     const PHIC = 0;
     const HDMF = 0;
     const CA = user.cashadvance || 0;
     const commiArray = activePayout?.map(sub => parseFloat(sub.plan*commiPercentage));
-    const totalCommi = commiArray.reduce((a, b) => a + b, 0);
+    const totalCommi = commiArray?.reduce((a, b) => a + b, 0);
     const deductions = parseFloat(totalCommi - ((totalCommi*VAT)+SSS+PHIC+HDMF+CA)).toFixed(2);
     
     const [openModal, setOpenModal] = useState(false);
@@ -124,21 +123,24 @@ const MyAccount = () => {
     const [data, setData] = useState({
         dateFrom: format(new Date(), 'yyyy-MM-01'),
         dateTo: format(new Date(), 'yyyy-MM-dd'),
+        isChange: false,
     });
 
     const [value, setValue] = useState(query.get('value') || '1');
 
     useEffect(() => {
-        history.push(`/home/myaccount?value=${value}`);
-    },[value]);
+        history.push(`/home/myaccount?value=${value}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`);
+    },[value, data]);
 
     useEffect(() => {
-        const userData = {
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-            userId,
+        if(usersubs1 && data.isChange){
+            const userData = {
+                dateFrom: data.dateFrom,
+                dateTo: data.dateTo,
+                userId,
+            }
+            dispatch(getUserSubs(userData));
         }
-        dispatch(getUserSubs(userData));
     },[data]);
 
     const handleChange = (event, newValue) => {
@@ -152,6 +154,7 @@ const MyAccount = () => {
     const onChange = e => {
         setData({
             ...data,
+            isChange: true,
             [e.target.name]: e.target.value
         });
     }
@@ -241,7 +244,7 @@ const MyAccount = () => {
                         >
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={usersubs?.length} color='secondary'>AllSUBS</Badge></Typography>} value='1' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={installedCount ? installedCount : '0'} color='secondary'>INSTALLED</Badge></Typography>} value='2' />
-                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={activePayout.length || '0'} color='secondary'>FOR PAYOUT</Badge></Typography>} value='3' />
+                            <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={activePayout?.length || '0'} color='secondary'>FOR PAYOUT</Badge></Typography>} value='3' />
                             <Tab label={<Typography className={classes.buttonLabel}><Badge badgeContent={userTrans?.length} color='secondary'>PAIDSUBS</Badge></Typography>} value='4' />
                         </TabList>
                     </AppBar>
@@ -280,7 +283,7 @@ const MyAccount = () => {
                             <TablePagination 
                                 rowsPerPageOptions={[10, 15, 20]}
                                 component='div'
-                                count={usersubs?.length}
+                                count={usersubs?.length || 0}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onChangePage={handleChangePage}
@@ -318,7 +321,7 @@ const MyAccount = () => {
                             <TablePagination 
                                 rowsPerPageOptions={[10, 15, 20]}
                                 component='div'
-                                count={installedSubs?.length}
+                                count={installedSubs?.length || 0}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onChangePage={handleChangePage}

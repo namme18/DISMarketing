@@ -1,18 +1,12 @@
-import { Grid, Typography, Paper, Divider } from '@mui/material';
-import React,{ useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getGrandTrans } from '../../redux/reducers/transActions/getGrandTrans';
+import { Grid, Typography, Paper } from '@mui/material';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 const Transactions = () => {
 
-    const dispatch = useDispatch();
     const grandTrans = useSelector(state => state.transReducer.grandTrans);
-
-    useEffect(() => {
-        dispatch(getGrandTrans());
-    },[]);
 
     return (
         <Grid container component={Paper} sx={{p: 2}} direction='column'>

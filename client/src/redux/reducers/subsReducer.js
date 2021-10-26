@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export const subsReducer = createSlice({
     name:'subsReducer',
     initialState:{
-        subscribers: [],
-        usersubs:[],
-        appsgen: [],
+        subscribers: null,
+        usersubs:null,
+        appsgen: null,
         agentIncome:[],
         checkedSubs:[],
         checkingActivation:[],
-        unclaimedSubs: [],
+        unclaimedSubs: null,
         forpayout: null,
         clearCS: false
     },

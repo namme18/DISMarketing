@@ -36,31 +36,27 @@ const Payout = ({dislogo, deductions, payoutFrom, payoutTo, classes, SSS, PHIC, 
                 </Box>
                 <Box display='flex' justifyContent='flex-start' alignItems='center'>
                     <Typography variant='subtitle1'><strong>Dc:</strong></Typography>
-                    <Typography display='inline' noWrap variant='body2' color='textSecondary'>&nbsp;{`${payoutFrom.split(' ')[0]} ${payoutFrom.split(' ')[1]} - ${payoutTo}`}</Typography>
+                    <Typography display='inline' noWrap variant='body2' color='textSecondary'>&nbsp;{`${payoutFrom?.split(' ')[0]} ${payoutFrom?.split(' ')[1]} - ${payoutTo}`}</Typography>
                 </Box>
                 <Divider />
                 <Box display='flex' justifyContent='space-between' alignItems='center'>
                     <Typography variant='subtitle1'><strong>Earnings</strong></Typography>
                     <Typography variant='subtitle1'><strong>Amount</strong></Typography>
                 </Box>
-                {activePayout?.map(sub => (
-                    <>
-                    <Box display='flex' justifyContent='space-between' alignItems='center'>
+                {activePayout?.map((sub, index) => (
+                    <Box display='flex' justifyContent='space-between' alignItems='center' key={index}>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${sub.fullname.map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{sub.plan}|P{(parseFloat(sub.plan)*parseFloat(commiPercentage)).toFixed(2)}</Typography>
                     </Box>
-                    </>
                 ))}
                 <Box display='flex' justifyContent='space-between' alignItems='center'>
                     <Typography variant='subtitle1'><strong>Incentives</strong></Typography>
                 </Box>
-                {user.incentives?.map(inc => (
-                    <>
-                    <Box display='flex' justifyContent='space-between' alignItems='center'>
+                {user.incentives?.map((inc, index) => (
+                    <Box display='flex' justifyContent='space-between' alignItems='center' key={index}>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${inc.remarks?.split(' ').map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>P{parseFloat(inc.amount).toFixed(2)}</Typography>
                     </Box>
-                    </>
                 ))}
                     <Typography variant='body2' style={{fontWeight:'bold'}}>Deductions</Typography>
                     <Divider />
@@ -84,13 +80,11 @@ const Payout = ({dislogo, deductions, payoutFrom, payoutTo, classes, SSS, PHIC, 
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>VAT 5%</Typography>
                         <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{parseFloat(totalCommi*VAT).toFixed(2)}</Typography>
                     </Box>
-                    {user.deductions?.map(ded => (
-                        <>
-                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    {user.deductions?.map((ded, index) => (
+                        <Box display='flex' justifyContent='space-between' alignItems='center' key={index}>
                             <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{`${ded.remarks?.split(' ').map(n => n[0].toUpperCase()+n.substring(1)).join(' ')}`}</Typography>
                             <Typography variant='body2' display='block' style={{maxWidth: '50%'}} noWrap color='textSecondary'>{parseFloat(ded.amount).toFixed(2)}</Typography>
                         </Box>
-                        </>
                      ))}
                     <Divider />
                     <Box display='flex' justifyContent='space-between' alignItems='center'>

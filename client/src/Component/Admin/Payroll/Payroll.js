@@ -98,11 +98,13 @@ const Payroll = () => {
                 filteredCheckedSubs.map(subs => subs.map(su => checkedSubsCount.push(su)))
         }
         setCs(checkedSubsCount);
-
-        domtoimage.toPng(contentToPrint.current)
-            .then(dataUrl => {
-                setMyImage(dataUrl);
-            })
+        
+        if(contentToPrint.current){
+            domtoimage.toPng(contentToPrint.current)
+                .then(dataUrl => {
+                    setMyImage(dataUrl);
+                })
+        }
     },[checkedSubs]);
 
     const teamLeaders = allUsers?.filter(user => user.restrictionlevel !== 'agent');

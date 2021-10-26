@@ -25,7 +25,7 @@ const StyledDivider = styled(Divider)(({theme}) => ({
     color: theme.palette.getContrastText(theme.palette.primary.dark),
 }));
 
-const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
+const Appbar = ({handleDrawerToggle, onClickDislogo, user, data, dateFrom, dateTo}) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -54,7 +54,7 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data}) => {
 
     const handleClickProfile = () => {
         handleClose();
-        history.push('/home/myprofile');
+        history.push(`/home/myprofile?dateFrom=${dateFrom}&dateTo=${dateTo}`);
     }
 
     return(

@@ -23,8 +23,7 @@ import Payroll from './Payroll/Payroll';
 import Activation   from './Activation';
 import CashAdvance from './CashAdvance';
 import UnclaimedAcct from './UnclaimedAcct';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
+import { useSelector } from 'react-redux';
 import UnclaimedModal from './UnclaimedModal';
 import EmpTracker from './Map/EmpTracker';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -68,7 +67,6 @@ const Admin = () => {
 
     const history = useHistory();
     const query = useQuery();
-    const dispatch = useDispatch();
     const classes = useStyles();
     const currentUser = useSelector(state => state.authReducer.user);
 
@@ -87,11 +85,7 @@ const Admin = () => {
     };
 
     useEffect(() => {
-        dispatch(getUnclaimedSubs());
-    },[]);
-
-    useEffect(() => {
-        history.push(`/home/admin?value=${value}`);
+        history.push(`/home/admin?value=${value}&dateFrom=${query.get('dateFrom')}&dateTo=${query.get('dateTo')}`);
     },[value]);
 
     return(

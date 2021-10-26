@@ -16,6 +16,12 @@ import ErrorSnackbar from '../../helper/ErrorSnackbar';
 import SuccessSnackbar from '../../helper/SuccessSnackbar';
 import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 import { InsertLocation } from '../../redux/reducers/authActions/InsertLocation';
+import { getUserTrans } from '../../redux/reducers/transActions/getUserTrans';
+import { getGrandTrans } from '../../redux/reducers/transActions/getGrandTrans';
+import { getUserSubs } from '../../redux/reducers/subsActions/getuserSubs';
+import { getAllSubs } from '../../redux/reducers/subsActions/getAllSubs';
+import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
+import { format } from 'date-fns';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -29,7 +35,14 @@ const Layout = ({children}) => {
     const query = useQuery();
  
     const { user, isLoading } = useSelector(state => state.authReducer);
-    const dateFrom = query.get('dateFrom');
+    const dateFrom = query.get('dateFrom') || format(new Date(), 'yyyy-MM-01');
+    const dateTo = query.get('dateTo') || format(new Date(), 'yyyy-MM-dd');
+    const usersubs = useSelector(state => state.subsReducer.usersubs);
+    const allusers = useSelector(state => state.authReducer.allUsers);
+    const userTrans = useSelector(state => state.transReducer.userTrans);
+    const grandTrans = useSelector(state => state.transReducer.grandTrans);
+    const subscribers = useSelector(state => state.subsReducer.subscribers);
+    const unclaimedSubs = useSelector(state => state.subsReducer.unclaimedSubs);
 
     const [dataLoc, setDataLoc] = useState({
         lng: '',
@@ -74,7 +87,23 @@ const Layout = ({children}) => {
     },[location]);
 
     useEffect(() => {
-        dispatch(getAllUsers());
+        if(!allusers && !userTrans && !grandTrans && !usersubs && !subscribers && !unclaimedSubs){
+            dispatch(getAllUsers());
+            dispatch(getUserTrans());
+            dispatch(getGrandTrans());
+            const userData = {
+                dateFrom,
+                dateTo,
+                userId: user._id
+            }
+            dispatch(getUserSubs(userData));
+            const data = {
+                dateFrom,
+                dateTo,
+            }
+            dispatch(getAllSubs(data));
+            dispatch(getUnclaimedSubs());
+        }
     },[dispatch]);
 
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -94,8 +123,8 @@ const Layout = ({children}) => {
             <CssBaseline />
             <ErrorSnackbar />
             <SuccessSnackbar />
-            <Appbar handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} user={user}  data={dataLoc} />
-            <ResponsiveNav handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
+            <Appbar dateFrom={dateFrom} dateTo={dateTo} handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} user={user}  data={dataLoc} />
+            <ResponsiveNav dateFrom={dateFrom} dateTo={dateTo} handleDrawerToggle={handleDrawerToggle} onClickDislogo={onClickDislogo} mobileOpen={mobileOpen} />
 
             <Grid className={classes.page}>
                 <Grid item>

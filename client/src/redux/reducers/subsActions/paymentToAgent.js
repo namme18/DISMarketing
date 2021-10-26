@@ -7,6 +7,8 @@ import { clearSuccess, getSuccess } from "../successReducer";
 import { clearErrors, getErrors } from "../errorReducer";
 import { removedPaid } from "../subsReducer";
 import { updateAllIncentives } from "../authReducer";
+import { getUserTrans } from '../transActions/getUserTrans';
+import { getGrandTrans } from '../transActions/getGrandTrans';
 
 export const paymentToAgent = createAsyncThunk('paymentToAgent', async({subscribers, password, myImage, imagePerAgent}, {dispatch, rejectWithValue, getState}) => {
 
@@ -21,6 +23,8 @@ export const paymentToAgent = createAsyncThunk('paymentToAgent', async({subscrib
             dispatch(removedPaid(upd));
             dispatch(updateAllIncentives());
             dispatch(clearErrors());
+            dispatch(getUserTrans());
+            dispatch(getGrandTrans());
             dispatch(getSuccess({msg:`Matched ${res.data.matched}, Updated ${res.data.updated}`, status: 200, id: 'UPDATE_SUCCESS'}));
             dispatch(userLoaded());
             return true;

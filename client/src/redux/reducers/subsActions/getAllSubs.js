@@ -5,9 +5,9 @@ import { userLoaded, userLoading } from "../authReducer";
 import { clearErrors, getErrors } from "../errorReducer";
 import { loadSubs } from '../subsReducer';
 
-export const getAllSubs = createAsyncThunk('getAllSubs', async({dateFrom, dateTo,search}, {dispatch, getState, rejectWithValue}) => {
+export const getAllSubs = createAsyncThunk('getAllSubs', async({dateFrom, dateTo}, {dispatch, getState, rejectWithValue}) => {
     dispatch(userLoading());
-    return axios.get(`/subs/getallsubs?dateFrom=${dateFrom}&dateTo=${dateTo}&search=${search}`, tokenConfig(getState))
+    return axios.get(`/subs/getallsubs?dateFrom=${dateFrom}&dateTo=${dateTo}`, tokenConfig(getState))
     .then(subscribers => {
             dispatch(loadSubs(subscribers.data));
             dispatch(clearErrors());
