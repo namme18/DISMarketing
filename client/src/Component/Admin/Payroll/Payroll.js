@@ -7,6 +7,7 @@ import {
     CardContent,
     Button,
 } from '@material-ui/core';
+import { Divider } from '@mui/material';
 import dislogo from '../../../images/converge-logo.png'
 import {format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
@@ -182,6 +183,7 @@ const Payroll = () => {
                 {teamLeaders?.map((teamleader) => (
                 <PerTeam key={teamleader._id} setImagePerAgent={setImagePerAgent} grandTotalPayout={grandTotalPayout} teamleader={teamleader} allusers={allUsers} forpayout={forpayout} seData={setData} data={data} />
                 ))}
+                <Divider sx={{width: '100%', mt: 5, mb:2}}>End Of Payment</Divider>
             </CardContent>
         </Card>
     )

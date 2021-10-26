@@ -35,7 +35,7 @@ const Team = ({team, subscribers, appsgen}) => {
 
     const installedPercenatge = parseInt(Math.round((subscribers?.filter(sub => sub.teamleader === team._id).length/target)*100));
     const activatedPercentage = parseInt(Math.round((subscribers?.filter(sub => sub.isActive && sub.teamleader === team._id).length/subscribers?.filter(sub => sub.teamleader === team._id).length)*100) || 0);
-    const appgeneratedPercentage = parseInt(Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100));
+    const appgeneratedPercentage = parseInt(Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100)) || 0;
 
     return(
         <Card className={classes.card} elevation={5}>
@@ -99,7 +99,7 @@ const Team = ({team, subscribers, appsgen}) => {
                             <Typography>Apps Generated :</Typography>
                        </Grid>
                        <Grid item>
-                            <Typography variant='body2' color='textSecondary'>{`${appsgen?.filter(sub => sub.teamleader === team._id).length} Out Of ${appsGenTarget}`}</Typography>
+                            <Typography variant='body2' color='textSecondary'>{`${appsgen?.filter(sub => sub.teamleader === team._id).length || 0} Out Of ${appsGenTarget}`}</Typography>
                        </Grid>
                    </Grid>
                    <Grid container item spacing={1} direction='row' alignItems='center'>
@@ -107,7 +107,7 @@ const Team = ({team, subscribers, appsgen}) => {
                         <LinearProgress variant='determinate' value={appgeneratedPercentage} /> 
                        </Grid>
                        <Grid item xs={1}>
-                        <Typography variant='body2' color='textSecondary'>{`${Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100)}%`}</Typography>
+                        <Typography variant='body2' color='textSecondary'>{`${Math.round((appsgen?.filter(sub => sub.teamleader === team._id).length/appsGenTarget)*100) || 0}%`}</Typography>
                        </Grid>
                    </Grid>
                </Grid>
