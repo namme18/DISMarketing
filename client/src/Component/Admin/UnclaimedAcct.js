@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { 
-    Grow,
     Grid,
-    Chip,
     Divider,
     IconButton,
-    Tooltip,
-    Badge,
-    Typography,
-    TextField,
-    Tab,
-    AppBar,
     TableContainer,
     Table,
     TableHead,
@@ -26,6 +18,7 @@ import { useSelector } from 'react-redux';
 import UnclaimedAccountRow from './UnclaimedAccountRow';
 import DnsIcon from '@material-ui/icons/Dns';
 import SearchIcon from '@material-ui/icons/Search';
+import Loading from '../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -99,7 +92,7 @@ const UnclaimedAcct = ({openModal, setOpenModal, data, setData}) => {
     const unclaimedSubsUnfiltered = useSelector(state => state.subsReducer?.unclaimedSubs);
     const allUsers = useSelector(state => state.authReducer.allUsers);
     const currentUser = useSelector(state => state.authReducer.user);
-
+    
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [page, setPage] = useState(0);
     const [search, setSearch] = useState('');
@@ -120,6 +113,12 @@ const UnclaimedAcct = ({openModal, setOpenModal, data, setData}) => {
     }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, unclaimedSubs?.length - page * rowsPerPage);
+
+    if(!unclaimedSubsUnfiltered || !allUsers || !currentUser){
+        return(
+            <Loading />
+        )
+    }
 
     return(
         <>

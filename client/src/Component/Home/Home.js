@@ -21,6 +21,7 @@ import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Team from './Team';
 import { useHistory } from 'react-router-dom';
+import Loading from '../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     divider:{
@@ -82,10 +83,6 @@ const Home = () => {
 
     useEffect(() => {
       history.push(`/home/home?dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`);
-      if(!appsgen && !subscribers && !data.isChange){
-        dispatch(getAllSubs(data));
-        dispatch(getAppsGen());
-      }
       if(appsgen && subscribers && data.isChange){
         dispatch(getAllSubs(data));
         dispatch(getAppsGen());
@@ -98,6 +95,12 @@ const Home = () => {
         isChange: true,
         [e.target.name]: e.target.value,
       });
+    }
+
+    if(!allUsers || !subscribers || !appsgen || !activeSubs){
+      return(
+      <Loading />    
+      )
     }
 
   return (

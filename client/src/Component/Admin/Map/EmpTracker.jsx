@@ -1,5 +1,5 @@
 import React,{ useState, useRef, useEffect } from 'react';
-import { Grid, IconButton, InputBase, Divider, Stack, Typography, Skeleton  } from '@mui/material';
+import { Grid, IconButton, InputBase, Divider, Stack, Typography } from '@mui/material';
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Markers from './Markers';

@@ -22,6 +22,7 @@ import Row from './Row';
 import { getAllUsers } from '../../redux/reducers/authActions/getAllUsers';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
+import Loading from '../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -98,6 +99,12 @@ const ApprovedUser = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers?.length - page * rowsPerPage);
 
+    if(!user || !users){
+        return(
+            <Loading />
+        );
+    }
+    
     return(
         <>
             <TableContainer component={Paper} className={classes.container}>

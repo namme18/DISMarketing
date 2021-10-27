@@ -17,6 +17,8 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/reducers/authReducer';
 import { useHistory } from 'react-router-dom';
 import { InsertLocation } from '../../redux/reducers/authActions/InsertLocation';
+import { clearDataSubs } from '../../redux/reducers/subsReducer';
+import { clearDataTrans } from '../../redux/reducers/transReducer';
 
 const StyledDivider = styled(Divider)(({theme}) => ({
     height: theme.spacing(2),
@@ -47,6 +49,8 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data, dateFrom, dateT
             timeout: new Date()
         }
         dispatch(InsertLocation(dataLoc));
+        dispatch(clearDataSubs());
+        dispatch(clearDataTrans());
         handleClose();
         dispatch(logoutUser());
         history.push('/');

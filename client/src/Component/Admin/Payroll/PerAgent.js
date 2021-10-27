@@ -214,17 +214,21 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout, setImagePerAg
                 subs: checkedSubs.map(sub => sub)
             }
             dispatch(loadCheckedSubs(data));
-            if(payoutContent.current){
-                domtoimage.toPng(payoutContent.current)
-                    .then(res =>{
-                        const data = {
-                            image: res,
-                            id: agent._id
-                        }
-                        setImagePerAgent({type: "ADDIMAGE", payload: data});
-                    })
-            }
+            
     },[checkedSubs]);
+
+    useEffect(() => {
+        if(payoutContent.current){
+            domtoimage.toPng(payoutContent.current)
+                .then(res =>{
+                    const data = {
+                        image: res,
+                        id: agent._id
+                    }
+                    setImagePerAgent({type: "ADDIMAGE", payload: data});
+                })
+        }
+    },[netIncome]);
 
     useEffect(() => {
             const data = {

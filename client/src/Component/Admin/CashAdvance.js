@@ -17,6 +17,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { useSelector } from 'react-redux';
 import CACard from './CACard';
 import Mansonry from 'react-masonry-css';
+import Loading from '../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     card:{
@@ -76,7 +77,7 @@ const CashAdvance = () => {
         isAddPayments: false,
         isAddCA: false
     });
-
+    
     const userThatHasForDeductions = users?.filter(user => user.fordeductions.length > 0)?.filter(use => use.username.search(new RegExp(data.search, 'i')) !== -1);
 
     const handleClickAddCA = () => {
@@ -110,6 +111,13 @@ const CashAdvance = () => {
             [e.target.name]: e.target.value
         });
     }
+
+    if(!users){
+        return(
+            <Loading />
+        )
+    }
+
 
     return(
         <Card elevation={6} className={classes.card}>

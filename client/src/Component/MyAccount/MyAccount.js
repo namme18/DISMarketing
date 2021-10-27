@@ -39,6 +39,7 @@ import Payout from './Payout';
 import dislogo from '../../images/converge-logo.png'
 import { useHistory, useLocation } from 'react-router-dom';
 import Transactions from './Transactions';
+import Loading from '../../helper/Loading';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -173,6 +174,13 @@ const MyAccount = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, usersubs?.length - page * rowsPerPage);
     const emptyRows2 = rowsPerPage - Math.min(rowsPerPage, installedSubs?.length - page * rowsPerPage);
+
+    if(!userTrans || !usersubs1 || !userId || !user){
+        return(
+            <Loading />
+        )
+    }
+
 
     return (
         <Grow in>

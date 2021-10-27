@@ -22,6 +22,7 @@ import { getUserSubs } from '../../redux/reducers/subsActions/getuserSubs';
 import { getAllSubs } from '../../redux/reducers/subsActions/getAllSubs';
 import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
 import { format } from 'date-fns';
+import { getAppsGen } from '../../redux/reducers/subsActions/getAppsGen';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -43,6 +44,7 @@ const Layout = ({children}) => {
     const grandTrans = useSelector(state => state.transReducer.grandTrans);
     const subscribers = useSelector(state => state.subsReducer.subscribers);
     const unclaimedSubs = useSelector(state => state.subsReducer.unclaimedSubs);
+    const appsgen = useSelector(state => state.subsReducer.appsgen);
 
     const [dataLoc, setDataLoc] = useState({
         lng: '',
@@ -87,22 +89,33 @@ const Layout = ({children}) => {
     },[location]);
 
     useEffect(() => {
-        if(!allusers && !userTrans && !grandTrans && !usersubs && !subscribers && !unclaimedSubs){
-            dispatch(getAllUsers());
-            dispatch(getUserTrans());
-            dispatch(getGrandTrans());
+        if(!unclaimedSubs){
+            dispatch(getUnclaimedSubs());
+        }
+        if(!subscribers){
+            const data = {
+                dateFrom,
+                dateTo,
+            }
+            dispatch(getAllSubs(data));
+        }
+        if(!appsgen){
+            dispatch(getAppsGen());
+        }
+        if(!usersubs){
             const userData = {
                 dateFrom,
                 dateTo,
                 userId: user._id
             }
             dispatch(getUserSubs(userData));
-            const data = {
-                dateFrom,
-                dateTo,
-            }
-            dispatch(getAllSubs(data));
-            dispatch(getUnclaimedSubs());
+        }
+        if(!userTrans && !grandTrans){
+            dispatch(getUserTrans());
+            dispatch(getGrandTrans());
+        }
+        if(!allusers ){
+            dispatch(getAllUsers());
         }
     },[dispatch]);
 

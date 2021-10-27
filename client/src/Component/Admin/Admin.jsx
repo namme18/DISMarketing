@@ -28,6 +28,7 @@ import UnclaimedModal from './UnclaimedModal';
 import EmpTracker from './Map/EmpTracker';
 import { useLocation, useHistory } from 'react-router-dom';
 import Transactions from './Transactions';
+import Loading from '../../helper/Loading';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -87,6 +88,12 @@ const Admin = () => {
     useEffect(() => {
         history.push(`/home/admin?value=${value}&dateFrom=${query.get('dateFrom')}&dateTo=${query.get('dateTo')}`);
     },[value]);
+
+    if(!currentUser){
+        return(
+            <Loading />
+        )
+    }
 
     return(
         <StyledGrow in>

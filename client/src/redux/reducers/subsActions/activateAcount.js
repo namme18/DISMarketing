@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { tokenConfig } from '../../../helper/tokenConfig';
 import { getErrors } from '../errorReducer';
+import { activateExistingAccount } from '../subsReducer';
 
 export const activateAccount = createAsyncThunk('activateAccount', async(data, {dispatch, rejectWithValue, getState}) => {
 
@@ -9,6 +10,7 @@ export const activateAccount = createAsyncThunk('activateAccount', async(data, {
 
     return axios.put('/subs/activateaccount', body, tokenConfig(getState))
         .then(res => {
+            dispatch(activateExistingAccount(res.data));
             return res.data;
         })
         .catch(err => {

@@ -20,6 +20,7 @@ import { resetCheckActivation } from '../../redux/reducers/subsReducer';
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { activateAccount } from '../../redux/reducers/subsActions/activateAcount';
 import { encodeAccount } from '../../redux/reducers/subsActions/encodeAccount';
+import Loading from '../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     input:{
@@ -87,7 +88,7 @@ const reducer = (filSubs, action) => {
         case "UPDATEUNMATCHED":
             return {...filSubs, unMatched: [...filSubs.unMatched?.map(sub => sub.COMPLETEACCTNO === action.payload.accountno ? {...sub, STATUS: 'Encoded'} : sub)]}
         case "UPDATEMATCHED":
-            return {...filSubs, matched: [...filSubs.matched.map?.(sub => sub.STATUS !== 'Duplicate' && sub.COMPLETEACCTNO === action.payload.COMPLETEACCTNO ? {...sub, STATUS: 'Encoded'} : sub)]};
+            return {...filSubs, matched: [...filSubs.matched.map?.(sub => sub.STATUS !== 'Duplicate' && sub.COMPLETEACCTNO === action.payload.accountno ? {...sub, STATUS: 'Encoded'} : sub)]};
         case "MATCHED": 
             return {...filSubs, matched: [action.payload.subStatus === 'duplicate' ? {...action.payload, STATUS: 'Duplicate'} : {...action.payload, STATUS: 'Ready'} , ...filSubs.matched]};
         case "UNMATCHED":
@@ -248,6 +249,13 @@ const Activation = () => {
                 })
         })
     }
+
+    if(!user){
+        return(
+            <Loading />
+        )
+    }
+
 
     return(
         <Card elevation={6} className={classes.card}>

@@ -24,6 +24,7 @@ import MasterlistTable from './MasterlistTable/MasterlistTable';
 import { styled } from '@mui/material/styles';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import { CSVLink } from 'react-csv';
+import Loading from '../../helper/Loading';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -146,6 +147,13 @@ const MasterList = () => {
     const showInfo = () => {
         setShow(!show);
     }
+
+    if(!subscribers){
+        return(
+            <Loading />
+        )
+    }
+
     return(
         <StyledGrow in>
             <div>

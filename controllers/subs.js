@@ -126,7 +126,7 @@ exports.activateAccount = (req, res, next) => {
 
         sub.save();
         
-        return res.status(200).json(account);
+        return res.status(200).json(sub);
     })
     .catch(err => {
         return next(err);
@@ -248,7 +248,7 @@ exports.paymentToAgent = async(req, res, next) => {
         });
 
         newTrans.save();
-
+        let userTrans = null;
         imagePerAgent.map(data => {
             const newData = new Trans({
                 userId: data.id,
@@ -257,10 +257,13 @@ exports.paymentToAgent = async(req, res, next) => {
             
             if(data.image.length > 30){
                 newData.save();
+                if(newData.userId === userId.toString()){
+                    userTrans = newData;
+                }
             }
         })
 
-        return res.status(200).json({matched: result.nMatched, updated: result.nModified});
+        return res.status(200).json({matched: result.nMatched, updated: result.nModified,grandTrans: newTrans, userTrans});
     })
     .catch(err => {
         return next(err);

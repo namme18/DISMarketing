@@ -10,7 +10,7 @@ import {
     Box,
     IconButton,
     Tooltip,
-    Skeleton
+    Grow
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
@@ -28,6 +28,7 @@ import { addProfilePicture } from '../../redux/reducers/authActions/addProfilePi
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { updateInformation } from '../../redux/reducers/authActions/updateInformation';
 import { logoutUser } from '../../redux/reducers/authReducer';
+import Loading from '../../helper/Loading';
 
 const reducer = (data, action) => {
     switch(action.type){
@@ -180,14 +181,12 @@ const MyProfile = () => {
 
     if(!user || !teamLeader){
         return (
-            <Stack spacing={2} justifyContent='center' alignItems='center'>
-                <Skeleton animation='wave' variant='circular' width={200} height={200} />
-                <Skeleton animation='wave' variant='rectangular' width={500} height={400} />
-            </Stack>
+            <Loading />
         )
     }
 
     return(
+        <Grow in>
         <Grid container spacing={2}>
             <Grid item container direction='column' xs={12} sm={12} md={5} key='avatar' spacing={1} justify='center' alignItems='center'>
                 <Grid item key='userAvatar'>
@@ -276,6 +275,7 @@ const MyProfile = () => {
             </Grid>
 
         </Grid>
+        </Grow>
     )
 }
 

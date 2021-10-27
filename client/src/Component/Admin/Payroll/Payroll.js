@@ -21,6 +21,7 @@ import ConfirmPaymentModal from './ConfirmPaymentModal';
 import PrintIcon from '@mui/icons-material/Print';
 import { useReactToPrint } from 'react-to-print';
 import domtoimage from 'dom-to-image';
+import Loading from '../../../helper/Loading';
 
 const useStyles = makeStyles(theme => ({
     card:{
@@ -94,18 +95,24 @@ const Payroll = () => {
         documentTitle: 'DISMarketing-Payout'
     })
 
+    const handleClickConfirm = () => {
+        setOpen(true);
+    }
+
     useEffect(() => {
-        if(checkedSubs.length > 0){
-                filteredCheckedSubs.map(subs => subs.map(su => checkedSubsCount.push(su)))
-        }
-        setCs(checkedSubsCount);
-        
         if(contentToPrint.current){
             domtoimage.toPng(contentToPrint.current)
                 .then(dataUrl => {
                     setMyImage(dataUrl);
                 })
         }
+    },[grandTotalPayout]);
+
+    useEffect(() => {
+        if(checkedSubs.length > 0){
+                filteredCheckedSubs.map(subs => subs.map(su => checkedSubsCount.push(su)))
+        }
+        setCs(checkedSubsCount);
     },[checkedSubs]);
 
     const teamLeaders = allUsers?.filter(user => user.restrictionlevel !== 'agent');
@@ -141,8 +148,10 @@ const Payroll = () => {
        });
     }
 
-    const handleClickConfirm = () => {
-        setOpen(true);
+    if(!forpayout || !checkedSubs || !agentIncome || !allUsers){
+        return(
+           <Loading />
+        )
     }
 
     return(

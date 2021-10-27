@@ -3,10 +3,17 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import Loading from '../../helper/Loading';
 
 const Transactions = () => {
 
     const grandTrans = useSelector(state => state.transReducer.grandTrans);
+
+    if(!grandTrans){
+        return(
+            <Loading />
+        )
+    }
 
     return (
         <Grid container component={Paper} sx={{p: 2}} direction='column'>
