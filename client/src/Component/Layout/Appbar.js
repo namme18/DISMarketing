@@ -43,6 +43,11 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data, dateFrom, dateT
         setAnchorEl(null)
     }
 
+    const handleMyAccount = () => {
+        handleClose();
+        history.push('/home/myaccount')
+    }
+
     const handleLogout = () => {
         const dataLoc = {
             ...data,
@@ -108,7 +113,7 @@ const Appbar = ({handleDrawerToggle, onClickDislogo, user, data, dateFrom, dateT
                         onClose={handleClose}
                     >
                         <MenuItem key='Profile' onClick={handleClickProfile}>Profile</MenuItem>
-                        <MenuItem key='My account' onClick={handleClose}>My account</MenuItem>
+                        <MenuItem key='My account' onClick={handleMyAccount}>My account</MenuItem>
                         <MenuItem key='logout' onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
 

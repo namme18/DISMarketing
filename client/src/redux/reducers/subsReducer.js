@@ -140,6 +140,7 @@ export const subsReducer = createSlice({
                 ...state,
                 subscribers: null,
                 unclaimedSubs: null,
+                usersubs: null
             }
         }
     }

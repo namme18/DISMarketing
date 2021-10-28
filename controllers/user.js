@@ -116,14 +116,19 @@ exports.loginUser = (req, res, next) => {
                             if(err) return res.status(400).json({msg: err.message});
                             return res.status(200).json({
                                 user: {
-                                    id: user._id,
+                                    _id: user._id,
                                     username: user.username,
                                     email: user.email,
                                     isApprove: user.isApproved,
                                     restrictionlevel: user.restrictionlevel,
                                     registerDate: user.registerDate,
                                     emailVerified: user.emailVerified,
-                                    teamleader: user.teamleader
+                                    teamleader: user.teamleader,
+                                    incentives: user.incentives,
+                                    deductions: user.deductions,
+                                    inoutinfo: user.inoutinfo,
+                                    profilePicture: user.profilePicture,
+                                    fordeductions: user.fordeductions
                                 },
                                 token
                             })
