@@ -53,6 +53,10 @@ const Layout = ({children}) => {
         timeout: 0,
     });
 
+    const error = err => {
+        console.warn(err);
+    }
+
     const myLocation = (position) => {
         setDataLoc({
             ...dataLoc,
@@ -60,34 +64,31 @@ const Layout = ({children}) => {
             lat: position.coords.latitude
         });
     }
-    useEffect(() => {
-        dispatch(InsertLocation(dataLoc));
-    },[dataLoc.lng, dataLoc.lat]);
-
+    
     useEffect(() => {
         if(!JSON.parse(localStorage.getItem('token'))){
             history.push('/auth');
         }
     }, [user]);
-
+    
     useEffect(() => {
         if(isLoading) {
             return setOpen(true);
         }
         setOpen(false);
     },[isLoading]);
-
+    
     useEffect(() => {
         if(!dateFrom){
             dispatch(validateUser());
         }
-
+        
         if(navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(myLocation);
+            navigator.geolocation.getCurrentPosition(myLocation,error , {enableHighAccuracy: true});
         }
-
+        
     },[location]);
-
+    
     useEffect(() => {
         if(!unclaimedSubs){
             dispatch(getUnclaimedSubs());
@@ -121,16 +122,20 @@ const Layout = ({children}) => {
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [open, setOpen] = useState(false);
-
+    
     const onClickDislogo = () => {
         history.push('/home');
         setMobileOpen(false);
     };
-
+    
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     }
-
+    
+    useEffect(() => {
+        dispatch(InsertLocation(dataLoc));
+    },[dataLoc.lng, dataLoc.lat]);
+    
     return (
         <div className={classes.root}>
             <CssBaseline />

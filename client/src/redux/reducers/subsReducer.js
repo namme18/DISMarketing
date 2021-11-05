@@ -24,7 +24,8 @@ export const subsReducer = createSlice({
         addNewSubs: (state, action) => {
             return{
                 ...state,
-                usersubs: [action.payload, ...state.usersubs]
+                usersubs: [action.payload, ...state.usersubs],
+                appsgen: [action.payload, ...state.appsgen]
             }
         },
 

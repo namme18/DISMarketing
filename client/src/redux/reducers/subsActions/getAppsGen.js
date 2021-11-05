@@ -8,7 +8,7 @@ import { loadAppsGen } from "../subsReducer";
 export const getAppsGen = createAsyncThunk('getAppsGen', async(obj, {dispatch, rejectWithValue, getState}) => {
 
     dispatch(userLoading());
-    const todayDate = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}T00:00:00.00Z`;
+    const todayDate = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`; //T00:00:00.00Z
 
     return axios.get(`/subs/appsgen?todayDate=${todayDate}`, tokenConfig(getState))
         .then(appsgen => {

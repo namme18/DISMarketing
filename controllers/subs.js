@@ -408,8 +408,10 @@ exports.getSubsViaApplicationNo = (req, res, next) => {
 
 exports.getAppsGen = (req, res, next) => {
 
+    
     const { todayDate } = req.query;
     const today = new Date(todayDate);
+    console.log(`${today}-appsgen date`);
     Subs.find({encodeddate: {
         $gte: today
     }})

@@ -128,9 +128,16 @@ export const authReducer = createSlice({
                 user: {...state.user, username: action.payload.user.username, email: action.payload.user.email},
                 allUsers: [...state.allUsers.map(user => user._id === action.payload.user._id ? {...user, username: action.payload.user.username, email: action.payload.user.email} : user)]
             }
+        },
+
+        updateUserLocation: (state, action) => {
+            return{
+                ...state,
+                allUsers: [...state.allUsers.map(user => user._id === action.payload._id ? action.payload : user)]
+            }
         }
     }
 });
 
-export const { loadUser, updateAllIncentives, updateAllUsers, updateDedutions,  logoutUser, userLoading, userLoaded, userValidated, resetMsg, clearResetMsg, emailVerifiedSuccess, loadAllUsers, approvedUser, updateProfilePicture, updateUserInfo } = authReducer.actions;
+export const { loadUser, updateUserLocation, updateAllIncentives, updateAllUsers, updateDedutions,  logoutUser, userLoading, userLoaded, userValidated, resetMsg, clearResetMsg, emailVerifiedSuccess, loadAllUsers, approvedUser, updateProfilePicture, updateUserInfo } = authReducer.actions;
 export default authReducer.reducer;

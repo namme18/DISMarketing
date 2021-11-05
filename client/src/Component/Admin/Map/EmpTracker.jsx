@@ -32,7 +32,7 @@ const EmpTracker = () => {
             profilePicture: user1.profilePicture
         }
         return data;
-    });    
+    });
     
     const onChange = e => {
         setSearch(e.target.value);

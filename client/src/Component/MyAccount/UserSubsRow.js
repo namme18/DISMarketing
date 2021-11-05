@@ -232,12 +232,12 @@ const UserSubsRow = ({sub, index}) => {
                                 type='text'
                                 size='small'
                                 name='address'
-                                placeholder={sub.address.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}
+                                placeholder={sub.address?.split(' ')?.map(name => name[0]?.toUpperCase()+name.substring(1)).join(' ')}
                                 onChange={onChange}
                                 className={classes.textField}
                             />
                         ) : (
-                            sub.address.split(' ').map(name => name[0].toUpperCase()+name.substring(1)).join(' ')
+                            sub.address.split(' ')?.map(name => name[0]?.toUpperCase()+name.substring(1)).join(' ')
                         )}
                     </Typography>
                     <Typography color='textSecondary' variant='body2' >

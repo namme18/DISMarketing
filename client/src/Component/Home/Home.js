@@ -97,7 +97,7 @@ const Home = () => {
       });
     }
 
-    if(!allUsers || !subscribers || !appsgen || !activeSubs){
+    if(!allUsers || !subscribers || !appsgen){
       return(
       <Loading />    
       )
