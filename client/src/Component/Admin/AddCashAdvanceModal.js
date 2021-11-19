@@ -128,7 +128,7 @@ const AddCashAdvanceModal = ({openModal, setOpenModal, operation, setOperation})
     }
 
     const handleKeyPress = e => {
-        if(e.key.match(/[^0-9.]/g)?.length > 0){
+        if(isNaN(e.key) && e.key !== '.'){
             e.preventDefault();
         };
     }

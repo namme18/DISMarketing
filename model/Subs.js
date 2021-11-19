@@ -45,6 +45,50 @@ const SubsSchema = mongoose.Schema({
         type: String,
         default: null
     },
+    bday: {
+        type: Date,
+        default: null
+    },
+    civilstatus: {
+        type: String,
+        default: null
+    },
+    mothersmaidenname: {
+        type: String,
+        default: null
+    },
+    gender: {
+        type: String,
+        default: null
+    },
+    spouse: {
+        type: String,
+        default: null
+    },
+    citizenship: {
+        type: String,
+        default: null
+    },
+    payment: {
+        type: String,
+        default: null
+    },
+    node: {
+        type: String,
+        default: null
+    },
+    agentcodename: {
+        type: String,
+        default: null
+    },
+    installationdate: {
+        type: Date,
+        default: null
+    },
+    attachments: {
+        type: [Object],
+        default: null
+    },
     isActive: {
         type: Boolean,
         default: false
@@ -84,6 +128,13 @@ const SubsSchema = mongoose.Schema({
     datepaidtoagent: {
         type: Date,
         default: null
+    },
+    sppstatus: {
+        type: Object,
+        default: {
+            remarks: null,
+            status: 'encoding'
+        }
     }
 });
 

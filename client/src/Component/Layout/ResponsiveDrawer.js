@@ -13,6 +13,7 @@ import  useStyles  from './style';
 import { useHistory, useLocation } from 'react-router-dom';
 import TouchAppIcon from '@material-ui/icons/TouchApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import InputIcon from '@material-ui/icons/Input';
 import { useSelector } from 'react-redux';
 
 const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen, dateFrom, dateTo}) => {
@@ -40,6 +41,12 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen, dateF
             text: 'Master List',
             icon: <SubjectIcon color='secondary'/>,
             path: '/home/masterlist'
+        },
+        {
+            for: 'private',
+            text: 'Encoder',
+            icon: <InputIcon color='secondary'/>,
+            path: `/home/encoder?dateFrom=${dateFrom}&dateTo=${dateTo}`
         },
         {
             for: 'private',

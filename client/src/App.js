@@ -17,6 +17,9 @@ import MyAccount from './Component/MyAccount/MyAccount';
 import AgentsPerformance from './Component/Home/AgentsPerformance';
 import MyProfile from './Component/Profile/MyProfile';
 import ImageShowRoom from './Component/MyAccount/ImageShowRoom';
+import Encoder from './Component/Encoder/Encoder';
+import ForSppList from './Component/Encoder/PanelOne/ForSppList';
+import Details from './Component/Encoder/PanelOne/Details';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +39,10 @@ function App() {
             <PrivateRoute exact path='/home/verifiedemail/:verifyToken' component={VerifiedEmail} />
             <PrivateRoute exact path='/home/myaccount' component={MyAccount} />
             <PrivateRoute exact path='/home/myprofile' component={MyProfile} />
+            <Encoder path='/home/encoder'>
+              <PrivateRoute exact path='/home/encoder/forspplist' component={ForSppList} />
+              <PrivateRoute exact path='/home/encoder/details' component={Details} />
+            </Encoder>
             <OMRoute exact path='/home/admin' component={Admin} />
         </Layout>
             <PrivateRoute exact path='/image/:id' component={ImageShowRoom} />

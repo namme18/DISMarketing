@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@mui/icons-material": "^5.0.0",
+    "@mui/lab": "^5.0.0-alpha.54",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
     "@mui/system": "^5.0.1",
@@ -32,6 +33,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-to-print": "^2.13.0",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.2",
     "worker-loader": "^3.0.8",
     "xlsx": "^0.17.1"

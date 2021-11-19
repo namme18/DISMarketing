@@ -25,7 +25,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { format } from 'date-fns';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { updateSingleSubs } from '../../redux/reducers/subsActions/updateSingleSubs';
 
@@ -70,10 +70,10 @@ const UserSubsRow = ({sub, index}) => {
 
     useEffect(() => {
         if(data.remarks === 'installed'){
-            setData({
+            setData(data => ({
                 ...data,
                 installeddate: new Date()
-            });
+            }));
         }
     },[data.remarks]);
 

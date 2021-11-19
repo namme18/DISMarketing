@@ -163,7 +163,7 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout, setImagePerAg
     }
     
     const handleKeyDown = e => {
-        if(e.key.match(/[^0-9.]/g)?.length > 0){
+        if(isNaN(e.key) && e.key !== '.'){
             e.preventDefault();
         };
     }

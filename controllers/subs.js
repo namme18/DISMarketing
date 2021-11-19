@@ -427,6 +427,18 @@ exports.getAppsGen = (req, res, next) => {
 
 }
 
+exports.getForSpp = (req, res, next) => {
+
+    Subs.find({remarks: 'standby', remarks: 'for installation'})
+        .then(subs => {
+            return res.status(200).json(subs);
+        })
+        .catch(err => {
+            return next(err);
+        })
+
+}
+
 exports.addMannySubs = async (req, res, next) => {
     const allSubs = await Subs.find({ispaidtoagent: true});
     

@@ -111,7 +111,7 @@ exports.loginUser = (req, res, next) => {
                     jwt.sign(
                         {id: user._id},
                         config.get('secret'),
-                        {expiresIn: '1h'},
+                        {expiresIn: '3h'},
                         (err, token) => {
                             if(err) return res.status(400).json({msg: err.message});
                             return res.status(200).json({

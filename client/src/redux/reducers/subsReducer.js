@@ -11,7 +11,8 @@ export const subsReducer = createSlice({
         checkingActivation:[],
         unclaimedSubs: null,
         forpayout: null,
-        clearCS: false
+        clearCS: false,
+        forspp: null
     },
     reducers:{
         loadSubs: (state, action) => {

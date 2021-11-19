@@ -17,6 +17,9 @@ export default makeStyles(theme => ({
     button: {
         marginTop: theme.spacing(1),
         marginRight: theme.spacing(1),
+        borderRadius: 0,
+        backgroundColor: 'teal',
+        color: 'white',
       },
     actionsContainer: {
         marginBottom: theme.spacing(2),
@@ -26,5 +29,9 @@ export default makeStyles(theme => ({
       },
     textField: {
         margin: theme.spacing(1, 0)
-      }
+      },
+    textFieldModal:{
+      padding: 0,
+      margin: '1px 0'
+    }
 }));
