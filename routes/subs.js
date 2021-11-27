@@ -19,6 +19,6 @@ router.put('/activateaccount', auth, activateAccount);
 router.post('/encodeaccount', auth, encodeAccount);
 router.get('/getunclaimedsubs', auth, getUnclaimedSubs);
 router.get('/subsviaapplicationno', auth, getSubsViaApplicationNo);
-router.get('/getforspp', getForSpp);
+router.get('/getforspp', auth, getForSpp);
 
 module.exports = router;

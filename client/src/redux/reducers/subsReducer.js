@@ -144,9 +144,16 @@ export const subsReducer = createSlice({
                 unclaimedSubs: null,
                 usersubs: null
             }
+        },
+
+        loadForSpp: (state, action) => {
+            return{
+                ...state,
+                forspp: action.payload
+            }
         }
     }
 });
 
-export const { activateExistingAccount, clearDataSubs, encodeNewAccount, removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid, setClearCSToFalse } = subsReducer.actions;
+export const { activateExistingAccount, loadForSpp, clearDataSubs, encodeNewAccount, removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid, setClearCSToFalse } = subsReducer.actions;
 export default subsReducer.reducer;

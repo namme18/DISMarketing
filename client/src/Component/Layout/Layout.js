@@ -23,6 +23,7 @@ import { getAllSubs } from '../../redux/reducers/subsActions/getAllSubs';
 import { getUnclaimedSubs } from '../../redux/reducers/subsActions/getUnclaimedSubs';
 import { format } from 'date-fns';
 import { getAppsGen } from '../../redux/reducers/subsActions/getAppsGen';
+import { getForSpp } from '../../redux/reducers/subsActions/getForSpp';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search);
@@ -45,6 +46,7 @@ const Layout = ({children}) => {
     const subscribers = useSelector(state => state.subsReducer.subscribers);
     const unclaimedSubs = useSelector(state => state.subsReducer.unclaimedSubs);
     const appsgen = useSelector(state => state.subsReducer.appsgen);
+    const forspp = useSelector(state => state.subsReducer.forspp);
 
     const [dataLoc, setDataLoc] = useState({
         lng: '',
@@ -107,7 +109,7 @@ const Layout = ({children}) => {
             const userData = {
                 dateFrom,
                 dateTo,
-                userId: user._id
+                userId: user?._id
             }
             dispatch(getUserSubs(userData));
         }
@@ -118,7 +120,18 @@ const Layout = ({children}) => {
         if(!allusers ){
             dispatch(getAllUsers());
         }
+        if(!forspp){
+            dispatch(getForSpp());
+        }
     },[dispatch]);
+
+    useEffect(() => {
+        setInterval(() => {
+            if(forspp){
+                dispatch(getForSpp());
+            }
+        },30000);
+    },[]);
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [open, setOpen] = useState(false);

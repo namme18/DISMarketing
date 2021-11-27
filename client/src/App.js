@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import Auth from '../src/Component/Auth/Auth';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -28,6 +28,7 @@ function App() {
     dispatch(validateUser());
   }, [dispatch]);
 
+
   return (
       <Router>
           <Switch>
@@ -39,10 +40,12 @@ function App() {
             <PrivateRoute exact path='/home/verifiedemail/:verifyToken' component={VerifiedEmail} />
             <PrivateRoute exact path='/home/myaccount' component={MyAccount} />
             <PrivateRoute exact path='/home/myprofile' component={MyProfile} />
-            <Encoder path='/home/encoder'>
-              <PrivateRoute exact path='/home/encoder/forspplist' component={ForSppList} />
-              <PrivateRoute exact path='/home/encoder/details' component={Details} />
-            </Encoder>
+            <Route path='/home/encoder'>
+              <Encoder path='/home/encoder'>
+                <PrivateRoute exact path='/home/encoder/forspplist' component={ForSppList} />
+                <PrivateRoute exact path='/home/encoder/details' component={Details} />
+              </Encoder>
+            </Route>
             <OMRoute exact path='/home/admin' component={Admin} />
         </Layout>
             <PrivateRoute exact path='/image/:id' component={ImageShowRoom} />

@@ -430,6 +430,7 @@ exports.getAppsGen = (req, res, next) => {
 exports.getForSpp = (req, res, next) => {
 
     Subs.find({remarks: 'standby', remarks: 'for installation'})
+        .sort({encodeddate: 1})
         .then(subs => {
             return res.status(200).json(subs);
         })

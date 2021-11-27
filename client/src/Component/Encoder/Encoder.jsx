@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppBar, Badge, Tab, Typography } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import InboxIcon from '@mui/icons-material/Inbox';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
@@ -36,11 +37,14 @@ const Encoder = ({children}) => {
     const query = useQuery();
     const history = useHistory();
     const location = useLocation();
-    console.log(location.pathname)
 
     const [value, setValue] = useState(query.get('value') || '1');
     const dateFrom = query.get('dateFrom');
     const dateTo = query.get('dateTo');
+
+    const forspp = useSelector(state => state.subsReducer.forspp);
+    const subsForEncoding = forspp?.filter(sub => sub.sppstatus.status === 'encoding');
+
 
     const handleChange = (event, newValue) => {
         console.log(newValue);
@@ -84,7 +88,7 @@ const Encoder = ({children}) => {
                             variant='scrollable'
                             scrollButtons='on'
                         >
-                            <Tab label={<Typography style={{fontWeight: 'bold'}}><Badge badgeContent={6} color='secondary'>FOR ENCODING</Badge></Typography>} value='1' />
+                            <Tab label={<Typography style={{fontWeight: 'bold'}}><Badge badgeContent={subsForEncoding?.length} color='secondary'>FOR ENCODING</Badge></Typography>} value='1' />
                             <Tab label='tab2' value='2' />
                             <Tab label='tab3' value='3' />
                             <Tab label='tab4' value='4' />

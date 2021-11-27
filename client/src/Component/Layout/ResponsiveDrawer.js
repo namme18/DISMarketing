@@ -46,7 +46,7 @@ const ResponsiveDrawer = ({handleDrawerToggle, onClickDislogo, mobileOpen, dateF
             for: 'private',
             text: 'Encoder',
             icon: <InputIcon color='secondary'/>,
-            path: `/home/encoder?dateFrom=${dateFrom}&dateTo=${dateTo}`
+            path: `/home/encoder/forspplist?value=1&dateFrom=${dateFrom}&dateTo=${dateTo}`
         },
         {
             for: 'private',
