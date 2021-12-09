@@ -227,6 +227,12 @@ const PerAgent = ({agent, teamleader, forpayout, grandTotalPayout, setImagePerAg
                     }
                     setImagePerAgent({type: "ADDIMAGE", payload: data});
                 })
+        }else{
+            const data = {
+                image: 'data:,',
+                id: agent._id
+            }
+            setImagePerAgent({type: "ADDIMAGE", payload: data});
         }
     },[netIncome]);
 

@@ -3,12 +3,17 @@ const User = require('../model/User');
 const Trans = require('../model/Trans');
 const bcrypt = require('bcryptjs');
 
-exports.addSubs = (req, res, next) => {
-    const { fullname, email, contactno, address, applicationno, plan} = req.body;
+const uploadResultArray = require('../middleware/uploadResultArray');
+
+exports.addSubs = async (req, res, next) => {
+    const files = req.files;
+    const details = JSON.parse(req.body.details);
+    const data = await uploadResultArray(files);
+    const { fullname, email, contactno, address, applicationno, plan} = details;
     if(!fullname || !email || !contactno || !address || !applicationno || !plan) return res.status(400).json({msg: 'Please input required fields'});
 
     Subs.findOne({fullname})
-        .then(sub => {
+        .then(async (sub) => {
             if(sub) {                
                 User.findById(sub.agent)
                     .then(user => {
@@ -19,8 +24,14 @@ exports.addSubs = (req, res, next) => {
                     })
             }
 
-            const newSubs = new Subs({...req.body, plan: req.body.plan.split(',')[0], packagename: req.body.plan.split(',')[1]});
-        
+            
+            const newSubs = new Subs({
+                ...details, 
+                plan: details.plan.split(',')[0], 
+                packagename: details.plan.split(',')[1], 
+                attachments: data
+            });
+
             newSubs.save()
                 .then(newSubs => {
                     res.status(200).json(newSubs);
@@ -216,8 +227,10 @@ exports.getUserSubs = (req, res, next) => {
 
 }
 
-exports.paymentToAgent = async(req, res, next) => {
-    const {subscribers, password, myImage, imagePerAgent} = req.body;
+exports.paymentToAgent = async (req, res, next) => {
+    const files = req.files;
+    req.body = JSON.parse(req.body.details);
+    const {subscribers, password } = req.body;
     const userId = req.user._id;
 
     const Currentuser = await User.findById(userId).select('+password');
@@ -234,6 +247,10 @@ exports.paymentToAgent = async(req, res, next) => {
         }))
     )
     .then(async result => {
+        const uploadToS3Result = await uploadResultArray(files);
+        const myImage = uploadToS3Result.filter((res, index) => index === 0);
+        const imagePerAgent = uploadToS3Result.filter((res, index) => index !== 0);
+        if(uploadToS3Result.length < 1) return res.status(400).json({msg: 'Failed to upload in S3 Bucket!'});
         const users = await User.find({});
         users.map(user => {
             user.incentives = [];
@@ -241,21 +258,21 @@ exports.paymentToAgent = async(req, res, next) => {
             user.fordeductions = [...user.fordeductions.filter(ded => ded.amount > 0)];
             user.save();
         })
-
+        
         const newTrans = new Trans({
             userId: 'GRAND',
-            allPayout: myImage
+            allPayout: myImage[0].img
         });
-
+        
         newTrans.save();
         let userTrans = null;
         imagePerAgent.map(data => {
             const newData = new Trans({
                 userId: data.id,
-                payout: data.image
+                payout: data.img
             });
             
-            if(data.image.length > 30){
+            if(data.img.length > 30){
                 newData.save();
                 if(newData.userId === userId.toString()){
                     userTrans = newData;
@@ -263,7 +280,7 @@ exports.paymentToAgent = async(req, res, next) => {
             }
         })
 
-        return res.status(200).json({matched: result.nMatched, updated: result.nModified,grandTrans: newTrans, userTrans});
+        return res.status(200).json({matched: result.nMatched, updated: result.nModified,grandTrans: newTrans, userTrans, subscribers});
     })
     .catch(err => {
         return next(err);

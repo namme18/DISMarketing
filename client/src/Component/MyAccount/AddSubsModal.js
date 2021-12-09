@@ -354,10 +354,14 @@ const AddSubsModal = ({openModal, setOpenModal}) => {
             node,
             agentcodename,
             installationdate: new Date(installationdate),
+        }
+        
+        const subsData = {
+            newSubscriber,
             attachments: attached,
         }
 
-       dispatch(addSubs(newSubscriber));
+       dispatch(addSubs(subsData));
 
     }
 

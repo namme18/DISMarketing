@@ -6,7 +6,7 @@ import { clearErrors, getErrors } from "../errorReducer";
 
 export const getAllUsers = createAsyncThunk('getAllUsers', async(obj, {getState, dispatch, rejectWithValue}) => {
     dispatch(userLoading());
-    return axios.get('/auth/allusers', tokenConfig(getState), tokenConfig(getState))
+    return axios.get('/auth/allusers', tokenConfig(getState))
         .then(users => {
             dispatch(loadAllUsers(users.data));
             dispatch(clearErrors());

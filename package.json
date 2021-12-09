@@ -13,19 +13,27 @@
   "author": "Emmanuel F. Morales Jr.",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.1042.0",
+    "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "concurrently": "^6.2.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "jimp": "^0.16.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.15",
+    "multer": "^1.4.3",
+    "node-fetch": "^3.1.0",
     "nodemailer": "^6.6.2",
     "nodemon": "^2.0.7",
     "path": "^0.12.7",
     "react-file-base64": "^1.0.3",
-    "react-masonry-css": "^1.0.16"
+    "react-masonry-css": "^1.0.16",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

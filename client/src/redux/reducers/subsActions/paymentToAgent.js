@@ -8,21 +8,46 @@ import { clearErrors, getErrors } from "../errorReducer";
 import { removedPaid } from "../subsReducer";
 import { updateAllIncentives } from "../authReducer";
 import { addGrandTrans, addUserTrans } from "../transReducer";
+import DataURLToFile from '../../../helper/DataURLtoFile';
 
 export const paymentToAgent = createAsyncThunk('paymentToAgent', async({subscribers, password, myImage, imagePerAgent}, {dispatch, rejectWithValue, getState}) => {
-
+    
     dispatch(userLoading());
+    const formData = new FormData();
+    const mainTransImageFile = DataURLToFile(myImage, `mainTransaction.png`);
+    formData.append('images', mainTransImageFile);
 
-    const body = JSON.stringify({subscribers, password, myImage, imagePerAgent});
+    imagePerAgent.map(imageURL => {
+        if(imageURL.image.length > 30){
+            const file = DataURLToFile(imageURL.image, `${imageURL.id}.png`);
+            formData.append('images', file);
+        }
+    })
+    formData.append('details', JSON.stringify({subscribers, password}));
+    //Headers
+    const { token } = getState().authReducer;
 
-    return axios.post('/subs/paymenttoagent', body, tokenConfig(getState))
+    const config = {
+        headers:{
+            'Content-Type':'multipart/form-data'
+        }
+    }
+
+    if(token){
+        config.headers['authorization'] = `Bearer ${token}`;
+    }
+
+    return axios.post('/subs/paymenttoagent', formData, config)
         .then(res => {
-            const upd = JSON.parse(res.config.data).subscribers;
+            console.log(res);
+            const upd = res.data.subscribers;
             dispatch(getForPayout());
             dispatch(removedPaid(upd));
             dispatch(updateAllIncentives());
             dispatch(clearErrors());
-            dispatch(addUserTrans(res.data.userTrans));
+            if(res.data.userTrans){
+                dispatch(addUserTrans(res.data.userTrans));
+            }
             dispatch(addGrandTrans(res.data.grandTrans));
             dispatch(getSuccess({msg:`Matched ${res.data.matched}, Updated ${res.data.updated}`, status: 200, id: 'UPDATE_SUCCESS'}));
             dispatch(userLoaded());

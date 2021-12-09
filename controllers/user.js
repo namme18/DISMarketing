@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
+const fs = require('fs');
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
+const { uploadFile, getFileStream, deleteFile, getUploadUrl } = require('../middleware/s3');
 
 exports.registerUser = (req, res) => {
    
@@ -216,17 +220,26 @@ exports.insertLocationInfo = (req, res, next) => {
         })
 
 }
-
+const Jimp = require('jimp');
 exports.addProfilePicture = (req, res, next) => {
-
-    const { profilePicture } = req.body;
+    const file = req.file;
+    const description = req.body.description;
     const userId = req.user._id;
+    const filename = file.filename;
 
     User.findById(userId)
-        .then(user => {
-            if(!user) return res.status(400).json({msg: 'No user found!'});
+    .then(async (user) => {
+        if(!user) return res.status(400).json({msg: 'No user found!'});
+        
+        //const uploadURLParams = await getUploadUrl(file);
+        //const { status, imgUrl } = uploadURLParams;
+        const key = user.profilePicture.split('/')[3];
 
-            user.profilePicture = profilePicture;
+        const uploadResult = await uploadFile(file);
+        if(!uploadResult.key) return res.status(400).json({msg: 'Upload Profile Error'});
+            await unlinkFile(file.path);
+            await deleteFile(key);
+            user.profilePicture = uploadResult.Location;
 
             user.save();
 
