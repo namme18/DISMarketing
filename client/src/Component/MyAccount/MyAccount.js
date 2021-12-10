@@ -175,7 +175,7 @@ const MyAccount = () => {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, usersubs?.length - page * rowsPerPage);
     const emptyRows2 = rowsPerPage - Math.min(rowsPerPage, installedSubs?.length - page * rowsPerPage);
 
-    if(!userTrans || !usersubs1 || !userId || !user){
+    if(!usersubs1 || !userId || !user){
         return(
             <Loading />
         )

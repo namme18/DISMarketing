@@ -40,8 +40,6 @@ const List = ({sub}) => {
     const allusers = useSelector(state => state.authReducer.allUsers);
     const agent = allusers?.filter(user => user._id === sub.agent)[0];
 
-    console.log(sub);
-
     const handleListClick = () => {
         history.push(`/home/encoder/details?value=${value}&dateFrom=${dateFrom}&dateTo=${dateTo}&subID=${sub._id}&agentID=${sub.agent}`);
     }
