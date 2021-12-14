@@ -151,9 +151,17 @@ export const subsReducer = createSlice({
                 ...state,
                 forspp: action.payload
             }
+        },
+
+        updateForSpp: (state, action) => {
+            return{
+                ...state,
+                forspp: [...state.forspp.map(sub => sub._id === action.payload._id ? action.payload : sub)],
+                usersubs: [action.payload, ...state.usersubs.filter(sub => sub._id !== action.payload._id)]
+            }
         }
     }
 });
 
-export const { activateExistingAccount, loadForSpp, clearDataSubs, encodeNewAccount, removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid, setClearCSToFalse } = subsReducer.actions;
+export const { activateExistingAccount, updateForSpp, loadForSpp, clearDataSubs, encodeNewAccount, removedSingleClaimedSubs, loadSubs, loadUnclaimedSubs, resetCheckActivation, loadCheckActivation, addNewSubs, loadUserSubs, agentUpdateSingleSubs, loadAppsGen, forPayoutList, addAgentIncome, loadCheckedSubs, removedPaid, setClearCSToFalse } = subsReducer.actions;
 export default subsReducer.reducer;

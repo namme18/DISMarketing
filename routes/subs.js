@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addSubs, deleteSubs, addMannySubs, getAllSubs, getUserSubs, agentUpdate, getAppsGen, forPayout, paymentToAgent, removeIncentivesDeductions, addIncentivesDeductions, checkSubs, activateAccount, encodeAccount, getUnclaimedSubs, getSubsViaApplicationNo, replaceClaimedSubs, getForSpp } = require('../controllers/subs');
+const { addSubs, deleteSubs, addMannySubs, getAllSubs, getUserSubs, agentUpdate, getAppsGen, forPayout, paymentToAgent, removeIncentivesDeductions, addIncentivesDeductions, checkSubs, activateAccount, encodeAccount, getUnclaimedSubs, getSubsViaApplicationNo, replaceClaimedSubs, getForSpp, subsUpdateByAdmin } = require('../controllers/subs');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
@@ -21,5 +21,6 @@ router.post('/encodeaccount', auth, encodeAccount);
 router.get('/getunclaimedsubs', auth, getUnclaimedSubs);
 router.get('/subsviaapplicationno', auth, getSubsViaApplicationNo);
 router.get('/getforspp', auth, getForSpp);
+router.put('/subsupdatebyadmin', auth, subsUpdateByAdmin);
 
 module.exports = router;

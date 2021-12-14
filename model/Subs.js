@@ -129,23 +129,14 @@ const SubsSchema = mongoose.Schema({
         type: Date,
         default: null
     },
+    lastmodified:{
+        type: Date,
+        default: Date.now()
+    },
     sppstatus: {
         type: Object,
         default: {
-            remarks: [
-                {
-                    id: 'sdgf987sd6fgsaduhfisadjgasdg987a8d5as87dfasd87f6',
-                    position: 'agent',
-                    msg: 'submit compliance',
-                    attachments: ['https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg', 'https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg']
-                },
-                {
-                    id: 'sdgf987sd6fgsaduhfisadjgasdg987a8d5as87dfasd87f6',
-                    position: 'admin',
-                    msg: 'submit compliance',
-                    attachments: ['https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg', 'https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg']
-                }
-            ],
+            remarks: null,
             status: 'encoding'
         }
     }
@@ -153,3 +144,18 @@ const SubsSchema = mongoose.Schema({
 
 const Subs = mongoose.model('Subs', SubsSchema);
 module.exports = Subs;
+
+// remarks: [
+//     {
+//         id: 'sdgf987sd6fgsaduhfisadjgasdg987a8d5as87dfasd87f6',
+//         position: 'agent',
+//         msg: 'submit compliance',
+//         attachments: ['https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg', 'https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg']
+//     },
+//     {
+//         id: 'sdgf987sd6fgsaduhfisadjgasdg987a8d5as87dfasd87f6',
+//         position: 'admin',
+//         msg: 'submit compliance',
+//         attachments: ['https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg', 'https://iclick-dis-app.s3.amazonaws.com/2021-12-11T06-55-26.077Z034d659802435efa11f93c69e254c32967c2c3b0--image0.jpeg']
+//     }
+// ]

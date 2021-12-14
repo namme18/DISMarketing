@@ -5,6 +5,7 @@ const cors = require('cors');
 const config = require('config');
 const errorHandler = require('./middleware/Error/errorHandler');
 const path = require('path');
+const logger = require('./middleware/logger');
 
 
 
@@ -12,18 +13,19 @@ const path = require('path');
 app.use(express.json({limit: '30mb', extended: true}));
 app.use(express.urlencoded({limit: '30mb', extended: true}));
 app.use(cors());
-app.use(express.static(__dirname))
+app.use(express.static(__dirname));
+app.use(logger);
 
 const db = config.get('mongoURI');
 
 mongoose
-    .connect(db, {
-         useCreateIndex: true,
-         useNewUrlParser: true,
-         useUnifiedTopology: true
-    })
-    .then(() => console.log('mongoDb connected...'))
-    .catch(err => console.log(err));
+.connect(db, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('mongoDb connected...'))
+.catch(err => console.log(err));
 
 app.use('/auth', require('./routes/user'));
 app.use('/subs', require('./routes/subs'));

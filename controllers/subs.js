@@ -5,6 +5,29 @@ const bcrypt = require('bcryptjs');
 
 const uploadResultArray = require('../middleware/uploadResultArray');
 
+exports.subsUpdateByAdmin = (req, res, next) => {
+
+    const { subID, position, sppRemarks, accountNumber, msg } = req.body;
+    const userID = req.user._id;
+
+    Subs.findById(subID)
+        .then(sub => {
+            if(!sub) return res.status(400).json({msg: 'No subs found'});
+            sub.sppstatus = sub.sppstatus.remarks !== null ? {remarks: [...sub?.sppstatus?.remarks, {position, id: userID, msg, attachments: []}], status: sppRemarks} : {remarks: [{position, id: userID, msg, attachments: []}], status: sppRemarks};
+            sub.accountno = accountNumber;
+            sub.remarks = 'for compliance';
+            sub.lastmodified = Date.now();
+
+            sub.save();
+
+            return res.status(200).json(sub);
+        })
+        .catch(err => {
+            return next(err);
+        });
+
+}
+
 exports.addSubs = async (req, res, next) => {
     const files = req.files;
     const details = JSON.parse(req.body.details);
@@ -217,7 +240,7 @@ exports.getUserSubs = (req, res, next) => {
             {ispaidtoagent: false}
         ]
     })
-    .sort({encodeddate: -1})
+    .sort({lastmodified: -1})
     .then(subscribers => {
         return res.status(200).json(subscribers);
     })
@@ -310,6 +333,7 @@ exports.agentUpdate = (req, res, next) => {
                             subs.plan = plan ? plan.split(',')[0] : subs.plan;
                             subs.packagename = plan ? plan.split(',')[1] : subs.packagename;
                             subs.installeddate = installeddate ? installeddate : subs.installeddate;
+                            subs.lastmodified = Date.now();
                 
                             subs.save();
                 
