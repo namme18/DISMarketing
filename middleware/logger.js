@@ -8,7 +8,7 @@ const logger = async (req, res, next) => {
     const method = req.method;
     const url = req.url;
     const status = res.statusCode;
-    if(!req.headers.authorization) return res.status(501).json({msg: 'Invalid User!'});
+    if(!req.headers.authorization) return next();
     const token = req.headers.authorization.split(' ')[1];
     const decoded = await jwt.verify(token, config.get('secret'));
     const user = await User.findById(decoded.id);
