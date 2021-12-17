@@ -15,7 +15,7 @@ exports.subsUpdateByAdmin = (req, res, next) => {
             if(!sub) return res.status(400).json({msg: 'No subs found'});
             sub.sppstatus = sub.sppstatus.remarks !== null ? {remarks: [...sub?.sppstatus?.remarks, {position, id: userID, msg, attachments: []}], status: sppRemarks} : {remarks: [{position, id: userID, msg, attachments: []}], status: sppRemarks};
             sub.accountno = accountNumber;
-            sub.remarks = 'for compliance';
+            sub.remarks = sppRemarks;
             sub.lastmodified = Date.now();
 
             sub.save();

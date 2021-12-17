@@ -28,6 +28,8 @@ import { format } from 'date-fns';
 import { useDispatch } from 'react-redux';
 import { getErrors } from '../../redux/reducers/errorReducer';
 import { updateSingleSubs } from '../../redux/reducers/subsActions/updateSingleSubs';
+import AttachmentsModal from './AttachmentsModal';
+import { styled } from '@mui/material/styles';
 
 const useStyles = makeStyles(theme => ({
     details: {
@@ -50,11 +52,35 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
+const StyledAvatar = styled(Avatar)(({theme}) => ({
+    ':hover': {
+        transform: 'scale(1.1)'
+    },
+    height: '20px', 
+    width: '20px', 
+    marginLeft: '5px', 
+    cursor:'pointer'
+}));
+
+const StyledGrid = styled(Grid)(({theme}) => ({
+    padding:'5px', 
+    border:`1px solid ${theme.palette.info.light}`, 
+    borderRadius: '5px',
+    [theme.breakpoints.down('sm')]:{
+        width:'100%'
+    },
+    [theme.breakpoints.up('md')]:{
+        width:'40%'
+    }
+}));
+
 const UserSubsRow = ({sub, index}) => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
 
+    const [open, setOpen] = useState(false);
+    const [img, setImg] = useState('');
     const [showDetails, setShowDetails] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
     const [data, setData] = useState({
@@ -76,6 +102,11 @@ const UserSubsRow = ({sub, index}) => {
             }));
         }
     },[data.remarks]);
+
+    const handleOpenModal = (img) => {
+        setOpen(true);
+        setImg(img);
+    }
 
     const handleClick = () => {
         setShowDetails(!showDetails);
@@ -201,7 +232,7 @@ const UserSubsRow = ({sub, index}) => {
                     <Avatar className={classes.avatar}>{index+1}</Avatar>{` ${sub.fullname.map(name => name.toLowerCase()).map(name => name[0].toUpperCase()+name.substring(1)).join(' ')}`}
                     </Badge>
                 </Typography>
-                    {!sub.isActive && (
+                    {!sub.isActive || sub.remarks !== 'for compliance' || sub.remarks !== 'spp done' && (
                         !editDetails ? (
                                 <>
                                 <IconButton size='small' onClick={handleEdit}>
@@ -348,6 +379,21 @@ const UserSubsRow = ({sub, index}) => {
                         )}
                         </Typography>
                     </form>
+                    <AttachmentsModal open={open} setOpen={setOpen} img={img}/>
+                    {sub.remarks === 'for compliance' && (
+                        <Grid container justify='flex-start' direction='column' style={{padding:'5px'}}>
+                            <Grid item container direction='row' style={{padding: '2px'}}>
+                                <Typography variant='subtitle2'>Attachments: </Typography>
+                                {sub?.attachments?.map(data => (
+                                    <StyledAvatar key={data.id} onClick={() => handleOpenModal(data.img)} key={data.id} src={data.img} alt='file' >file</StyledAvatar>
+                                ))}
+                            </Grid>
+                            
+                            <StyledGrid item container direction='column' justifyContent='flex-start'>
+                                    <Typography variant='caption' color='textSecondary' style={{fontWeight:'600'}}>Remarks Trail:</Typography>
+                            </StyledGrid>
+                        </Grid>
+                    )}
                 </Collapse>
                 </TableCell>
         </TableRow>

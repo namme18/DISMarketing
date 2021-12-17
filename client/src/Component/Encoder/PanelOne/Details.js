@@ -78,7 +78,7 @@ const Details = () => {
             msg: ''
         });
     }
-
+    console.log(data);
     const handleSubmit = () => {
         if((data.sppRemarks === 'spp done' && data.accountNumber === '') || (data.sppRemarks === '')){
             const errData = {
@@ -92,9 +92,7 @@ const Details = () => {
             .then(res => {
                 if(res.payload){
                     clearData();
-                    setTimeout(() => {
-                        history.push(`/home/encoder/forspplist?value=${value}&dateFrom=${dateFrom}&dateTo=${dateTo}`);
-                    },200);
+                    history.push(`/home/encoder/forspplist?value=${value}&dateFrom=${dateFrom}&dateTo=${dateTo}`);
                 }
             })
             .catch(err => {
@@ -171,7 +169,7 @@ const Details = () => {
                     {data.sppRemarks === 'spp done' && (
                         <TextField
                             type='text'
-                            name='acountNumber'
+                            name='accountNumber'
                             onChange={onChange}
                             label='Account Number'
                             InputLabelProps={{shrink: true}}
