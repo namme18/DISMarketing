@@ -228,7 +228,7 @@ exports.getUserSubs = (req, res, next) => {
     const To = new Date(`${dateTo},${cDate.getHours()}:${cDate.getMinutes()}:${cDate.getSeconds()}.${cDate.getUTCMilliseconds()}`);
 
     if(!dateFrom || !dateTo || !userId) return res.status(400).json({msg: 'No user found!'});
-
+    
     Subs.find({
         agent: userId,
         $or:[
@@ -242,12 +242,35 @@ exports.getUserSubs = (req, res, next) => {
     })
     .sort({lastmodified: -1})
     .then(subscribers => {
+        if(!subscribers) return res.status(404).json({msg: 'invalid userID'});
         return res.status(200).json(subscribers);
     })
     .catch(err => {
         return next(err);
     })
 
+}
+
+exports.agentCompliance = async (req, res, next) => {
+    const files = req.files;
+    req.body = JSON.parse(req.body.details);
+    const { subID, msg } = req.body;
+
+    Subs.findById(subID)
+        .then(async sub => {
+            if(!sub) return res.status(400).json({msg: 'No Client found!'});
+            const uploadToS3Result = await uploadResultArray(files);
+            const attachments = uploadToS3Result.map(data => data.img)
+            sub.sppstatus.remarks = [...sub.sppstatus.remarks, {position: 'agent', msg, attachments, id: subID}];
+            sub.sppstatus.status = 'encoding';
+            sub.remarks = 'encoding';
+
+            sub.save();
+            return res.status(200).json(sub);
+        })
+        .catch(err => {
+            return next(err);
+        })
 }
 
 exports.paymentToAgent = async (req, res, next) => {
@@ -470,7 +493,7 @@ exports.getAppsGen = (req, res, next) => {
 
 exports.getForSpp = (req, res, next) => {
 
-    Subs.find({remarks: 'standby', remarks: 'for installation'})
+    Subs.find({remarks: 'standby', remarks: 'for installation', remarks: 'encoding'})
         .sort({encodeddate: 1})
         .then(subs => {
             return res.status(200).json(subs);

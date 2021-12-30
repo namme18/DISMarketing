@@ -11,7 +11,7 @@ import {
     Avatar,
     Collapse
 } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import HomeIcon from '@material-ui/icons/Home';
 import { makeStyles } from '@material-ui/core';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
@@ -30,6 +30,10 @@ import { getErrors } from '../../redux/reducers/errorReducer';
 import { updateSingleSubs } from '../../redux/reducers/subsActions/updateSingleSubs';
 import AttachmentsModal from './AttachmentsModal';
 import { styled } from '@mui/material/styles';
+import { Stack, Box, TextareaAutosize } from '@mui/material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import SendIcon from '@mui/icons-material/Send';
+import { complianceOfAgent } from '../../redux/reducers/subsActions/complianceOfAgent';
 
 const useStyles = makeStyles(theme => ({
     details: {
@@ -50,6 +54,24 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(0, 1, 0, 0),
         fontSize: 'small'
     },
+}))
+
+const StyledTextarea = styled(TextareaAutosize)(({theme}) => ({
+    resize:'none', 
+    outline:'none', 
+    width: '100%', 
+    borderRadius: '5px', 
+    border: 'none', 
+    padding: '5px'
+}));
+
+const StyledSendIcon = styled(SendIcon)(({theme}) => ({
+    fontSize: '20px', 
+    cursor: 'pointer',
+    ':hover':{
+        transform: 'scale(1.1)',
+        color: theme.palette.secondary.main
+    }
 }))
 
 const StyledAvatar = styled(Avatar)(({theme}) => ({
@@ -74,15 +96,42 @@ const StyledGrid = styled(Grid)(({theme}) => ({
     }
 }));
 
+const StyledStack = styled(Stack)(({theme}) => ({
+    margin: '5px 5px', 
+    backgroundColor: theme.palette.primary.main, 
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    borderRadius: '10px',
+    padding: '10px',
+}));
+
+const reducer = (attachedFile, action) => {
+    switch(action.type){
+        case "ADDIMAGE":
+            return [...attachedFile, action.payload]
+        case "DELETEIMAGE":
+            return []
+        default:
+            return attachedFile
+    }
+}
+
 const UserSubsRow = ({sub, index}) => {
 
     const classes = useStyles();
     const dispatch = useDispatch();
-
     const [open, setOpen] = useState(false);
     const [img, setImg] = useState('');
     const [showDetails, setShowDetails] = useState(false);
     const [editDetails, setEditDetails] = useState(false);
+    const [attachedFile, setAttachedFile] = useReducer(reducer, []);
+    
+    const [msgData, setMsgData] = useState({
+        files: [],
+        msg: '',
+        subID:  sub._id
+    });
+
+    
     const [data, setData] = useState({
         address: '',
         contactno: '',
@@ -102,6 +151,51 @@ const UserSubsRow = ({sub, index}) => {
             }));
         }
     },[data.remarks]);
+
+    const handleClickSend = () => {
+        const data = {
+            details: {
+                msg: msgData.msg,
+                subID: msgData.subID
+            },
+            files: msgData.files
+        }
+
+        dispatch(complianceOfAgent(data));
+    }
+
+    const types = ['image/jpeg', 'image/png', 'image/gif'];
+
+    const hanldeUploadFile = e => {
+        const files = Object.values(e.target.files);
+        setMsgData({...msgData, files: e.target.files})
+        const invalidFile = files?.map(file => types.includes(file.type) ? true : false).some(item => item === false);
+        const fileArray = files?.map(file => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = e => {
+                const data = {
+                    base64: e.target.result,
+                    file
+                }
+                return setAttachedFile({type: "ADDIMAGE", payload: data})
+            } 
+        })
+
+        if(invalidFile){
+            const errData = {
+                msg: 'Invalid File Type',
+                status: 400,
+                id: 'ERROR'
+            }
+            return dispatch(getErrors(errData));
+        }
+    }
+
+    const handleClickUploadFile = () => {
+        setAttachedFile({type: "DELETEIMAGE"});
+        setMsgData({...msgData, files: []});
+    }
 
     const handleOpenModal = (img) => {
         setOpen(true);
@@ -391,6 +485,47 @@ const UserSubsRow = ({sub, index}) => {
                             
                             <StyledGrid item container direction='column' justifyContent='flex-start'>
                                     <Typography variant='caption' color='textSecondary' style={{fontWeight:'600'}}>Remarks Trail:</Typography>
+                                    
+                                    {sub?.sppstatus?.remarks?.map((data) => (
+                                        <Grid key={data.dispatch} item container direction={data.position === 'admin' ? 'row-reverse': 'row'}>
+                                            <Typography variant='caption' color='primary' style={{fontWeight:'600'}}>{data.position === 'agent'? 'Agent: ' : ' :Admin'}</Typography>
+                                            <StyledStack direction='column'>
+                                                <Typography>{data.msg}</Typography>
+                                                <Stack direction='row'>
+                                                   {data?.attachments?.map((attached, index) => (
+                                                       <Box key={index} style={{marginLeft:'5px'}}>
+                                                           <a href={attached} download ><Avatar src={attached} style={{width:'20px', height: '20px'}}>file</Avatar></a>
+                                                       </Box>
+                                                   ))}
+                                                </Stack>
+                                            </StyledStack>
+                                        </Grid>
+                                    ))}
+
+                                    <Stack direction='row'>
+                                        {attachedFile.map((file, index) => (
+                                            <Box key={index} style={{width: '20px', height: '25px', padding: '2px'}}>
+                                                <img src={file.base64} alt='file' style={{height: '100%', width: '100%', objectFit: 'cover'}} />
+                                            </Box>
+                                        ))}
+                                    </Stack>
+
+                                    <Grid item container direction='row' alignItems='center' style={{backgroundColor: 'skyblue', padding: '5px', borderRadius: '5px'}}>
+                                        <Stack alignItems='center' justifyContent='center' sx={{width: '10%'}}>
+                                           <input type='file' multiple name='attachmentFile' id='attachmentFile' onClick={handleClickUploadFile} onChange={hanldeUploadFile} style={{display: 'none'}} />
+                                            <label htmlFor='attachmentFile'>
+                                                <AttachFileIcon color='secondary' style={{fontSize: '20px', cursor: 'pointer'}} />
+                                            </label>
+                                        </Stack>
+
+                                        <Stack direction='column' justifyContent='center' alignItems='center' sx={{width: '70%', }}>
+                                            <StyledTextarea onChange={(e) => setMsgData({...msgData, msg: e.target.value})} placeholder='Aa' name='msg' rows='1' />
+                                        </Stack>
+
+                                        <Stack justifyContent='center' alignItems='center' sx={{width: '20%'}}>
+                                            <StyledSendIcon color='primary' onClick={handleClickSend} />
+                                        </Stack>
+                                    </Grid>
                             </StyledGrid>
                         </Grid>
                     )}

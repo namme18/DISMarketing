@@ -125,14 +125,6 @@ const Layout = ({children}) => {
         }
     },[dispatch]);
 
-    useEffect(() => {
-        setInterval(() => {
-            if(forspp){
-                dispatch(getForSpp());
-            }
-        },30000);
-    },[]);
-
     const [mobileOpen, setMobileOpen] = useState(false);
     const [open, setOpen] = useState(false);
     

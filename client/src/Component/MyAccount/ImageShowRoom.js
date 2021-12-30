@@ -44,7 +44,7 @@ const ImageShowRoom = () => {
     return (
         <Grid container justifyContent='center' alignItems='center' sx={{height: '100vh'}}>
             <Stack sx={{boxShadow: 6, width: '80vw', height: '80vh'}}>
-                {status === 'agent' && userTrans.length > 0 && (
+                {status === 'agent' && userTrans?.length > 0 && (
                 <img alt={id} src={user[0].payout} />
                 )}
                 {status === 'admin' && grandTrans && (
